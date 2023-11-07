@@ -24,7 +24,7 @@ public class Member {
     private String nickname;
 
     @Column(name = "login_email", length = 50, columnDefinition = "varchar")
-    private String email;
+    private String loginEmail;
 
     @Column(name = "profile_img", columnDefinition = "text")
     private String profileImg;
