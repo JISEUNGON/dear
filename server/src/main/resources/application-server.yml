@@ -1,0 +1,50 @@
+pring:
+  profiles:
+    active:
+      on-profile: server
+  output:
+    ansi:
+      enabled: always
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_IP}:${DB_PORT}/${DB_SCHEMA}?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: none #create, create-drop, none, update
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy # set DB column name by snake case
+    show-sql: true
+    generate-ddl: false
+  mvc.pathmatch.matching-strategy: ANT_PATH_MATCHER # Swagger-ui
+
+logging:
+  slack:
+    webhook-url: ${SLACK_WEBHOOK_URL}
+  config: classpath:logback.xml
+
+jwt:
+  secret: ${JWT_TOKEN_SECRET_KEY}
+
+sns:
+  google:
+    id: ${GOOGLE_CLIENT_ID}
+    secret: ${GOOGLE_SECRET_KEY}
+    url: ${GOOGLE_REDIRECT_URL}
+
+cloud:
+  aws:
+    s3:
+      bucket: ${AWS_S3_BUCKET}
+    credentials:
+      accessKey: ${AWS_S3_ACCESS_KEY}
+      secretKey: ${AWS_S3_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
