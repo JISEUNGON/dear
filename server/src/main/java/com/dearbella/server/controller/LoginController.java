@@ -17,7 +17,6 @@ public class LoginController {
 
     @GetMapping(value = "/google")
     public void socialLoginType() {
-        log.info("login google");
         oauthService.request();
     }
 

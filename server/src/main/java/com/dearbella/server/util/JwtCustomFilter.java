@@ -24,8 +24,6 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class JwtCustomFilter extends OncePerRequestFilter {
-    @Value("${jwt.secret}")
-    private String secretKey;
     private MemberRepository memberRepository;
 
     @Override
