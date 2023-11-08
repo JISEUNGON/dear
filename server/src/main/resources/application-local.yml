@@ -33,8 +33,11 @@ jwt:
 
 sns:
   google:
-    id: ${GOOGLE_CLIENT_ID}
-    secret: ${GOOGLE_SECRET_KEY}
+    client:
+      id: ${GOOGLE_CLIENT_ID}
+      secret: ${GOOGLE_SECRET_KEY}
+    callback:
+      url: ${GOOGLE_CALLBACK_URL}
 
 
 cloud:
