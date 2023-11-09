@@ -35,6 +35,9 @@ public class Member {
     @Column(name = "phone", length = 30, columnDefinition = "varchar")
     private String phone;
 
+    @Column(name = "ban", columnDefinition = "tinyint")
+    private Boolean ban;
+
     @CreationTimestamp
     private LocalDate createdAt;
 

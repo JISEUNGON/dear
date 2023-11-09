@@ -42,6 +42,7 @@ public class MemberServiceImpl implements MemberService {
                         .phone(null)
                         .nickname(idTokenVo.getName())
                         .authorities(List.of(authority))
+                        .ban(false)
                         .build()
         );
 
