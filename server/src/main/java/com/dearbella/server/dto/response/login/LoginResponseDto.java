@@ -6,6 +6,8 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 
+import static com.dearbella.server.config.MapperConfig.modelMapper;
+
 @Getter
 @Setter
 @Builder
@@ -17,13 +19,12 @@ public class LoginResponseDto {
     private String accessToken;
     private String refreshToken;
     private String nickname;
-    private String email;
-    private String img;
-    private Boolean pro;
-    private Boolean ban;
+    private String loginEmail;
+    private String profileImg;
+    private String phone;
 
-    public static LoginResponseDto of(Member user, Token token, ModelMapper mapper) {
-        LoginResponseDto map = mapper.map(user, LoginResponseDto.class);
+    public static LoginResponseDto of(Member user, Token token) {
+        LoginResponseDto map = modelMapper.map(user, LoginResponseDto.class);
 
         map.setAccessToken(token.getAccessToken());
         map.setRefreshToken(token.getRefreshToken());

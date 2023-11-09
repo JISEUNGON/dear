@@ -1,6 +1,7 @@
 package com.dearbella.server.exception;
 
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
+import com.dearbella.server.exception.member.MemberLoginEmailNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,6 +16,12 @@ public class ApiExceptionHandler {
     @ExceptionHandler(MemberIdNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleException(MemberIdNotFoundException ex) {
         ApiErrorResponse response = new ApiErrorResponse("DEM-0001","user is not found - id "+ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MemberLoginEmailNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(MemberLoginEmailNotFoundException ex) {
+        ApiErrorResponse response = new ApiErrorResponse("DEM-0002","Email is not found - id "+ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 

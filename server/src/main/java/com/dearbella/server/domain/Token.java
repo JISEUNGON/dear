@@ -37,9 +37,9 @@ public class Token {
         return Token.builder()
                 .memberId(member.getMemberId())
                 .accessToken(JwtUtil.createJwt(member.getMemberId()))
-                .accessTokenExpiredAt(LocalDate.now())
+                .accessTokenExpiredAt(LocalDate.now().plusDays(10))
                 .refreshToken(JwtUtil.createRefreshToken(member.getMemberId()))
-                .refreshTokenExpiredAt(LocalDate.now())
+                .refreshTokenExpiredAt(LocalDate.now().plusYears(1))
                 .build();
     }
 }
