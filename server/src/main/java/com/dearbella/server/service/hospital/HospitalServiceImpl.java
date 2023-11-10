@@ -57,6 +57,7 @@ public class HospitalServiceImpl implements HospitalService {
                         .hospitalLocation(dto.getLocation())
                         .description(dto.getDescription())
                         .hospitalVideoLink(dto.getLink())
+                        .sequence(dto.getSequence())
                         .build()
         );
     }

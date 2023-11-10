@@ -61,6 +61,7 @@ public class DoctorServiceImpl implements DoctorService {
                         .adminId(JwtUtil.getMemberId())
                         .career(careers)
                         .links(videos)
+                        .sequence(dto.getSequence())
                         .build()
         );
     }

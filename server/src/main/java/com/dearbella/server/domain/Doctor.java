@@ -36,6 +36,9 @@ public class Doctor {
     @Column(name = "tag", length = 50, columnDefinition = "varchar")
     private String tag;
 
+    @Column(name = "sequence", columnDefinition = "int")
+    private Long sequence;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "doctor_career",

@@ -37,6 +37,9 @@ public class Hospital {
     @Column(name = "hospital_infra", length = 50, columnDefinition = "varchar")
     private String hospitalInfra;
 
+    @Column(name = "sequence", columnDefinition = "int")
+    private Long sequence;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "hospital_before",
