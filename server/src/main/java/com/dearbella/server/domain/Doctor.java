@@ -2,6 +2,7 @@ package com.dearbella.server.domain;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -33,11 +34,19 @@ public class Doctor {
     @Column(name = "description", columnDefinition = "text")
     private String description;
 
-    @Column(name = "tag", length = 50, columnDefinition = "varchar")
-    private String tag;
-
     @Column(name = "sequence", columnDefinition = "int")
     private Long sequence;
+
+    @Column(name = "total_rate", columnDefinition = "float")
+    private Float totalRate;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "doctor_category",
+            joinColumns = {@JoinColumn(name = "doctor_id", referencedColumnName = "doctor_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_num", referencedColumnName = "category_num")})
+    @ApiModelProperty(example = "전문 분야")
+    private List<Category> categories;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -58,6 +67,6 @@ public class Doctor {
     @Column(name = "admin_id", columnDefinition = "bigint")
     private Long adminId;
 
-    @Column(name = "created_at", columnDefinition = "datetime")
+    @CreationTimestamp
     private LocalDateTime createdAt;
 }

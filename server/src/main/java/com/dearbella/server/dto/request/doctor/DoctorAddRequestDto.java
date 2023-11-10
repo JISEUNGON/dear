@@ -17,9 +17,9 @@ public class DoctorAddRequestDto {
     private String doctorName;
     private String hospitalName;
     private String description;
-    private String specialParts;
     private List<String> videoLinks;
     private List<String> date;
     private List<String> career;
-    private String tags;
+    private List<Long> tags;
+    private Long sequence;
 }

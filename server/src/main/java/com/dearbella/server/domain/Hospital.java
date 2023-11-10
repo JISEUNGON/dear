@@ -34,11 +34,19 @@ public class Hospital {
     @Column(name = "description", columnDefinition = "text")
     private String description;
 
-    @Column(name = "hospital_infra", length = 50, columnDefinition = "varchar")
-    private String hospitalInfra;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "hospital_infra",
+            joinColumns = {@JoinColumn(name = "hospital_id", referencedColumnName = "hospital_id")},
+            inverseJoinColumns = {@JoinColumn(name = "infra_number", referencedColumnName = "infra_number")})
+    @ApiModelProperty(example = "병원 인프라")
+    private Set<Infra> infras;
 
     @Column(name = "sequence", columnDefinition = "int")
     private Long sequence;
+
+    @Column(name = "total_rate", columnDefinition = "float")
+    private Float totalRate;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(

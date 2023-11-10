@@ -1,10 +1,15 @@
 package com.dearbella.server.service.doctor;
 
 import com.dearbella.server.domain.Career;
+import com.dearbella.server.domain.Category;
 import com.dearbella.server.domain.Doctor;
 import com.dearbella.server.domain.IntroLink;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
+import com.dearbella.server.dto.request.doctor.DoctorFindRequestDto;
+import com.dearbella.server.dto.response.doctor.DoctorFindResponseDto;
+import com.dearbella.server.enums.doctor.CategoryEnum;
 import com.dearbella.server.repository.CareerRepository;
+import com.dearbella.server.repository.CategoryRepository;
 import com.dearbella.server.repository.DoctorRepository;
 import com.dearbella.server.repository.IntroLinkRepository;
 import com.dearbella.server.util.JwtUtil;
@@ -24,11 +29,17 @@ public class DoctorServiceImpl implements DoctorService {
     private final CareerRepository careerRepository;
     private final IntroLinkRepository introLinkRepository;
 
+    /**
+     * TODO
+     * total rate
+     * */
+
     @Override
     @Transactional
     public Doctor addDoctor(final DoctorAddRequestDto dto, String image) {
         List<Career> careers = new ArrayList<>();
         List<IntroLink> videos = new ArrayList<>();
+        List<Category> categories = new ArrayList<>();
 
         for(int i = 0; i < dto.getCareer().size(); i++) {
             careers.add(
@@ -51,18 +62,33 @@ public class DoctorServiceImpl implements DoctorService {
             );
         }
 
+        for(Long tag: dto.getTags()) {
+            categories.add(
+                    Category.builder()
+                            .categoryName(CategoryEnum.findByValue(tag).toString())
+                            .categoryNum(tag)
+                            .build()
+            );
+        }
+
         return doctorRepository.save(
                 Doctor.builder()
                         .doctorName(dto.getDoctorName())
                         .doctorImage(image)
                         .hospitalName(dto.getHospitalName())
                         .description(dto.getDescription())
-                        .tag(dto.getTags())
                         .adminId(JwtUtil.getMemberId())
                         .career(careers)
+                        .categories(categories)
                         .links(videos)
                         .sequence(dto.getSequence())
+                        .totalRate(0.0F)
                         .build()
         );
+    }
+
+    @Override
+    public List<DoctorFindResponseDto> findDoctors(final DoctorFindRequestDto dto) {
+        return null;
     }
 }

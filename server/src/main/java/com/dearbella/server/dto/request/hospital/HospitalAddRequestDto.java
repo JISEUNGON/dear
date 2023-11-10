@@ -18,7 +18,8 @@ public class HospitalAddRequestDto {
     private String name;
     private String location;
     private String description;
-    private String infra;
+    private List<Long> infras;
     private List<MultipartFile> befores;
     private List<MultipartFile> afters;
+    private Long sequence;
 }
