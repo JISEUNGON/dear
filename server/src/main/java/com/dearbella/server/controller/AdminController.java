@@ -1,7 +1,11 @@
 package com.dearbella.server.controller;
 
+import com.dearbella.server.domain.Doctor;
 import com.dearbella.server.domain.Hospital;
+import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
+import com.dearbella.server.service.doctor.DoctorService;
+import com.dearbella.server.service.doctor.DoctorServiceImpl;
 import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.s3.S3UploadService;
 import io.swagger.annotations.Api;
@@ -29,6 +33,7 @@ import java.util.List;
 public class AdminController {
     private final HospitalService hospitalService;
     private final S3UploadService s3UploadService;
+    private final DoctorService doctorService;
 
     @ApiOperation("병원 정보 넣기")
     @PostMapping(value = "/hospital/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -50,5 +55,14 @@ public class AdminController {
         }
 
         return ResponseEntity.ok(hospitalService.addHospital(dto, befores, afters));
+    }
+
+    @ApiOperation("의사 정보 넣기")
+    @PostMapping(value = "/doctor/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @Transactional
+    public ResponseEntity<Doctor> saveDoctor(@ModelAttribute DoctorAddRequestDto dto) throws IOException {
+        final String upload = s3UploadService.upload(dto.getImage(), "/dearbella/doctor/", false);
+
+        return ResponseEntity.ok(doctorService.addDoctor(dto, upload));
     }
 }

@@ -1,10 +1,9 @@
 package com.dearbella.server.config;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.dearbella.server.repository.HospitalRepository;
-import com.dearbella.server.repository.ImageRepository;
-import com.dearbella.server.repository.MemberRepository;
-import com.dearbella.server.repository.TokenRepository;
+import com.dearbella.server.repository.*;
+import com.dearbella.server.service.doctor.DoctorService;
+import com.dearbella.server.service.doctor.DoctorServiceImpl;
 import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.hospital.HospitalServiceImpl;
 import com.dearbella.server.service.member.MemberService;
@@ -27,6 +26,9 @@ public class SpringConfig {
     private final HospitalRepository hospitalRepository;
     private final AmazonS3 amazonS3Client;
     private final ImageRepository imageRepository;
+    private final DoctorRepository doctorRepository;
+    private final IntroLinkRepository introLinkRepository;
+    private final CareerRepository careerRepository;
 
     @Bean
     public MemberService memberService() {
@@ -41,5 +43,10 @@ public class SpringConfig {
     @Bean
     public S3UploadService s3UploadService() {
         return new S3UploadServiceImpl(amazonS3Client);
+    }
+
+    @Bean
+    public DoctorService doctorService() {
+        return new DoctorServiceImpl(doctorRepository, careerRepository, introLinkRepository);
     }
 }

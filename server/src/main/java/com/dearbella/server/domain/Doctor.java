@@ -42,7 +42,7 @@ public class Doctor {
             joinColumns = {@JoinColumn(name = "doctor_id", referencedColumnName = "doctor_id")},
             inverseJoinColumns = {@JoinColumn(name = "career_id", referencedColumnName = "career_id")})
     @ApiModelProperty(example = "경력")
-    private Set<Career> career;
+    private List<Career> career;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -50,9 +50,9 @@ public class Doctor {
             joinColumns = {@JoinColumn(name = "doctor_id", referencedColumnName = "doctor_id")},
             inverseJoinColumns = {@JoinColumn(name = "link_id", referencedColumnName = "link_id")})
     @ApiModelProperty(example = "영상 링크 주")
-    private Set<IntroLink> links;
+    private List<IntroLink> links;
 
-    @Column(name = "admin_id", columnDefinition = "int")
+    @Column(name = "admin_id", columnDefinition = "bigint")
     private Long adminId;
 
     @Column(name = "created_at", columnDefinition = "datetime")
