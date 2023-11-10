@@ -5,11 +5,8 @@ import com.dearbella.server.domain.Category;
 import com.dearbella.server.domain.Doctor;
 import com.dearbella.server.domain.IntroLink;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
-import com.dearbella.server.dto.request.doctor.DoctorFindRequestDto;
-import com.dearbella.server.dto.response.doctor.DoctorFindResponseDto;
 import com.dearbella.server.enums.doctor.CategoryEnum;
 import com.dearbella.server.repository.CareerRepository;
-import com.dearbella.server.repository.CategoryRepository;
 import com.dearbella.server.repository.DoctorRepository;
 import com.dearbella.server.repository.IntroLinkRepository;
 import com.dearbella.server.util.JwtUtil;
@@ -85,10 +82,5 @@ public class DoctorServiceImpl implements DoctorService {
                         .totalRate(0.0F)
                         .build()
         );
-    }
-
-    @Override
-    public List<DoctorFindResponseDto> findDoctors(final DoctorFindRequestDto dto) {
-        return null;
     }
 }

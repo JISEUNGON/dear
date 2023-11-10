@@ -2,7 +2,6 @@ package com.dearbella.server.service.hospital;
 
 import com.dearbella.server.domain.Hospital;
 import com.dearbella.server.domain.Image;
-import com.dearbella.server.domain.Infra;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
 import com.dearbella.server.repository.HospitalRepository;
 import com.dearbella.server.repository.ImageRepository;
@@ -30,7 +29,6 @@ public class HospitalServiceImpl implements HospitalService {
     public Hospital addHospital(final HospitalAddRequestDto dto, List<String> befores, List<String> afters)  {
         Set<Image> beforeImages = new HashSet<>();
         Set<Image> afterImages = new HashSet<>();
-        Set<Infra> infras = new HashSet<>();
 
         for(String image: befores) {
             beforeImages.add(
