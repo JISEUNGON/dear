@@ -37,7 +37,7 @@ public class Hospital {
     @Column(name = "hospital_infra", length = 50, columnDefinition = "varchar")
     private String hospitalInfra;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "hospital_before",
             joinColumns = {@JoinColumn(name = "hospital_id", referencedColumnName = "hospital_id")},
@@ -45,7 +45,7 @@ public class Hospital {
     @ApiModelProperty(example = "병원 전 사진")
     private Set<Image> before;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "hospital_after",
             joinColumns = {@JoinColumn(name = "hospital_id", referencedColumnName = "hospital_id")},
@@ -53,9 +53,9 @@ public class Hospital {
     @ApiModelProperty(example = "병원 후 사")
     private Set<Image> after;
 
-    @Column(name = "admin_id", columnDefinition = "int")
+    @Column(name = "admin_id", columnDefinition = "bigint")
     private Long adminId;
 
     @CreationTimestamp
-    private LocalDateTime createdAT;
+    private LocalDateTime createdAt;
 }

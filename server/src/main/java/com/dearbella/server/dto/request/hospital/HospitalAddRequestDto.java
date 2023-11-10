@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class HospitalAddRequestDto {
     private String link;
-    private List<MultipartFile> images;
+    private List<MultipartFile> hospitalImages;
     private String name;
     private String location;
     private String description;

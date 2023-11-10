@@ -24,7 +24,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class JwtCustomFilter extends OncePerRequestFilter {
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
