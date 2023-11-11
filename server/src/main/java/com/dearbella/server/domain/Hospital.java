@@ -38,7 +38,7 @@ public class Hospital {
     @JoinTable(
             name = "hospital_infra",
             joinColumns = {@JoinColumn(name = "hospital_id", referencedColumnName = "hospital_id")},
-            inverseJoinColumns = {@JoinColumn(name = "infra_number", referencedColumnName = "infra_number")})
+            inverseJoinColumns = {@JoinColumn(name = "infra_num", referencedColumnName = "infra_num")})
     @ApiModelProperty(example = "병원 인프라")
     private Set<Infra> infras;
 

@@ -16,8 +16,8 @@ import javax.persistence.Table;
 @Builder
 public class Infra {
     @Id
-    @Column(name = "infra_number", columnDefinition = "int")
-    private Long infraNumber;
+    @Column(name = "infra_num", columnDefinition = "int")
+    private Long infraNum;
 
     @Column(name = "infra_name", length = 50, columnDefinition = "varchar")
     private String infraName;
