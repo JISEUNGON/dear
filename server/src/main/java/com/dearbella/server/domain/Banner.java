@@ -57,7 +57,7 @@ public class Banner {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "banner_inra",
+            name = "banner_infra",
             joinColumns = {@JoinColumn(name = "banner_id", referencedColumnName = "banner_id")},
             inverseJoinColumns = {@JoinColumn(name = "infra_num", referencedColumnName = "infra_num")})
     @ApiModelProperty(example = "banner images")

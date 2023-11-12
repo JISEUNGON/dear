@@ -2,6 +2,8 @@ package com.dearbella.server.config;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.dearbella.server.repository.*;
+import com.dearbella.server.service.banner.BannerService;
+import com.dearbella.server.service.banner.BannerServiceImpl;
 import com.dearbella.server.service.doctor.DoctorService;
 import com.dearbella.server.service.doctor.DoctorServiceImpl;
 import com.dearbella.server.service.hospital.HospitalService;
@@ -29,6 +31,8 @@ public class SpringConfig {
     private final DoctorRepository doctorRepository;
     private final IntroLinkRepository introLinkRepository;
     private final CareerRepository careerRepository;
+    private final BannerRepository bannerRepository;
+    private final InfraRepository infraRepository;
 
     @Bean
     public MemberService memberService() {
@@ -48,5 +52,10 @@ public class SpringConfig {
     @Bean
     public DoctorService doctorService() {
         return new DoctorServiceImpl(doctorRepository, careerRepository, introLinkRepository);
+    }
+
+    @Bean
+    public BannerService bannerService() {
+        return new BannerServiceImpl(bannerRepository, infraRepository, imageRepository);
     }
 }

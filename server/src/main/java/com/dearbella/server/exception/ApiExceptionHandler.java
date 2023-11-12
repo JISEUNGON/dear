@@ -1,5 +1,6 @@
 package com.dearbella.server.exception;
 
+import com.dearbella.server.exception.banner.BannerInfraNotFoundException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
 import com.dearbella.server.exception.member.MemberLoginEmailNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,16 @@ public class ApiExceptionHandler {
     @ExceptionHandler(MemberLoginEmailNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleException(MemberLoginEmailNotFoundException ex) {
         ApiErrorResponse response = new ApiErrorResponse("DEM-0002","Email is not found - id "+ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Banner Error
+     * */
+    @ExceptionHandler(BannerInfraNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(BannerInfraNotFoundException ex) {
+        ApiErrorResponse response = new ApiErrorResponse("DEB-001", "banner tag is not found: " + ex.getMessage());
+
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
