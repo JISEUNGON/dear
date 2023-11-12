@@ -1,6 +1,7 @@
 package com.dearbella.server.exception;
 
 import com.dearbella.server.exception.banner.BannerInfraNotFoundException;
+import com.dearbella.server.exception.doctor.CategoryNotFoundException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
 import com.dearbella.server.exception.member.MemberLoginEmailNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,15 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleException(BannerInfraNotFoundException ex) {
         ApiErrorResponse response = new ApiErrorResponse("DEB-001", "banner tag is not found: " + ex.getMessage());
 
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * doctor error
+     * */
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(CategoryNotFoundException ex) {
+        ApiErrorResponse response = new ApiErrorResponse("DED-001", "Doctor tag is not exist: " + ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 

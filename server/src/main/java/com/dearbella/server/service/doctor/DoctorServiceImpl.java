@@ -6,7 +6,9 @@ import com.dearbella.server.domain.Doctor;
 import com.dearbella.server.domain.IntroLink;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
 import com.dearbella.server.enums.doctor.CategoryEnum;
+import com.dearbella.server.exception.doctor.CategoryNotFoundException;
 import com.dearbella.server.repository.CareerRepository;
+import com.dearbella.server.repository.CategoryRepository;
 import com.dearbella.server.repository.DoctorRepository;
 import com.dearbella.server.repository.IntroLinkRepository;
 import com.dearbella.server.util.JwtUtil;
@@ -25,6 +27,7 @@ public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository doctorRepository;
     private final CareerRepository careerRepository;
     private final IntroLinkRepository introLinkRepository;
+    private final CategoryRepository categoryRepository;
 
     /**
      * TODO
@@ -61,10 +64,9 @@ public class DoctorServiceImpl implements DoctorService {
 
         for(Long tag: dto.getTags()) {
             categories.add(
-                    Category.builder()
-                            .categoryName(CategoryEnum.findByValue(tag).toString())
-                            .categoryNum(tag)
-                            .build()
+                    categoryRepository.findById(tag).orElseThrow(
+                            () -> new CategoryNotFoundException(tag)
+                    )
             );
         }
 

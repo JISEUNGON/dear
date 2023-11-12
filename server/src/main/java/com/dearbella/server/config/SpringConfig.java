@@ -23,6 +23,7 @@ import javax.annotation.PostConstruct;
 @RequiredArgsConstructor
 @Slf4j
 public class SpringConfig {
+    private final CategoryRepository categoryRepository;
     private final MemberRepository memberRepository;
     private final TokenRepository tokenRepository;
     private final HospitalRepository hospitalRepository;
@@ -51,7 +52,7 @@ public class SpringConfig {
 
     @Bean
     public DoctorService doctorService() {
-        return new DoctorServiceImpl(doctorRepository, careerRepository, introLinkRepository);
+        return new DoctorServiceImpl(doctorRepository, careerRepository, introLinkRepository, categoryRepository);
     }
 
     @Bean
