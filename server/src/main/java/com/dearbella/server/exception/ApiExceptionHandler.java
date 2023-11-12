@@ -2,6 +2,8 @@ package com.dearbella.server.exception;
 
 import com.dearbella.server.exception.banner.BannerInfraNotFoundException;
 import com.dearbella.server.exception.doctor.CategoryNotFoundException;
+import com.dearbella.server.exception.doctor.DoctorIdNotFoundException;
+import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
 import com.dearbella.server.exception.member.MemberLoginEmailNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -43,6 +45,21 @@ public class ApiExceptionHandler {
     @ExceptionHandler(CategoryNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleException(CategoryNotFoundException ex) {
         ApiErrorResponse response = new ApiErrorResponse("DED-001", "Doctor tag is not exist: " + ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DoctorIdNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(DoctorIdNotFoundException ex) {
+        ApiErrorResponse response = new ApiErrorResponse("DED-002", "Doctor id is not exist: " + ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * hospital error
+     * */
+    @ExceptionHandler(HospitalIdNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(HospitalIdNotFoundException ex) {
+        ApiErrorResponse response = new ApiErrorResponse("DEH-002", "Hospital id is not exist: " + ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 

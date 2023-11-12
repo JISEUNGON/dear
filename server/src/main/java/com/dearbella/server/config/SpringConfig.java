@@ -10,6 +10,8 @@ import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.hospital.HospitalServiceImpl;
 import com.dearbella.server.service.member.MemberService;
 import com.dearbella.server.service.member.MemberServiceImpl;
+import com.dearbella.server.service.review.ReviewService;
+import com.dearbella.server.service.review.ReviewServiceImpl;
 import com.dearbella.server.service.s3.S3UploadService;
 import com.dearbella.server.service.s3.S3UploadServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import javax.annotation.PostConstruct;
 @RequiredArgsConstructor
 @Slf4j
 public class SpringConfig {
+    private final ReviewRepository reviewRepository;
     private final CategoryRepository categoryRepository;
     private final MemberRepository memberRepository;
     private final TokenRepository tokenRepository;
@@ -34,6 +37,8 @@ public class SpringConfig {
     private final CareerRepository careerRepository;
     private final BannerRepository bannerRepository;
     private final InfraRepository infraRepository;
+    private final HospitalReviewRepository hospitalReviewRepository;
+    private final DoctorReviewRepository doctorReviewRepository;
 
     @Bean
     public MemberService memberService() {
@@ -58,5 +63,10 @@ public class SpringConfig {
     @Bean
     public BannerService bannerService() {
         return new BannerServiceImpl(bannerRepository, infraRepository, imageRepository);
+    }
+
+    @Bean
+    public ReviewService reviewService() {
+        return new ReviewServiceImpl(reviewRepository, imageRepository, memberRepository, doctorRepository, hospitalRepository, hospitalReviewRepository, doctorReviewRepository);
     }
 }

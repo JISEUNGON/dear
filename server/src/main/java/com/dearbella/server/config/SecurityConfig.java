@@ -77,6 +77,7 @@ public class SecurityConfig {
                 .addFilterAfter(new JwtCustomFilter(memberRepository), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN")
+                .antMatchers("/review/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .anyRequest().denyAll()
                 .and().build();
     }
