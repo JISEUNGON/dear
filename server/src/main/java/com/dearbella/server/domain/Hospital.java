@@ -45,6 +45,15 @@ public class Hospital {
     @Column(name = "sequence", columnDefinition = "int")
     private Long sequence;
 
+    @Column(name = "anesthesiologist", columnDefinition = "int")
+    private Long anesthesiologist;
+
+    @Column(name = "plastic_surgeon", columnDefinition = "int")
+    private Long plasticSurgeon;
+
+    @Column(name = "dermatologist", columnDefinition = "int")
+    private Long dermatologist;
+
     @Column(name = "total_rate", columnDefinition = "float")
     private Float totalRate;
 

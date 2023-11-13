@@ -22,4 +22,7 @@ public class HospitalAddRequestDto {
     private List<MultipartFile> befores;
     private List<MultipartFile> afters;
     private Long sequence;
+    private Long anesthesiologist;
+    private Long plasticSurgeon;
+    private Long dermatologist;
 }

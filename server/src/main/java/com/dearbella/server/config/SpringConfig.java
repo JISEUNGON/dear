@@ -47,7 +47,7 @@ public class SpringConfig {
 
     @Bean
     public HospitalService hospitalService() {
-        return new HospitalServiceImpl(hospitalRepository, imageRepository);
+        return new HospitalServiceImpl(hospitalRepository, imageRepository, infraRepository);
     }
 
     @Bean
