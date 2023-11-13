@@ -49,11 +49,12 @@ public class PostServiceImpl implements PostService {
 
         return postRepository.save(
                 Post.builder()
-                    .tag(tag)
-                    .postImages(imageList)
-                    .title(dto.getTitle())
-                    .content(dto.getContent())
-                    .memberId(JwtUtil.getMemberId())
+                        .tag(tag)
+                        .postImages(imageList)
+                        .title(dto.getTitle())
+                        .content(dto.getContent())
+                        .memberId(JwtUtil.getMemberId())
+                        .like(0L)
                     .build()
         );
     }

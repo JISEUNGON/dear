@@ -46,6 +46,9 @@ public class Post {
     @Column(name = "member_id", columnDefinition = "bigint")
     private Long memberId;
 
+    @Column(name = "lile", columnDefinition = "int")
+    private Long like;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 }
