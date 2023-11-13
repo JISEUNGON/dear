@@ -6,6 +6,7 @@ import com.dearbella.server.exception.doctor.DoctorIdNotFoundException;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
 import com.dearbella.server.exception.member.MemberLoginEmailNotFoundException;
+import com.dearbella.server.exception.post.TagIdNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -64,6 +65,11 @@ public class ApiExceptionHandler {
     }
 
     /**
-     * Unknown Error
+     * post Error
      * */
+    @ExceptionHandler(TagIdNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(TagIdNotFoundException ex) {
+        ApiErrorResponse response = new ApiErrorResponse("DEP-001", "Tag id is not exist: " + ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
 }

@@ -84,4 +84,11 @@ public class MemberServiceImpl implements MemberService {
 
         return response.isEmpty();
     }
+
+    @Override
+    public Member findById() {
+        return memberRepository.findById(JwtUtil.getMemberId()).orElseThrow(
+                () -> new MemberIdNotFoundException(JwtUtil.getMemberId().toString())
+        );
+    }
 }
