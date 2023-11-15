@@ -1,5 +1,6 @@
 package com.dearbella.server.controller;
 
+import com.dearbella.server.dto.response.banner.BannerDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
 import com.dearbella.server.service.banner.BannerService;
 import io.swagger.annotations.Api;
@@ -27,4 +28,10 @@ public class FreeController {
         return ResponseEntity.ok(bannerService.getBanners(location == 1));
     }
 
+    @ApiOperation("배너 상세 조회")
+    @GetMapping("/banner/detail")
+    public ResponseEntity<BannerDetailResponseDto> getBanner(@RequestParam Long bannerId) {
+        log.info("banner id: {}", bannerId);
+        return ResponseEntity.ok(bannerService.findById(bannerId));
+    }
 }

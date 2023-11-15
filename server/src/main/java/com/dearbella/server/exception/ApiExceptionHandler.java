@@ -1,5 +1,6 @@
 package com.dearbella.server.exception;
 
+import com.dearbella.server.exception.banner.BannerIdNotFoundException;
 import com.dearbella.server.exception.banner.BannerInfraNotFoundException;
 import com.dearbella.server.exception.banner.BannerNotExistException;
 import com.dearbella.server.exception.doctor.CategoryNotFoundException;
@@ -44,6 +45,13 @@ public class ApiExceptionHandler {
     @ExceptionHandler(BannerNotExistException.class)
     public ResponseEntity<ApiErrorResponse> handleException(BannerNotExistException ex) {
         ApiErrorResponse response = new ApiErrorResponse("DEB-002", ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BannerIdNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(BannerIdNotFoundException ex) {
+        ApiErrorResponse response = new ApiErrorResponse("DEB-003", ex.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }

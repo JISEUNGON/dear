@@ -4,8 +4,10 @@ import com.dearbella.server.domain.Banner;
 import com.dearbella.server.domain.Image;
 import com.dearbella.server.domain.Infra;
 import com.dearbella.server.dto.request.banner.BannerAddRequestDto;
+import com.dearbella.server.dto.response.banner.BannerDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
 import com.dearbella.server.enums.hospital.InfraEnum;
+import com.dearbella.server.exception.banner.BannerIdNotFoundException;
 import com.dearbella.server.exception.banner.BannerInfraNotFoundException;
 import com.dearbella.server.exception.banner.BannerNotExistException;
 import com.dearbella.server.repository.BannerRepository;
@@ -102,5 +104,10 @@ public class BannerServiceImpl implements BannerService {
         }
 
         return response;
+    }
+
+    @Override
+    public BannerDetailResponseDto findById(Long bannerId) {
+        return modelMapper.map(bannerRepository.findById(bannerId).orElseThrow(() -> new BannerIdNotFoundException(bannerId)), BannerDetailResponseDto.class);
     }
 }
