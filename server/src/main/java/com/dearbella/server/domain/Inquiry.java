@@ -22,6 +22,18 @@ public class Inquiry {
     @Column(name = "member_id", columnDefinition = "bigint")
     private Long memberId;
 
+    @Column(name = "hospital_id", columnDefinition = "int")
+    private Long hospitalId;
+
+    @Column(name = "member_name", length = 100, columnDefinition = "varchar")
+    private String member_name;
+
+    @Column(name = "location", columnDefinition = "int")
+    private Long location;
+
+    @Column(name = "phone_number", length = 20, columnDefinition = "varchar")
+    private String phoneNumber;
+
     @Column(name = "title", columnDefinition = "text")
     private String title;
 

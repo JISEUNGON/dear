@@ -8,6 +8,8 @@ import com.dearbella.server.service.doctor.DoctorService;
 import com.dearbella.server.service.doctor.DoctorServiceImpl;
 import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.hospital.HospitalServiceImpl;
+import com.dearbella.server.service.inquiry.InquiryService;
+import com.dearbella.server.service.inquiry.InquiryServiceImpl;
 import com.dearbella.server.service.member.MemberService;
 import com.dearbella.server.service.member.MemberServiceImpl;
 import com.dearbella.server.service.post.PostService;
@@ -59,5 +61,10 @@ public class SpringConfig {
     public PostService postService(PostRepository postRepository, ImageRepository imageRepository,
                                    TagRepository tagRepository) {
         return new PostServiceImpl(postRepository, tagRepository, imageRepository);
+    }
+
+    @Bean
+    public InquiryService inquiryService(InquiryRepository inquiryRepository) {
+        return new InquiryServiceImpl(inquiryRepository);
     }
 }
