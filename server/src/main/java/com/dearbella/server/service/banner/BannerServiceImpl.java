@@ -4,8 +4,10 @@ import com.dearbella.server.domain.Banner;
 import com.dearbella.server.domain.Image;
 import com.dearbella.server.domain.Infra;
 import com.dearbella.server.dto.request.banner.BannerAddRequestDto;
+import com.dearbella.server.dto.response.banner.BannerResponseDto;
 import com.dearbella.server.enums.hospital.InfraEnum;
 import com.dearbella.server.exception.banner.BannerInfraNotFoundException;
+import com.dearbella.server.exception.banner.BannerNotExistException;
 import com.dearbella.server.repository.BannerRepository;
 import com.dearbella.server.repository.ImageRepository;
 import com.dearbella.server.repository.InfraRepository;
@@ -16,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.dearbella.server.config.MapperConfig.modelMapper;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -77,5 +81,26 @@ public class BannerServiceImpl implements BannerService {
                         .bannerInfra(infras)
                         .build()
         );
+    }
+
+    @Override
+    public List<BannerResponseDto> getBanners(Boolean location) {
+        List<BannerResponseDto> response = new ArrayList<>();
+
+        List<Banner> banners = bannerRepository.findBannerByBannerLocation(location);
+
+        if(banners.isEmpty()) {
+            throw new BannerNotExistException();
+        }
+        else
+        {
+            for(Banner banner: banners) {
+                response.add(
+                        modelMapper.map(banner, BannerResponseDto.class)
+                );
+            }
+        }
+
+        return response;
     }
 }
