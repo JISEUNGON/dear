@@ -108,6 +108,10 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     public BannerDetailResponseDto findById(Long bannerId) {
-        return modelMapper.map(bannerRepository.findById(bannerId).orElseThrow(() -> new BannerIdNotFoundException(bannerId)), BannerDetailResponseDto.class);
+        Banner banner = bannerRepository.findById(bannerId).orElseThrow(() -> new BannerIdNotFoundException(bannerId));
+
+        log.info("banner: {}", banner);
+
+        return modelMapper.map(banner, BannerDetailResponseDto.class);
     }
 }
