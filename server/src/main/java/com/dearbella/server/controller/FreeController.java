@@ -51,8 +51,14 @@ public class FreeController {
     }
 
     @ApiOperation("추천 리뷰 조회(카테고리 포함)")
-    @GetMapping("/review/recommend")
+    @GetMapping("/review/search/category")
     public ResponseEntity<Set<ReviewResponseDto>> getReviews(@RequestParam Long category) {
         return ResponseEntity.ok(reviewService.findByCategory(category));
+    }
+
+    @ApiOperation("추천 리뷰 조회(검색어)")
+    @GetMapping("/review/search/query")
+    public ResponseEntity<Set<ReviewResponseDto>> getReviews(@RequestParam String query) {
+        return ResponseEntity.ok(reviewService.findByQuery(query));
     }
 }

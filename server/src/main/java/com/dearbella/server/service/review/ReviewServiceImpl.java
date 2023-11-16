@@ -8,6 +8,7 @@ import com.dearbella.server.enums.doctor.CategoryEnum;
 import com.dearbella.server.exception.doctor.DoctorIdNotFoundException;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
+import com.dearbella.server.exception.review.ReviewNotFoundException;
 import com.dearbella.server.repository.*;
 import com.dearbella.server.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,11 @@ public class ReviewServiceImpl implements ReviewService {
     private final HospitalRepository hospitalRepository;
     private final HospitalReviewRepository hospitalReviewRepository;
     private final DoctorReviewRepository doctorReviewRepository;
+
+    /**
+     * TODO:
+     * slice
+     * */
 
     @Override
     @Transactional
@@ -144,17 +150,56 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional
     public Set<ReviewResponseDto> findByCategory(final Long category) {
         //정렬
-        /**
-         * TODO:
-         * slice
-         * */
         Sort sort = Sort.by(Sort.Direction.DESC, "viewNum");
         List<Review> reviews = reviewRepository.findByTitleContainingAndDeletedFalse(category == 0 ? "" : CategoryEnum.findByValue(category).name(), sort);
         Set<ReviewResponseDto> responseDtoSet = new HashSet<>();
 
+        if(reviews.isEmpty())
+            throw new ReviewNotFoundException();
+
         for(Review review: reviews) {
+            responseDtoSet.add(
+                    modelMapper.map(review, ReviewResponseDto.class)
+            );
+        }
+
+        return responseDtoSet;
+    }
+
+    @Override
+    @Transactional
+    public Set<ReviewResponseDto> findByQuery(final String query) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "viewNum");
+
+        List<Review> reviewListByTitle = reviewRepository.findByTitleContainingAndDeletedFalse(query, sort);
+        List<Review> reviewListByContent = reviewRepository.findByContentContainingAndDeletedFalse(query, sort);
+        List<Review> reviewListByHospitalName = reviewRepository.findByHospitalNameContainingAndDeletedFalse(query, sort);
+        List<Review> reviewListByDoctorName = reviewRepository.findByDoctorNameContainingAndDeletedFalse(query, sort);
+
+        Set<ReviewResponseDto> responseDtoSet = new HashSet<>();
+
+        for(Review review: reviewListByTitle) {
+            responseDtoSet.add(
+                    modelMapper.map(review, ReviewResponseDto.class)
+            );
+        }
+
+        for(Review review: reviewListByContent) {
+            responseDtoSet.add(
+                    modelMapper.map(review, ReviewResponseDto.class)
+            );
+        }
+
+        for(Review review: reviewListByHospitalName) {
+            responseDtoSet.add(
+                    modelMapper.map(review, ReviewResponseDto.class)
+            );
+        }
+
+        for(Review review: reviewListByDoctorName) {
             responseDtoSet.add(
                     modelMapper.map(review, ReviewResponseDto.class)
             );

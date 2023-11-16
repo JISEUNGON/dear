@@ -16,4 +16,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * doctor
      * */
     public List<Review> findByTitleContainingAndDeletedFalse(String byValue, Sort sort);
+    public List<Review> findByContentContainingAndDeletedFalse(String byValue, Sort sort);
+    public List<Review> findByHospitalNameContainingAndDeletedFalse(String byValue, Sort sort);
+    public List<Review> findByDoctorNameContainingAndDeletedFalse(String byValue, Sort sort);
 }

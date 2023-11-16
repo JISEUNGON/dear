@@ -12,4 +12,6 @@ public interface ReviewService {
     public Review addReview(ReviewAddRequestDto dto, List<String> befores, List<String> afters);
 
     public Set<ReviewResponseDto> findByCategory(Long category);
+
+    public Set<ReviewResponseDto> findByQuery(String query);
 }

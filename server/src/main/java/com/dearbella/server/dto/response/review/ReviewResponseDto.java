@@ -10,5 +10,21 @@ import lombok.*;
 public class ReviewResponseDto {
     private Long reviewId;
     private String title;
-    private String rate;
+    private Float rate;
+
+    @Override
+    public int hashCode() {
+        return this.reviewId.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof ReviewResponseDto) {
+            ReviewResponseDto reviewResponseDto = (ReviewResponseDto) obj;
+
+            return this.hashCode() == reviewResponseDto.hashCode();
+        }
+
+        return false;
+    }
 }
