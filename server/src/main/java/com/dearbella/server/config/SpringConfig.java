@@ -53,8 +53,11 @@ public class SpringConfig {
     }
 
     @Bean
-    public ReviewService reviewService(ReviewRepository reviewRepository, ImageRepository imageRepository, MemberRepository memberRepository, DoctorRepository doctorRepository, HospitalRepository hospitalRepository, HospitalReviewRepository hospitalReviewRepository, DoctorReviewRepository doctorReviewRepository) {
-        return new ReviewServiceImpl(reviewRepository, imageRepository, memberRepository, doctorRepository, hospitalRepository, hospitalReviewRepository, doctorReviewRepository);
+    public ReviewService reviewService(ReviewRepository reviewRepository, ImageRepository imageRepository, MemberRepository memberRepository, DoctorRepository doctorRepository,
+                                       HospitalRepository hospitalRepository, HospitalReviewRepository hospitalReviewRepository,
+                                       DoctorReviewRepository doctorReviewRepository, ReviewLikeRepository reviewLikeRepository) {
+        return new ReviewServiceImpl(reviewRepository, imageRepository, memberRepository, doctorRepository, hospitalRepository,
+                hospitalReviewRepository, doctorReviewRepository, reviewLikeRepository);
     }
 
     @Bean

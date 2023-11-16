@@ -3,11 +3,13 @@ package com.dearbella.server.service.review;
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.review.ReviewAddRequestDto;
 import com.dearbella.server.dto.response.review.ReviewAddResponseDto;
+import com.dearbella.server.dto.response.review.ReviewDetailResponseDto;
 import com.dearbella.server.dto.response.review.ReviewResponseDto;
 import com.dearbella.server.enums.doctor.CategoryEnum;
 import com.dearbella.server.exception.doctor.DoctorIdNotFoundException;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
+import com.dearbella.server.exception.review.ReviewIdNotFoundException;
 import com.dearbella.server.exception.review.ReviewNotFoundException;
 import com.dearbella.server.repository.*;
 import com.dearbella.server.util.JwtUtil;
@@ -33,6 +35,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final HospitalRepository hospitalRepository;
     private final HospitalReviewRepository hospitalReviewRepository;
     private final DoctorReviewRepository doctorReviewRepository;
+    private final ReviewLikeRepository reviewLikeRepository;
 
     /**
      * TODO:
@@ -96,6 +99,8 @@ public class ReviewServiceImpl implements ReviewService {
                         .hospitalName(dto.getHospitalName())
                         .doctorId(dto.getDoctorId())
                         .doctorName(dto.getDoctorName())
+                        .befores(beforeImages)
+                        .afters(afterImages)
                         .rate(dto.getRate())
                         .viewNum(0L)
                         .build()
@@ -206,5 +211,30 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         return responseDtoSet;
+    }
+
+    @Override
+    @Transactional
+    public ReviewDetailResponseDto findById(final Long id) {
+        final Review review = reviewRepository.findById(id).orElseThrow(
+                () -> new ReviewIdNotFoundException(id)
+        );
+        Member member = memberRepository.findById(review.getMemberId()).orElseThrow(
+                () -> new MemberIdNotFoundException(review.getMemberId().toString())
+        );
+
+        ReviewDetailResponseDto response = modelMapper.map(review, ReviewDetailResponseDto.class);
+
+        response.setNickname(member.getNickname());
+        response.setProfileImg(member.getProfileImg());
+        /**
+         * 변경
+         * */
+        response.setCommentNum(0L);
+        response.setLikeNum(Long.valueOf(
+                reviewLikeRepository.findByReviewId(response.getReviewId()).size())
+        );
+
+        return response;
     }
 }

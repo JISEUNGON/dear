@@ -3,6 +3,7 @@ package com.dearbella.server.controller;
 import com.dearbella.server.domain.Banner;
 import com.dearbella.server.dto.response.banner.BannerDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
+import com.dearbella.server.dto.response.review.ReviewDetailResponseDto;
 import com.dearbella.server.dto.response.review.ReviewResponseDto;
 import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.review.ReviewService;
@@ -38,6 +39,9 @@ public class FreeController {
      *
      * */
 
+    /**
+     * Banner API
+     * */
     @ApiOperation("배너 조회")
     @GetMapping("/banner")
     public ResponseEntity<List<BannerResponseDto>> getBanners(@RequestParam Long location) {
@@ -50,6 +54,9 @@ public class FreeController {
         return ResponseEntity.ok(bannerService.findById(bannerId));
     }
 
+    /**
+     * Review Api
+     * */
     @ApiOperation("추천 리뷰 조회(카테고리 포함)")
     @GetMapping("/review/search/category")
     public ResponseEntity<Set<ReviewResponseDto>> getReviews(@RequestParam Long category) {
@@ -60,5 +67,11 @@ public class FreeController {
     @GetMapping("/review/search/query")
     public ResponseEntity<Set<ReviewResponseDto>> getReviews(@RequestParam String query) {
         return ResponseEntity.ok(reviewService.findByQuery(query));
+    }
+
+    @ApiOperation("review 상세 조회")
+    @GetMapping("/review/info")
+    public ResponseEntity<ReviewDetailResponseDto> getInfo(@RequestParam Long reviewId) {
+        return ResponseEntity.ok(reviewService.findById(reviewId));
     }
 }

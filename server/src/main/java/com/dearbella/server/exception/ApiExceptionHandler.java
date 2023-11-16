@@ -9,6 +9,7 @@ import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
 import com.dearbella.server.exception.member.MemberLoginEmailNotFoundException;
 import com.dearbella.server.exception.post.TagIdNotFoundException;
+import com.dearbella.server.exception.review.ReviewIdNotFoundException;
 import com.dearbella.server.exception.review.ReviewNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -96,6 +97,13 @@ public class ApiExceptionHandler {
     @ExceptionHandler(ReviewNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleException(ReviewNotFoundException ex) {
         ApiErrorResponse response = new ApiErrorResponse("DER-001", ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ReviewIdNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(ReviewIdNotFoundException ex) {
+        ApiErrorResponse response = new ApiErrorResponse("DER-0002", "Review id not exist: " + ex.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
