@@ -24,6 +24,16 @@ import java.util.List;
 public class FreeController {
     private final BannerService bannerService;
 
+    /**
+     * TODO
+     * 추천 의사 10명
+     * 추천 병원 15개
+     * 추천 리뷰 20개
+     * 광고 무제한
+     * 더보기에서 카테고리별 항목 10개씩
+     *
+     * */
+
     @ApiOperation("배너 조회")
     @GetMapping("/banner")
     public ResponseEntity<List<BannerResponseDto>> getBanners(@RequestParam Long location) {
