@@ -16,12 +16,18 @@ import javax.persistence.Table;
 @Table(name = "authority")
 public class Admin {
     @Id
-    @Column(name = "admin_id", length = 200, columnDefinition = "varchar")
+    @Column(name = "member_id", columnDefinition = "bigint")
+    private Long memberId;
+
+    @Column(name = "admin_id", length = 10, columnDefinition = "varchar")
     private String adminId;
 
-    @Column(name = "admin_password", length = 50, columnDefinition = "varchar")
+    @Column(name = "admin_password", length = 12, columnDefinition = "varchar")
     private String adminPassword;
 
     @Column(name = "hospital_name", length = 100, columnDefinition = "varchar")
     private String hospitalName;
+
+    @Column(name = "hospital_id", columnDefinition = "int")
+    private Long hospitalId;
 }
