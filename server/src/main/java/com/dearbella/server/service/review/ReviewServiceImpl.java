@@ -227,8 +227,20 @@ public class ReviewServiceImpl implements ReviewService {
 
         response.setNickname(member.getNickname());
         response.setProfileImg(member.getProfileImg());
+
+        if(review.getHospitalId().equals(0L))
+            response.setRate(review.getRate());
+        else
+        {
+            final Hospital hospital = hospitalRepository.findById(review.getHospitalId()).orElseThrow(
+                    () -> new HospitalIdNotFoundException(review.getHospitalId())
+            );
+
+            response.setRate(hospital.getTotalRate());
+        }
         /**
          * 변경
+         * hospital 별점으로 변경
          * */
         response.setCommentNum(0L);
         response.setLikeNum(Long.valueOf(
