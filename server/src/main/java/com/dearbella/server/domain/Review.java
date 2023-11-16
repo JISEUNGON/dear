@@ -48,4 +48,7 @@ public class Review {
 
     @Column(name = "rate", columnDefinition = "float")
     private Float rate;
+
+    @Column(name = "view_num", columnDefinition = "int")
+    private Long viewNum;
 }

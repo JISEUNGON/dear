@@ -3,7 +3,9 @@ package com.dearbella.server.controller;
 import com.dearbella.server.domain.Banner;
 import com.dearbella.server.dto.response.banner.BannerDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
+import com.dearbella.server.dto.response.review.ReviewResponseDto;
 import com.dearbella.server.service.banner.BannerService;
+import com.dearbella.server.service.review.ReviewService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/free")
@@ -23,6 +26,7 @@ import java.util.List;
 @Api(tags = {"권한 필요 없는 API"})
 public class FreeController {
     private final BannerService bannerService;
+    private final ReviewService reviewService;
 
     /**
      * TODO
@@ -44,5 +48,11 @@ public class FreeController {
     @GetMapping("/banner/info")
     public ResponseEntity<BannerDetailResponseDto> getBanner(@RequestParam Long bannerId) {
         return ResponseEntity.ok(bannerService.findById(bannerId));
+    }
+
+    @ApiOperation("추천 리뷰 조회(카테고리 포함)")
+    @GetMapping("/review/recommend")
+    public ResponseEntity<Set<ReviewResponseDto>> getReviews(@RequestParam Long category) {
+        return ResponseEntity.ok(reviewService.findByCategory(category));
     }
 }

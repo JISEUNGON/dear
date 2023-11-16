@@ -3,6 +3,8 @@ package com.dearbella.server.service.review;
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.review.ReviewAddRequestDto;
 import com.dearbella.server.dto.response.review.ReviewAddResponseDto;
+import com.dearbella.server.dto.response.review.ReviewResponseDto;
+import com.dearbella.server.enums.doctor.CategoryEnum;
 import com.dearbella.server.exception.doctor.DoctorIdNotFoundException;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
@@ -10,10 +12,13 @@ import com.dearbella.server.repository.*;
 import com.dearbella.server.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.dearbella.server.config.MapperConfig.modelMapper;
 
@@ -86,6 +91,7 @@ public class ReviewServiceImpl implements ReviewService {
                         .doctorId(dto.getDoctorId())
                         .doctorName(dto.getDoctorName())
                         .rate(dto.getRate())
+                        .viewNum(0L)
                         .build()
         );
 
@@ -135,5 +141,25 @@ public class ReviewServiceImpl implements ReviewService {
 
         return response;
          */
+    }
+
+    @Override
+    public Set<ReviewResponseDto> findByCategory(final Long category) {
+        //정렬
+        /**
+         * TODO:
+         * slice
+         * */
+        Sort sort = Sort.by(Sort.Direction.DESC, "viewNum");
+        List<Review> reviews = reviewRepository.findByTitleContainingAndDeletedFalse(category == 0 ? "" : CategoryEnum.findByValue(category).name(), sort);
+        Set<ReviewResponseDto> responseDtoSet = new HashSet<>();
+
+        for(Review review: reviews) {
+            responseDtoSet.add(
+                    modelMapper.map(review, ReviewResponseDto.class)
+            );
+        }
+
+        return responseDtoSet;
     }
 }
