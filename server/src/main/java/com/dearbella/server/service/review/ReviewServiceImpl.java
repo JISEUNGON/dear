@@ -241,6 +241,9 @@ public class ReviewServiceImpl implements ReviewService {
         /**
          * 변경
          * comment size 변경
+         * like 했는지 안 했는지
+         * 병원 정보 + 좋아요 여부
+         * 닥터 정보 + 좋아요 여부
          * */
         response.setCommentNum(0L);
         response.setLikeNum(Long.valueOf(
