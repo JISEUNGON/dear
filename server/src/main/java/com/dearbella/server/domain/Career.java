@@ -21,6 +21,6 @@ public class Career {
     @Column(name = "career_name", length = 100, columnDefinition = "varchar")
     private String careerName;
 
-    @Column(name = "career_date", columnDefinition = "date")
-    private LocalDate careerDate;
+    @Column(name = "career_date", length = 20, columnDefinition = "varchar")
+    private String careerDate;
 }

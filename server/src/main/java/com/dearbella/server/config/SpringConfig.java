@@ -43,8 +43,9 @@ public class SpringConfig {
     }
 
     @Bean
-    public DoctorService doctorService(DoctorRepository doctorRepository, CareerRepository careerRepository, IntroLinkRepository introLinkRepository, CategoryRepository categoryRepository) {
-        return new DoctorServiceImpl(doctorRepository, careerRepository, introLinkRepository, categoryRepository);
+    public DoctorService doctorService(DoctorRepository doctorRepository, CareerRepository careerRepository, IntroLinkRepository introLinkRepository,
+                                       CategoryRepository categoryRepository, HospitalDoctorRepository hospitalDoctorRepository) {
+        return new DoctorServiceImpl(doctorRepository, careerRepository, introLinkRepository, categoryRepository, hospitalDoctorRepository);
     }
 
     @Bean

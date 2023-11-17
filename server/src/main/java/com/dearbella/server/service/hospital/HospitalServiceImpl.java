@@ -4,6 +4,7 @@ import com.dearbella.server.domain.Hospital;
 import com.dearbella.server.domain.Image;
 import com.dearbella.server.domain.Infra;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
+import com.dearbella.server.dto.response.hospital.HospitalResponseDto;
 import com.dearbella.server.exception.banner.BannerInfraNotFoundException;
 import com.dearbella.server.repository.HospitalRepository;
 import com.dearbella.server.repository.ImageRepository;
@@ -83,5 +84,11 @@ public class HospitalServiceImpl implements HospitalService {
                         .dermatologist(0L)
                         .build()
         );
+    }
+
+    @Override
+    public List<HospitalResponseDto> getAll(final Long category, final Long sort) {
+        List<Hospital> hospitals;
+        return null;
     }
 }

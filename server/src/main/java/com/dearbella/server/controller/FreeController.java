@@ -3,9 +3,11 @@ package com.dearbella.server.controller;
 import com.dearbella.server.domain.Banner;
 import com.dearbella.server.dto.response.banner.BannerDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
+import com.dearbella.server.dto.response.hospital.HospitalResponseDto;
 import com.dearbella.server.dto.response.review.ReviewDetailResponseDto;
 import com.dearbella.server.dto.response.review.ReviewResponseDto;
 import com.dearbella.server.service.banner.BannerService;
+import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.review.ReviewService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +30,7 @@ import java.util.Set;
 public class FreeController {
     private final BannerService bannerService;
     private final ReviewService reviewService;
+    private final HospitalService hospitalService;
 
     /**
      * TODO
@@ -73,5 +76,11 @@ public class FreeController {
     @GetMapping("/review/info")
     public ResponseEntity<ReviewDetailResponseDto> getInfo(@RequestParam Long reviewId) {
         return ResponseEntity.ok(reviewService.findById(reviewId));
+    }
+
+    @ApiOperation("병원 정보")
+    @GetMapping("/hospital")
+    private ResponseEntity<List<HospitalResponseDto>> getHospitals(@RequestParam Long category, @RequestParam Long sort) {
+        return ResponseEntity.ok(hospitalService.getAll(category, sort));
     }
 }
