@@ -2,10 +2,13 @@ package com.dearbella.server.service.hospital;
 
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
+import com.dearbella.server.dto.response.doctor.DoctorResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalDetailResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalResponseDto;
+import com.dearbella.server.dto.response.review.ReviewResponseDto;
 import com.dearbella.server.exception.banner.BannerInfraNotFoundException;
 import com.dearbella.server.exception.doctor.DoctorByHospitalNameNotFoundException;
+import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
 import com.dearbella.server.repository.*;
 import com.dearbella.server.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +26,9 @@ public class HospitalServiceImpl implements HospitalService {
     private final ImageRepository imageRepository;
     private final InfraRepository infraRepository;
     private final HospitalMemberRepository hospitalMemberRepository;
-    private final HospitalReviewRepository hospitalReviewRepository;
     private final DoctorRepository doctorRepository;
+    private final ReviewRepository reviewRepository;
+    private final DoctorMemberRepository doctorMemberRepository;
 
     @Override
     public Hospital addHospital(final HospitalAddRequestDto dto, List<String> befores, List<String> afters, List<String> banners)  {
@@ -107,13 +111,13 @@ public class HospitalServiceImpl implements HospitalService {
         else
             hospitals = hospitalRepository.findAll(Sort.by(Sort.Direction.DESC, "totalRate"));
 
-        String memberIdString = JwtUtil.isExistAccessToken();
+        String accessToken = JwtUtil.isExistAccessToken();
         Long memberId;
 
-        if(memberIdString == null)
+        if(accessToken == null)
             memberId = 0L;
         else
-            memberId = Long.parseLong(memberIdString);
+            memberId = JwtUtil.getMemberId(accessToken);
 
         for(Hospital hospital: hospitals) {
             Boolean isEmpty = true;
@@ -131,7 +135,7 @@ public class HospitalServiceImpl implements HospitalService {
                                 .isMine(isEmpty ? false : true)
                                 .location(hospital.getHospitalLocation())
                                 .rate(hospital.getTotalRate())
-                                .reviewNum(Long.valueOf(hospitalReviewRepository.findHospitalReviewByHospitalId(hospital.getHospitalId()).size()))
+                                .reviewNum(Long.valueOf(reviewRepository.findByHospitalId(hospital.getHospitalId()).size()))
                                 .build()
                 );
             }
@@ -149,7 +153,7 @@ public class HospitalServiceImpl implements HospitalService {
                                         .isMine(isEmpty ? false : true)
                                         .location(hospital.getHospitalLocation())
                                         .rate(hospital.getTotalRate())
-                                        .reviewNum(Long.valueOf(hospitalReviewRepository.findHospitalReviewByHospitalId(hospital.getHospitalId()).size()))
+                                        .reviewNum(Long.valueOf(reviewRepository.findByHospitalId(hospital.getHospitalId()).size()))
                                         .build()
                         );
                     }
@@ -161,7 +165,75 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
+    @Transactional
     public HospitalDetailResponseDto findById(final Long id) {
-        return null;
+        HospitalDetailResponseDto response;
+        final Hospital hospital = hospitalRepository.findById(id).orElseThrow(
+                () -> new HospitalIdNotFoundException(id)
+        );
+        String accessToken = JwtUtil.isExistAccessToken();
+
+        Long memberId;
+
+        if(accessToken == null) {
+            memberId = 0L;
+        }
+        else
+        {
+            memberId = JwtUtil.getMemberId(accessToken);
+        }
+
+        Boolean isEmpty = hospitalMemberRepository.findByHospitalIdAndMemberId(hospital.getHospitalId(), memberId).isEmpty();
+
+        final List<Doctor> doctors = doctorRepository.findByHospitalName(hospital.getHospitalName());
+        List<DoctorResponseDto> doctorResponseDtos = new ArrayList<>();
+
+        for(Doctor doctor: doctors) {
+            Boolean empty = doctorMemberRepository.findByDoctorIdAndMemberId(doctor.getDoctorId(), memberId).isEmpty();
+
+            doctorResponseDtos.add(
+                    DoctorResponseDto.builder()
+                            .doctorId(doctor.getDoctorId())
+                            .doctorImage(doctor.getDoctorImage())
+                            .doctorName(doctor.getDoctorName())
+                            .intro(doctor.getDescription())
+                            .rate(doctor.getTotalRate())
+                            .parts(doctor.getCategories())
+                            .reviewNum(Long.valueOf(reviewRepository.findByDoctorId(doctor.getDoctorId()).size()))
+                            .isMine(empty ? false : true)
+                            .build()
+            );
+        }
+
+        List<ReviewResponseDto> reviewResponseDtos = new ArrayList<>();
+        final List<Review> byHospitalId = reviewRepository.findByHospitalId(hospital.getHospitalId());
+
+        for(Review review: byHospitalId) {
+            reviewResponseDtos.add(
+                    ReviewResponseDto.builder()
+                            .reviewId(review.getReviewId())
+                            .title(review.getTitle())
+                            .rate(review.getRate())
+                            .build()
+            );
+        }
+
+        response = HospitalDetailResponseDto.builder()
+                .hospitalId(hospital.getHospitalId())
+                .banners(hospital.getBanners())
+                .hospitalName(hospital.getHospitalName())
+                .location(hospital.getHospitalLocation())
+                .isMine(isEmpty ? false : true)
+                .rate(hospital.getTotalRate())
+                .reviewNum(Long.valueOf(reviewRepository.findByHospitalId(hospital.getHospitalId()).size()))
+                .intro(hospital.getDescription())
+                .infras(hospital.getInfras())
+                .doctors(doctorResponseDtos)
+                .befores(hospital.getBefore())
+                .afters(hospital.getAfter())
+                .reviews(reviewResponseDtos)
+                .build();
+
+        return response;
     }
 }

@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "infra")
@@ -14,7 +15,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Builder
-public class Infra {
+public class Infra implements Serializable {
     @Id
     @Column(name = "infra_num", columnDefinition = "int")
     private Long infraNum;

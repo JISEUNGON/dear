@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
@@ -19,4 +20,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     public List<Review> findByContentContainingAndDeletedFalse(String byValue, Sort sort);
     public List<Review> findByHospitalNameContainingAndDeletedFalse(String byValue, Sort sort);
     public List<Review> findByDoctorNameContainingAndDeletedFalse(String byValue, Sort sort);
+
+    public List<Review> findByHospitalId(Long hospitalId);
+
+    public List<Review> findByDoctorId(Long doctorId);
 }

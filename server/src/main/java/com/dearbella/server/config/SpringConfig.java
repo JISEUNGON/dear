@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 @Slf4j
 public class SpringConfig {
+
     @Bean
     public MemberService memberService(TokenRepository tokenRepository, MemberRepository memberRepository) {
         return new MemberServiceImpl(memberRepository, tokenRepository);
@@ -39,8 +40,8 @@ public class SpringConfig {
 
     @Bean
     public DoctorService doctorService(DoctorRepository doctorRepository, CareerRepository careerRepository, IntroLinkRepository introLinkRepository,
-                                       CategoryRepository categoryRepository, HospitalDoctorRepository hospitalDoctorRepository) {
-        return new DoctorServiceImpl(doctorRepository, careerRepository, introLinkRepository, categoryRepository, hospitalDoctorRepository);
+                                       CategoryRepository categoryRepository) {
+        return new DoctorServiceImpl(doctorRepository, careerRepository, introLinkRepository, categoryRepository);
     }
 
     @Bean
@@ -50,10 +51,10 @@ public class SpringConfig {
 
     @Bean
     public ReviewService reviewService(ReviewRepository reviewRepository, ImageRepository imageRepository, MemberRepository memberRepository, DoctorRepository doctorRepository,
-                                       HospitalRepository hospitalRepository, HospitalReviewRepository hospitalReviewRepository,
-                                       DoctorReviewRepository doctorReviewRepository, ReviewLikeRepository reviewLikeRepository) {
-        return new ReviewServiceImpl(reviewRepository, imageRepository, memberRepository, doctorRepository, hospitalRepository,
-                hospitalReviewRepository, doctorReviewRepository, reviewLikeRepository);
+                                       HospitalRepository hospitalRepository,
+                                       ReviewLikeRepository reviewLikeRepository) {
+        return new ReviewServiceImpl(reviewRepository, imageRepository, memberRepository, doctorRepository, hospitalRepository
+                , reviewLikeRepository);
     }
 
     @Bean
@@ -71,11 +72,20 @@ public class SpringConfig {
     public HospitalService hospitalService(
             final DoctorRepository doctorRepository,
             final HospitalMemberRepository hospitalMemberRepository,
-            final HospitalReviewRepository hospitalReviewRepository,
             final InfraRepository infraRepository,
             final ImageRepository imageRepository,
-            final HospitalRepository hospitalRepository
+            final HospitalRepository hospitalRepository,
+            final ReviewRepository reviewRepository,
+            final DoctorMemberRepository doctorMemberRepository
     ) {
-        return new HospitalServiceImpl(hospitalRepository, imageRepository, infraRepository ,hospitalMemberRepository, hospitalReviewRepository, doctorRepository);
+        return new HospitalServiceImpl(
+                hospitalRepository,
+                imageRepository,
+                infraRepository ,
+                hospitalMemberRepository,
+                doctorRepository,
+                reviewRepository,
+                doctorMemberRepository
+        );
     }
 }

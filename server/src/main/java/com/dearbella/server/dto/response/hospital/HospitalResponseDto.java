@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 public class HospitalResponseDto {
     private Long hospitalId;
+    private String hospitalImage;
     private String hospitalName;
     private String location;
     private Float rate;

@@ -112,6 +112,16 @@ public class JwtUtil {
         return body.get("id", Long.class);
     }
 
+    public static Long getMemberId(String accessToken) {
+        Claims body = Jwts.parserBuilder()
+                .setSigningKey(JWT_SECRET_KEY)
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody();
+
+        return body.get("id", Long.class);
+    }
+
     public static List<String> getRoles() {
         String token = JwtUtil.getAccessToken();
 

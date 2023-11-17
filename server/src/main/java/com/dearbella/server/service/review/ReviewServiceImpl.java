@@ -33,8 +33,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final MemberRepository memberRepository;
     private final DoctorRepository doctorRepository;
     private final HospitalRepository hospitalRepository;
-    private final HospitalReviewRepository hospitalReviewRepository;
-    private final DoctorReviewRepository doctorReviewRepository;
     private final ReviewLikeRepository reviewLikeRepository;
 
     /**
@@ -107,30 +105,16 @@ public class ReviewServiceImpl implements ReviewService {
         );
 
         if(doctor != null) {
-            final int num = doctorReviewRepository.findDoctorReviewByDoctorId(doctor.getDoctorId()).size();
+            final int num = reviewRepository.findByDoctorId(doctor.getDoctorId()).size();
 
             doctor.setTotalRate(((doctor.getTotalRate() * num + dto.getRate())) / (num + 1));
         }
 
         if(hospital != null) {
-            final int num = hospitalReviewRepository.findHospitalReviewByHospitalId(hospital.getHospitalId()).size();
+            final int num = reviewRepository.findByHospitalId(hospital.getHospitalId()).size();
 
             hospital.setTotalRate(((hospital.getTotalRate() * num + dto.getRate())) / (num + 1));
         }
-
-        doctorReviewRepository.save(
-                DoctorReview.builder()
-                        .reviewId(save.getReviewId())
-                        .doctorId(save.getDoctorId())
-                        .build()
-        );
-
-        hospitalReviewRepository.save(
-                HospitalReview.builder()
-                        .reviewId(save.getReviewId())
-                        .hospitalId(save.getHospitalId())
-                        .build()
-        );
 
         return save;
 

@@ -22,7 +22,6 @@ public class DoctorServiceImpl implements DoctorService {
     private final CareerRepository careerRepository;
     private final IntroLinkRepository introLinkRepository;
     private final CategoryRepository categoryRepository;
-    private final HospitalDoctorRepository hospitalDoctorRepository;
 
     /**
      * TODO
@@ -77,13 +76,6 @@ public class DoctorServiceImpl implements DoctorService {
                         .links(videos)
                         .sequence(dto.getSequence())
                         .totalRate(0.0F)
-                        .build()
-        );
-
-        hospitalDoctorRepository.save(
-                HospitalDoctor.builder()
-                        .doctorId(save.getDoctorId())
-                        .hospitalName(save.getHospitalName())
                         .build()
         );
 
