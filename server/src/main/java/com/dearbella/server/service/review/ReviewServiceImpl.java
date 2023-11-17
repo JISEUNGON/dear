@@ -50,7 +50,7 @@ public class ReviewServiceImpl implements ReviewService {
         Member member = memberRepository.findById(JwtUtil.getMemberId()).orElseThrow(
                 () -> new MemberIdNotFoundException(JwtUtil.getMemberId().toString())
         );
-        /*
+
         Doctor doctor = null;
         Hospital hospital = null;
 
@@ -65,7 +65,7 @@ public class ReviewServiceImpl implements ReviewService {
                     () -> new HospitalIdNotFoundException(dto.getHospitalId())
             );
         }
-        */
+
 
         for(String image: befores) {
             beforeImages.add(
@@ -106,6 +106,18 @@ public class ReviewServiceImpl implements ReviewService {
                         .build()
         );
 
+        if(doctor != null) {
+            final int num = doctorReviewRepository.findDoctorReviewByDoctorId(doctor.getDoctorId()).size();
+
+            doctor.setTotalRate(((doctor.getTotalRate() * num + dto.getRate())) / (num + 1));
+        }
+
+        if(hospital != null) {
+            final int num = hospitalReviewRepository.findHospitalReviewByHospitalId(hospital.getHospitalId()).size();
+
+            hospital.setTotalRate(((hospital.getTotalRate() * num + dto.getRate())) / (num + 1));
+        }
+
         doctorReviewRepository.save(
                 DoctorReview.builder()
                         .reviewId(save.getReviewId())
@@ -124,18 +136,6 @@ public class ReviewServiceImpl implements ReviewService {
 
         /*
         ReviewAddResponseDto response = modelMapper.map(save, ReviewAddResponseDto.class);
-
-        if(doctor != null) {
-            final int num = doctorReviewRepository.findDoctorReviewByDoctorId(doctor.getDoctorId()).size();
-
-            doctor.setTotalRate((doctor.getTotalRate() * num + dto.getRate()) / num + 1);
-        }
-
-        if(hospital != null) {
-            final int num = hospitalReviewRepository.findHospitalReviewByHospitalId(hospital.getHospitalId()).size();
-
-            hospital.setTotalRate((hospital.getTotalRate() * num + dto.getRate()) / num + 1);
-        }
 
         response.setMemberName(member.getNickname());
         response.setLikeNum(0L);
@@ -240,7 +240,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
         /**
          * 변경
-         * hospital 별점으로 변경
+         * comment size 변경
          * */
         response.setCommentNum(0L);
         response.setLikeNum(Long.valueOf(
