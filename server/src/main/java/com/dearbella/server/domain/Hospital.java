@@ -63,7 +63,7 @@ public class Hospital {
             joinColumns = {@JoinColumn(name = "hospital_id", referencedColumnName = "hospital_id")},
             inverseJoinColumns = {@JoinColumn(name = "image_id", referencedColumnName = "image_id")})
     @ApiModelProperty(example = "병원 전 사진")
-    private Set<Image> before;
+    private List<Image> before;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -71,7 +71,15 @@ public class Hospital {
             joinColumns = {@JoinColumn(name = "hospital_id", referencedColumnName = "hospital_id")},
             inverseJoinColumns = {@JoinColumn(name = "image_id", referencedColumnName = "image_id")})
     @ApiModelProperty(example = "병원 후 사")
-    private Set<Image> after;
+    private List<Image> after;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "hospital_banner",
+            joinColumns = {@JoinColumn(name = "hospital_id", referencedColumnName = "hospital_id")},
+            inverseJoinColumns = {@JoinColumn(name = "image_id", referencedColumnName = "image_id")})
+    @ApiModelProperty(example = "병원 배너 사진")
+    private List<Image> banners;
 
     @Column(name = "admin_id", columnDefinition = "bigint")
     private Long adminId;

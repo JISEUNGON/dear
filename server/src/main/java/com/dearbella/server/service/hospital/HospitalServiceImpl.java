@@ -2,6 +2,7 @@ package com.dearbella.server.service.hospital;
 
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
+import com.dearbella.server.dto.response.hospital.HospitalDetailResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalResponseDto;
 import com.dearbella.server.exception.banner.BannerInfraNotFoundException;
 import com.dearbella.server.exception.doctor.DoctorByHospitalNameNotFoundException;
@@ -25,20 +26,11 @@ public class HospitalServiceImpl implements HospitalService {
     private final HospitalReviewRepository hospitalReviewRepository;
     private final DoctorRepository doctorRepository;
 
-    @PostConstruct
-    public void main() {
-        log.info("called");
-    }
-
-    /**
-     * TODO
-     * 병원 시설 저장
-     * */
-
     @Override
-    public Hospital addHospital(final HospitalAddRequestDto dto, List<String> befores, List<String> afters)  {
-        Set<Image> beforeImages = new HashSet<>();
-        Set<Image> afterImages = new HashSet<>();
+    public Hospital addHospital(final HospitalAddRequestDto dto, List<String> befores, List<String> afters, List<String> banners)  {
+        List<Image> beforeImages = new ArrayList<>();
+        List<Image> afterImages = new ArrayList<>();
+        List<Image> bannerImages = new ArrayList<>();
         Set<Infra> infraList = new HashSet<>();
 
         for(String image: befores) {
@@ -63,6 +55,17 @@ public class HospitalServiceImpl implements HospitalService {
             );
         }
 
+        for(String image: banners) {
+            bannerImages.add(
+                    imageRepository.save(
+                            Image.builder()
+                                    .imageUrl(image)
+                                    .memberId(JwtUtil.getMemberId())
+                                    .build()
+                    )
+            );
+        }
+
         for(Long tag: dto.getInfras()) {
             infraList.add(
                     infraRepository.findById(tag).orElseThrow(
@@ -76,6 +79,7 @@ public class HospitalServiceImpl implements HospitalService {
                         .adminId(JwtUtil.getMemberId())
                         .after(afterImages)
                         .before(beforeImages)
+                        .banners(bannerImages)
                         .hospitalName(dto.getName())
                         .description(dto.getDescription())
                         .hospitalLocation(dto.getLocation())
@@ -94,7 +98,6 @@ public class HospitalServiceImpl implements HospitalService {
     @Override
     @Transactional
     public List<HospitalResponseDto> getAll(final Long category, final Long sort) {
-        log.error("hospital is null");
         List<Hospital> hospitals;
         List<HospitalResponseDto> responseDtos = new ArrayList<>();
 
@@ -141,6 +144,7 @@ public class HospitalServiceImpl implements HospitalService {
                         responseDtos.add(
                                 HospitalResponseDto.builder()
                                         .hospitalId(hospital.getHospitalId())
+                                        .hospitalImage(hospital.getBanners().get(0).getImageUrl())
                                         .hospitalName(hospital.getHospitalName())
                                         .isMine(isEmpty ? false : true)
                                         .location(hospital.getHospitalLocation())
@@ -154,5 +158,10 @@ public class HospitalServiceImpl implements HospitalService {
         }
 
         return responseDtos;
+    }
+
+    @Override
+    public HospitalDetailResponseDto findById(final Long id) {
+        return null;
     }
 }

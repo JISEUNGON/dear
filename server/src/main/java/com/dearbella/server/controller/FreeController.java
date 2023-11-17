@@ -2,6 +2,7 @@ package com.dearbella.server.controller;
 
 import com.dearbella.server.dto.response.banner.BannerDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
+import com.dearbella.server.dto.response.hospital.HospitalDetailResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalResponseDto;
 import com.dearbella.server.dto.response.review.ReviewDetailResponseDto;
 import com.dearbella.server.dto.response.review.ReviewResponseDto;
@@ -83,9 +84,18 @@ public class FreeController {
         return ResponseEntity.ok(reviewService.findById(reviewId));
     }
 
+    /**
+     * 병원
+     * */
     @ApiOperation("병원 전체 리스트")
     @GetMapping("/hospital/all")
     public ResponseEntity<List<HospitalResponseDto>> getHospitals(@RequestParam Long category, @RequestParam Long sort) {
         return ResponseEntity.ok(hospitalService.getAll(category, sort));
+    }
+
+    @ApiOperation("병원 상세 정보")
+    @GetMapping("/hospital/info")
+    public ResponseEntity<HospitalDetailResponseDto> getHospitalInfo(@RequestParam Long id) {
+        return ResponseEntity.ok(hospitalService.findById(id));
     }
 }

@@ -43,6 +43,7 @@ public class AdminController {
     public ResponseEntity<Hospital> saveHospital(@ModelAttribute HospitalAddRequestDto dto) throws IOException {
         List<String> befores = new ArrayList<>();
         List<String> afters = new ArrayList<>();
+        List<String> banners = new ArrayList<>();
 
         for(MultipartFile before: dto.getBefores()) {
             befores.add(
@@ -56,7 +57,13 @@ public class AdminController {
             );
         }
 
-        return ResponseEntity.ok(hospitalService.addHospital(dto, befores, afters));
+        for(MultipartFile banner: dto.getBanners()) {
+            banners.add(
+                    s3UploadService.upload(banner, "/dearbella/hospital/banner", false)
+            );
+        }
+
+        return ResponseEntity.ok(hospitalService.addHospital(dto, befores, afters, banners));
     }
 
     @ApiOperation("의사 정보 넣기")

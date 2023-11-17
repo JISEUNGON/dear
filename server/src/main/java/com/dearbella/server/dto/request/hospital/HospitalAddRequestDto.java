@@ -21,6 +21,7 @@ public class HospitalAddRequestDto {
     private List<Long> infras;
     private List<MultipartFile> befores;
     private List<MultipartFile> afters;
+    private List<MultipartFile> banners;
     private Long sequence;
     private Long anesthesiologist;
     private Long plasticSurgeon;
