@@ -1,6 +1,5 @@
 package com.dearbella.server.controller;
 
-import com.dearbella.server.domain.Banner;
 import com.dearbella.server.dto.response.banner.BannerDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalResponseDto;
@@ -11,8 +10,8 @@ import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.review.ReviewService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,13 +23,19 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/free")
-@RequiredArgsConstructor
 @Slf4j
 @Api(tags = {"권한 필요 없는 API"})
 public class FreeController {
     private final BannerService bannerService;
     private final ReviewService reviewService;
     private final HospitalService hospitalService;
+
+    @Autowired
+    public FreeController(final BannerService bannerService, final ReviewService reviewService, final HospitalService hospitalService) {
+        this.bannerService = bannerService;
+        this.reviewService = reviewService;
+        this.hospitalService = hospitalService;
+    }
 
     /**
      * TODO
@@ -78,9 +83,9 @@ public class FreeController {
         return ResponseEntity.ok(reviewService.findById(reviewId));
     }
 
-    @ApiOperation("병원 정보")
-    @GetMapping("/hospital")
-    private ResponseEntity<List<HospitalResponseDto>> getHospitals(@RequestParam Long category, @RequestParam Long sort) {
+    @ApiOperation("병원 전체 리스트")
+    @GetMapping("/hospital/all")
+    public ResponseEntity<List<HospitalResponseDto>> getHospitals(@RequestParam Long category, @RequestParam Long sort) {
         return ResponseEntity.ok(hospitalService.getAll(category, sort));
     }
 }

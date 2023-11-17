@@ -33,11 +33,6 @@ public class SpringConfig {
     }
 
     @Bean
-    public HospitalService hospitalService(HospitalRepository hospitalRepository, ImageRepository imageRepository, InfraRepository infraRepository) {
-        return new HospitalServiceImpl(hospitalRepository, imageRepository, infraRepository);
-    }
-
-    @Bean
     public S3UploadService s3UploadService(AmazonS3 amazonS3Client) {
         return new S3UploadServiceImpl(amazonS3Client);
     }
@@ -70,5 +65,17 @@ public class SpringConfig {
     @Bean
     public InquiryService inquiryService(InquiryRepository inquiryRepository) {
         return new InquiryServiceImpl(inquiryRepository);
+    }
+
+    @Bean
+    public HospitalService hospitalService(
+            final DoctorRepository doctorRepository,
+            final HospitalMemberRepository hospitalMemberRepository,
+            final HospitalReviewRepository hospitalReviewRepository,
+            final InfraRepository infraRepository,
+            final ImageRepository imageRepository,
+            final HospitalRepository hospitalRepository
+    ) {
+        return new HospitalServiceImpl(hospitalRepository, imageRepository, infraRepository ,hospitalMemberRepository, hospitalReviewRepository, doctorRepository);
     }
 }

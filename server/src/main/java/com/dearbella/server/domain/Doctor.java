@@ -69,4 +69,14 @@ public class Doctor {
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    public Boolean contains(Long category) {
+        for(Category category1 : categories) {
+            if(category1.getCategoryNum() == category) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

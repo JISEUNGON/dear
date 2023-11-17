@@ -80,6 +80,7 @@ public class SecurityConfig {
                 .antMatchers("/review/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .antMatchers("/community/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .antMatchers("/inquiry/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
                 .anyRequest().denyAll()
                 .and().build();
     }

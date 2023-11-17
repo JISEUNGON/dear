@@ -154,6 +154,21 @@ public class JwtUtil {
         return token;
     }
 
+    public static String isExistAccessToken() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = null;
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            token = authorizationHeader.substring(7);
+
+            return token;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     public static String getRefreshToken() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String authorizationHeader = request.getHeader("RefreshToken");
