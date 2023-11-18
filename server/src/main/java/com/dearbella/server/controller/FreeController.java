@@ -1,7 +1,5 @@
 package com.dearbella.server.controller;
 
-import com.dearbella.server.domain.Category;
-import com.dearbella.server.domain.Doctor;
 import com.dearbella.server.dto.request.doctor.DoctorDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
@@ -14,6 +12,7 @@ import com.dearbella.server.repository.DoctorRepository;
 import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.doctor.DoctorService;
 import com.dearbella.server.service.hospital.HospitalService;
+import com.dearbella.server.service.inquiry.InquiryService;
 import com.dearbella.server.service.review.ReviewService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,10 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
@@ -40,6 +36,7 @@ public class FreeController {
     private final ReviewService reviewService;
     private final HospitalService hospitalService;
     private final DoctorService doctorService;
+
 
     /**
      * TODO

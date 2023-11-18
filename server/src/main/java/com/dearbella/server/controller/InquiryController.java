@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/inquiry")
-@RequiredArgsConstructor
 @Slf4j
-@Api(tags = {"문의 API"})
+@RequiredArgsConstructor
+@Api(tags = {"문의하기 API"})
 public class InquiryController {
     private final InquiryService inquiryService;
 
