@@ -1,5 +1,6 @@
 package com.dearbella.server.controller;
 
+import com.dearbella.server.domain.MemberIp;
 import com.dearbella.server.dto.request.doctor.DoctorDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
@@ -12,13 +13,12 @@ import com.dearbella.server.repository.DoctorRepository;
 import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.doctor.DoctorService;
 import com.dearbella.server.service.hospital.HospitalService;
-import com.dearbella.server.service.inquiry.InquiryService;
+import com.dearbella.server.service.ip.IpService;
 import com.dearbella.server.service.review.ReviewService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +36,7 @@ public class FreeController {
     private final ReviewService reviewService;
     private final HospitalService hospitalService;
     private final DoctorService doctorService;
+    private final IpService ipService;
 
 
     /**
@@ -112,5 +113,10 @@ public class FreeController {
     @GetMapping("/doctor/detail")
     public ResponseEntity<DoctorDetailResponseDto> getDoctor(@RequestParam Long doctorId) {
         return ResponseEntity.ok(doctorService.findById(doctorId));
+    }
+
+    @GetMapping("/ip")
+    public ResponseEntity<MemberIp> getIp() {
+        return ResponseEntity.ok(ipService.getIp());
     }
 }
