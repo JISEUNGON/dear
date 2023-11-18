@@ -1,16 +1,22 @@
 package com.dearbella.server.controller;
 
+import com.dearbella.server.domain.Category;
+import com.dearbella.server.domain.Doctor;
 import com.dearbella.server.dto.response.banner.BannerDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
+import com.dearbella.server.dto.response.doctor.DoctorResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalDetailResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalResponseDto;
 import com.dearbella.server.dto.response.review.ReviewDetailResponseDto;
 import com.dearbella.server.dto.response.review.ReviewResponseDto;
+import com.dearbella.server.repository.DoctorRepository;
 import com.dearbella.server.service.banner.BannerService;
+import com.dearbella.server.service.doctor.DoctorService;
 import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.review.ReviewService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,18 +31,14 @@ import java.util.Set;
 @RestController
 @RequestMapping("/free")
 @Slf4j
+@RequiredArgsConstructor
 @Api(tags = {"권한 필요 없는 API"})
 public class FreeController {
+    private final DoctorRepository doctorRepository;
     private final BannerService bannerService;
     private final ReviewService reviewService;
     private final HospitalService hospitalService;
-
-    @Autowired
-    public FreeController(final BannerService bannerService, final ReviewService reviewService, final HospitalService hospitalService) {
-        this.bannerService = bannerService;
-        this.reviewService = reviewService;
-        this.hospitalService = hospitalService;
-    }
+    private final DoctorService doctorService;
 
     /**
      * TODO
@@ -97,5 +99,14 @@ public class FreeController {
     @GetMapping("/hospital/info")
     public ResponseEntity<HospitalDetailResponseDto> getHospitalInfo(@RequestParam Long id) {
         return ResponseEntity.ok(hospitalService.findById(id));
+    }
+
+    /**
+     * 원장
+     * */
+    @ApiOperation("원장 리스트 조회")
+    @GetMapping("/doctor/all")
+    public ResponseEntity<List<DoctorResponseDto>> getDoctors(Long category, Long sort) {
+        return ResponseEntity.ok(doctorService.findAll(category, sort));
     }
 }

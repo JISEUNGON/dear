@@ -106,10 +106,10 @@ public class HospitalServiceImpl implements HospitalService {
         List<HospitalResponseDto> responseDtos = new ArrayList<>();
 
         if(sort == 0) {
-            hospitals = hospitalRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+            hospitals = hospitalRepository.findAll(Sort.by(Sort.Direction.DESC, "totalRate"));
         }
         else
-            hospitals = hospitalRepository.findAll(Sort.by(Sort.Direction.DESC, "totalRate"));
+            hospitals = hospitalRepository.findAll(Sort.by(Sort.Direction.DESC, "viewNum"));
 
         String accessToken = JwtUtil.isExistAccessToken();
         Long memberId;
@@ -201,6 +201,7 @@ public class HospitalServiceImpl implements HospitalService {
                             .parts(doctor.getCategories())
                             .reviewNum(Long.valueOf(reviewRepository.findByDoctorId(doctor.getDoctorId()).size()))
                             .isMine(empty ? false : true)
+                            .hospitalName(hospital.getHospitalName())
                             .build()
             );
         }

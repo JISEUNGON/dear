@@ -20,4 +20,5 @@ public class DoctorResponseDto {
     private List<Category> parts;
     private Float rate;
     private Long reviewNum;
+    private String hospitalName;
 }

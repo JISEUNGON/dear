@@ -64,6 +64,9 @@ public class Doctor {
     @ApiModelProperty(example = "영상 링크 주")
     private List<IntroLink> links;
 
+    @Column(name = "view_num", columnDefinition = "int")
+    private Long viewNum;
+
     @Column(name = "admin_id", columnDefinition = "bigint")
     private Long adminId;
 

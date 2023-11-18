@@ -81,6 +81,9 @@ public class Hospital {
     @ApiModelProperty(example = "병원 배너 사진")
     private List<Image> banners;
 
+    @Column(name = "view_num", columnDefinition = "int")
+    private Long viewNum;
+
     @Column(name = "admin_id", columnDefinition = "bigint")
     private Long adminId;
 

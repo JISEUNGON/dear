@@ -2,12 +2,14 @@ package com.dearbella.server.service.doctor;
 
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
+import com.dearbella.server.dto.response.doctor.DoctorResponseDto;
 import com.dearbella.server.enums.doctor.CategoryEnum;
 import com.dearbella.server.exception.doctor.CategoryNotFoundException;
 import com.dearbella.server.repository.*;
 import com.dearbella.server.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -22,6 +24,8 @@ public class DoctorServiceImpl implements DoctorService {
     private final CareerRepository careerRepository;
     private final IntroLinkRepository introLinkRepository;
     private final CategoryRepository categoryRepository;
+    private final DoctorMemberRepository doctorMemberRepository;
+    private final ReviewRepository reviewRepository;
 
     /**
      * TODO
@@ -80,5 +84,56 @@ public class DoctorServiceImpl implements DoctorService {
         );
 
         return save;
+    }
+
+    @Override
+    @Transactional
+    public List<DoctorResponseDto> findAll(final Long category, final Long sort) {
+        Sort sort1;
+        List<DoctorResponseDto> responseDtoList = new ArrayList<>();
+
+        if(sort == 0L) {
+            sort1 = Sort.by(Sort.Direction.DESC, "totalRate");
+        }
+        else
+            sort1 = Sort.by(Sort.Direction.DESC, "viewNum");
+
+        final List<Doctor> byCategories;
+
+        if(category > 0) {
+            byCategories = doctorRepository.findByCategories(
+                    Category.builder()
+                            .categoryNum(category)
+                            .categoryName(CategoryEnum.findByValue(category).name())
+                            .build(), sort1
+            );
+        }
+        else
+        {
+            byCategories = doctorRepository.findAll(sort1);
+        }
+
+        Long memberId = JwtUtil.isExistAccessToken() == null ? 0L : JwtUtil.getMemberId(JwtUtil.isExistAccessToken());
+
+        for(Doctor doctor: byCategories) {
+            final boolean empty = doctorMemberRepository.findByDoctorIdAndMemberId(doctor.getDoctorId(), memberId).isEmpty();
+            final int size = reviewRepository.findByDoctorId(doctor.getDoctorId()).size();
+
+            responseDtoList.add(
+                    DoctorResponseDto.builder()
+                            .isMine(empty ? false : true)
+                            .doctorId(doctor.getDoctorId())
+                            .reviewNum(Long.valueOf(size))
+                            .parts(doctor.getCategories())
+                            .rate(doctor.getTotalRate())
+                            .intro(doctor.getDescription())
+                            .doctorName(doctor.getDoctorName())
+                            .doctorImage(doctor.getDoctorImage())
+                            .hospitalName(doctor.getHospitalName())
+                            .build()
+            );
+        }
+
+        return responseDtoList;
     }
 }
