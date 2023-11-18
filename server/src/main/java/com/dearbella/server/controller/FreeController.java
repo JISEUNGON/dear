@@ -2,6 +2,7 @@ package com.dearbella.server.controller;
 
 import com.dearbella.server.domain.Category;
 import com.dearbella.server.domain.Doctor;
+import com.dearbella.server.dto.request.doctor.DoctorDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
 import com.dearbella.server.dto.response.doctor.DoctorResponseDto;
@@ -108,5 +109,11 @@ public class FreeController {
     @GetMapping("/doctor/all")
     public ResponseEntity<List<DoctorResponseDto>> getDoctors(Long category, Long sort) {
         return ResponseEntity.ok(doctorService.findAll(category, sort));
+    }
+
+    @ApiOperation("원장 디테일")
+    @GetMapping("/doctor/detail")
+    public ResponseEntity<DoctorDetailResponseDto> getDoctor(@RequestParam Long doctorId) {
+        return ResponseEntity.ok(doctorService.findById(doctorId));
     }
 }

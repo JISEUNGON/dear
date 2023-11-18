@@ -2,9 +2,13 @@ package com.dearbella.server.service.doctor;
 
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
+import com.dearbella.server.dto.request.doctor.DoctorDetailResponseDto;
 import com.dearbella.server.dto.response.doctor.DoctorResponseDto;
+import com.dearbella.server.dto.response.review.ReviewPreviewResponseDto;
 import com.dearbella.server.enums.doctor.CategoryEnum;
 import com.dearbella.server.exception.doctor.CategoryNotFoundException;
+import com.dearbella.server.exception.doctor.DoctorIdNotFoundException;
+import com.dearbella.server.exception.member.MemberIdNotFoundException;
 import com.dearbella.server.repository.*;
 import com.dearbella.server.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +30,7 @@ public class DoctorServiceImpl implements DoctorService {
     private final CategoryRepository categoryRepository;
     private final DoctorMemberRepository doctorMemberRepository;
     private final ReviewRepository reviewRepository;
+    private final MemberRepository memberRepository;
 
     /**
      * TODO
@@ -135,5 +140,64 @@ public class DoctorServiceImpl implements DoctorService {
         }
 
         return responseDtoList;
+    }
+
+    @Override
+    @Transactional
+    public DoctorDetailResponseDto findById(final Long doctorId) {
+        final Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(
+                () -> new DoctorIdNotFoundException(doctorId)
+        );
+
+        Long memberId = JwtUtil.isExistAccessToken() == null ? 0L : JwtUtil.getMemberId(JwtUtil.isExistAccessToken());
+
+        final boolean empty = doctorMemberRepository.findByDoctorIdAndMemberId(doctorId, memberId).isEmpty();
+
+        final List<Review> byDoctorId = reviewRepository.findByDoctorId(doctorId);
+
+        List<ReviewPreviewResponseDto> reviews = new ArrayList<>();
+
+        for(Review review: byDoctorId) {
+            final Member member = memberRepository.findById(review.getMemberId()).orElseThrow(
+                    () -> new MemberIdNotFoundException(review.getMemberId().toString())
+            );
+
+            final boolean empty1 = doctorMemberRepository.findByDoctorIdAndMemberId(doctorId, member.getMemberId()).isEmpty();
+
+            reviews.add(
+                    ReviewPreviewResponseDto.builder()
+                            .reviewId(review.getReviewId())
+                            .after(review.getAfters().get(0))
+                            .before(review.getBefores().get(0))
+                            .memberName(member.getNickname())
+                            .memberImage(member.getProfileImg())
+                            .commentNum(0L)
+                            .isLike(empty1 ? false : true)
+                            .likeNum(0L)
+                            .updatedAt(review.getUpdatedAt())
+                            .hospitalName(review.getHospitalName())
+                            .rate(review.getRate())
+                            .title(review.getTitle())
+                            .build()
+            );
+        }
+
+        DoctorDetailResponseDto response = DoctorDetailResponseDto.builder()
+                .doctorId(doctorId)
+                .careers(doctor.getCareer())
+                .rate(doctor.getTotalRate())
+                .description(doctor.getDescription())
+                .doctorName(doctor.getDoctorName())
+                .hospitalName(doctor.getHospitalName())
+                .parts(doctor.getCategories())
+                .videos(doctor.getLinks())
+                .doctorImage(doctor.getDoctorImage())
+                .isMine(empty ? false : true)
+                .reviewNum(Long.valueOf(byDoctorId.size()))
+                .reviews(reviews)
+                .build();
+
+
+        return response;
     }
 }
