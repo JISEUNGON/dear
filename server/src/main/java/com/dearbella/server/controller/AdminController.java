@@ -70,7 +70,7 @@ public class AdminController {
     @PostMapping(value = "/doctor/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Transactional
     public ResponseEntity<Doctor> saveDoctor(@ModelAttribute DoctorAddRequestDto dto) throws IOException {
-        final String upload = s3UploadService.upload(dto.getImage(), "/dearbella/doctor/", false);
+        final String upload = s3UploadService.upload(dto.getImage(), "/dearbella/doctor", false);
 
         return ResponseEntity.ok(doctorService.addDoctor(dto, upload));
     }
