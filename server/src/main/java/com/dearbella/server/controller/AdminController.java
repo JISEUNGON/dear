@@ -47,19 +47,19 @@ public class AdminController {
 
         for(MultipartFile before: dto.getBefores()) {
             befores.add(
-                    s3UploadService.upload(before, "/dearbella/hospital/before", false)
+                    s3UploadService.upload(before, "dearbella/hospital/before", false)
             );
         }
 
         for(MultipartFile after: dto.getAfters()) {
             afters.add(
-                    s3UploadService.upload(after, "/dearbella/hospital/after", false)
+                    s3UploadService.upload(after, "dearbella/hospital/after", false)
             );
         }
 
         for(MultipartFile banner: dto.getBanners()) {
             banners.add(
-                    s3UploadService.upload(banner, "/dearbella/hospital/banner", false)
+                    s3UploadService.upload(banner, "dearbella/hospital/banner", false)
             );
         }
 
@@ -70,7 +70,7 @@ public class AdminController {
     @PostMapping(value = "/doctor/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Transactional
     public ResponseEntity<Doctor> saveDoctor(@ModelAttribute DoctorAddRequestDto dto) throws IOException {
-        final String upload = s3UploadService.upload(dto.getImage(), "/dearbella/doctor", false);
+        final String upload = s3UploadService.upload(dto.getImage(), "dearbella/doctor", false);
 
         return ResponseEntity.ok(doctorService.addDoctor(dto, upload));
     }
@@ -83,7 +83,7 @@ public class AdminController {
         List<String> detailImages = new ArrayList<>();
 
         for(MultipartFile file: dto.getBannerImages()) {
-            mainImages.add(s3UploadService.upload(file, "/dearbella/banner/main", false));
+            mainImages.add(s3UploadService.upload(file, "dearbella/banner/main", false));
         }
 
         for(MultipartFile file: dto.getDetailImages()) {

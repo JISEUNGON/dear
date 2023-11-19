@@ -40,13 +40,13 @@ public class ReviewController {
 
         for(MultipartFile file: dto.getBefores()) {
             befores.add(
-                    s3UploadService.upload(file, "/dearbella/review/before", false)
+                    s3UploadService.upload(file, "dearbella/review/before", false)
             );
         }
 
         for(MultipartFile file: dto.getBefores()) {
             afters.add(
-                    s3UploadService.upload(file, "/dearbella/review/after", false)
+                    s3UploadService.upload(file, "dearbella/review/after", false)
             );
         }
 
