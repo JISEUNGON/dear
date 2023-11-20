@@ -115,6 +115,12 @@ public class FreeController {
         return ResponseEntity.ok(doctorService.findAll(category, sort));
     }
 
+    @ApiOperation("의사 전체 리스트(검색)")
+    @GetMapping("/doctor/search")
+    public ResponseEntity<Set<DoctorResponseDto>> findDoctorsByQuery(@RequestParam String query) {
+        return ResponseEntity.ok(doctorService.findByQuery(query));
+    }
+
     @ApiOperation("원장 디테일")
     @GetMapping("/doctor/detail")
     public ResponseEntity<DoctorDetailResponseDto> getDoctor(@RequestParam Long doctorId) {

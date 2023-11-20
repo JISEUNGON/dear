@@ -266,6 +266,25 @@ public class HospitalServiceImpl implements HospitalService {
             );
         }
 
+        for (Hospital hospital : hospitalRepository.findByDescriptionContainingAndDeletedFalse(query)) {
+            final Hospital h = hospitalRepository.findById(hospital.getHospitalId()).orElseThrow(
+                    () -> new HospitalIdNotFoundException(hospital.getHospitalId())
+            );
+            final List<Review> byHospitalId = reviewRepository.findByHospitalId(hospital.getHospitalId());
+
+            responseDtoList.add(
+                    HospitalResponseDto.builder()
+                            .hospitalImage(h.getBanners().size() > 0 ? h.getBanners().get(0).getImageUrl() : null)
+                            .reviewNum(Long.valueOf(byHospitalId.size()))
+                            .rate(hospital.getTotalRate())
+                            .location(hospital.getHospitalLocation())
+                            .isMine(false)
+                            .hospitalId(h.getHospitalId())
+                            .hospitalName(hospital.getHospitalName())
+                            .build()
+            );
+        }
+
         if(responseDtoList.size() == 0)
             throw new HospitalResponseNullException();
 

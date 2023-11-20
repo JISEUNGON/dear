@@ -18,8 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -200,5 +199,71 @@ public class DoctorServiceImpl implements DoctorService {
 
 
         return response;
+    }
+
+    @Override
+    @Transactional
+    public Set<DoctorResponseDto> findByQuery(final String query) {
+        Set<DoctorResponseDto> doctorResponseDtos = new HashSet<>();
+
+        for(Doctor doctor: doctorRepository.findByHospitalNameContainingAndDeletedFalse(query)) {
+            final List<Review> byDoctorId = reviewRepository.findByDoctorId(doctor.getDoctorId());
+
+            doctorResponseDtos.add(
+                    DoctorResponseDto.builder()
+                            .doctorId(doctor.getDoctorId())
+                            .hospitalName(doctor.getHospitalName())
+                            .doctorImage(doctor.getDoctorImage())
+                            .isMine(false)
+                            .rate(doctor.getTotalRate())
+                            .reviewNum(Long.valueOf(byDoctorId.size()))
+                            .intro(doctor.getDescription())
+                            .parts(doctor.getCategories())
+                            .doctorName(doctor.getDoctorName())
+                            .build()
+            );
+        }
+
+        for(Doctor doctor: doctorRepository.findByDescriptionAndDeletedFalse(query)) {
+            final List<Review> byDoctorId = reviewRepository.findByDoctorId(doctor.getDoctorId());
+
+            doctorResponseDtos.add(
+                    DoctorResponseDto.builder()
+                            .doctorId(doctor.getDoctorId())
+                            .hospitalName(doctor.getHospitalName())
+                            .doctorImage(doctor.getDoctorImage())
+                            .isMine(false)
+                            .rate(doctor.getTotalRate())
+                            .reviewNum(Long.valueOf(byDoctorId.size()))
+                            .intro(doctor.getDescription())
+                            .parts(doctor.getCategories())
+                            .doctorName(doctor.getDoctorName())
+                            .build()
+            );
+        }
+
+        final Optional<Category> byCategoryName = categoryRepository.findByCategoryName(query);
+
+        if(!byCategoryName.isEmpty()) {
+            for(Doctor doctor: doctorRepository.findByCategoriesAndDeletedFalse(byCategoryName.get())) {
+                final List<Review> byDoctorId = reviewRepository.findByDoctorId(doctor.getDoctorId());
+
+                doctorResponseDtos.add(
+                        DoctorResponseDto.builder()
+                                .doctorId(doctor.getDoctorId())
+                                .hospitalName(doctor.getHospitalName())
+                                .doctorImage(doctor.getDoctorImage())
+                                .isMine(false)
+                                .rate(doctor.getTotalRate())
+                                .reviewNum(Long.valueOf(byDoctorId.size()))
+                                .intro(doctor.getDescription())
+                                .parts(doctor.getCategories())
+                                .doctorName(doctor.getDoctorName())
+                                .build()
+                );
+            }
+        }
+
+        return doctorResponseDtos;
     }
 }
