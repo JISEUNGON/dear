@@ -73,6 +73,9 @@ public class Doctor {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Column(name = "deleted", columnDefinition = "tinyint")
+    private Boolean deleted;
+
     public Boolean contains(Long category) {
         for(Category category1 : categories) {
             if(category1.getCategoryNum() == category) {

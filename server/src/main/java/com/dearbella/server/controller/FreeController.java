@@ -94,6 +94,12 @@ public class FreeController {
         return ResponseEntity.ok(hospitalService.getAll(category, sort));
     }
 
+    @ApiOperation("병원 전체 리스트(검색)")
+    @GetMapping("/hospital/search")
+    public ResponseEntity<Set<HospitalResponseDto>> findByQuery(@RequestParam String query) {
+        return ResponseEntity.ok(hospitalService.findByQuery(query));
+    }
+
     @ApiOperation("병원 상세 정보")
     @GetMapping("/hospital/info")
     public ResponseEntity<HospitalDetailResponseDto> getHospitalInfo(@RequestParam Long id) {

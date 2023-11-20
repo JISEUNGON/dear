@@ -9,6 +9,7 @@ import com.dearbella.server.dto.response.review.ReviewResponseDto;
 import com.dearbella.server.exception.banner.BannerInfraNotFoundException;
 import com.dearbella.server.exception.doctor.DoctorByHospitalNameNotFoundException;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
+import com.dearbella.server.exception.hospital.HospitalResponseNullException;
 import com.dearbella.server.repository.*;
 import com.dearbella.server.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+
+import static com.dearbella.server.config.MapperConfig.modelMapper;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -95,6 +98,7 @@ public class HospitalServiceImpl implements HospitalService {
                         .anesthesiologist(0L)
                         .plasticSurgeon(0L)
                         .dermatologist(0L)
+                        .deleted(false)
                         .build()
         );
     }
@@ -236,5 +240,35 @@ public class HospitalServiceImpl implements HospitalService {
                 .build();
 
         return response;
+    }
+
+    @Override
+    @Transactional
+    public Set<HospitalResponseDto> findByQuery(final String query) {
+        Set<HospitalResponseDto> responseDtoList = new HashSet<>();
+
+        for (Hospital hospital : hospitalRepository.findByHospitalNameContainingAndDeletedFalse(query)) {
+            final Hospital h = hospitalRepository.findById(hospital.getHospitalId()).orElseThrow(
+                    () -> new HospitalIdNotFoundException(hospital.getHospitalId())
+            );
+            final List<Review> byHospitalId = reviewRepository.findByHospitalId(hospital.getHospitalId());
+
+            responseDtoList.add(
+                    HospitalResponseDto.builder()
+                            .hospitalImage(h.getBanners().size() > 0 ? h.getBanners().get(0).getImageUrl() : null)
+                            .reviewNum(Long.valueOf(byHospitalId.size()))
+                            .rate(hospital.getTotalRate())
+                            .location(hospital.getHospitalLocation())
+                            .isMine(false)
+                            .hospitalId(h.getHospitalId())
+                            .hospitalName(hospital.getHospitalName())
+                            .build()
+            );
+        }
+
+        if(responseDtoList.size() == 0)
+            throw new HospitalResponseNullException();
+
+        return responseDtoList;
     }
 }

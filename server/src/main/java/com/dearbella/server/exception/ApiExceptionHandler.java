@@ -7,6 +7,7 @@ import com.dearbella.server.exception.doctor.CategoryNotFoundException;
 import com.dearbella.server.exception.doctor.DoctorByHospitalNameNotFoundException;
 import com.dearbella.server.exception.doctor.DoctorIdNotFoundException;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
+import com.dearbella.server.exception.hospital.HospitalResponseNullException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
 import com.dearbella.server.exception.member.MemberLoginEmailNotFoundException;
 import com.dearbella.server.exception.post.TagIdNotFoundException;
@@ -85,7 +86,14 @@ public class ApiExceptionHandler {
      * */
     @ExceptionHandler(HospitalIdNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleException(HospitalIdNotFoundException ex) {
-        ApiErrorResponse response = new ApiErrorResponse("DEH-002", "HospitalController id is not exist: " + ex.getMessage());
+        ApiErrorResponse response = new ApiErrorResponse("DEH-001", "HospitalController id is not exist: " + ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(HospitalResponseNullException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(HospitalResponseNullException ex) {
+        ApiErrorResponse response = new ApiErrorResponse("DEH-002", ex.getMessage());
+
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 

@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface HospitalRepository extends JpaRepository<Hospital, Long> {
     public Optional<Hospital> findByHospitalName(String name);
     public List<Hospital> findAll(Sort sort);
+    public List<Hospital> findByHospitalNameContainingAndDeletedFalse(String name);
+    public List<Hospital> findByDescriptionContainingAndDeletedFalse(String name);
 }

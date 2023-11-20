@@ -89,4 +89,7 @@ public class Hospital {
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @Column(name = "deleted", columnDefinition = "tinyint")
+    private Boolean deleted;
 }
