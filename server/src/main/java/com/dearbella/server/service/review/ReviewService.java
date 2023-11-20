@@ -2,6 +2,7 @@ package com.dearbella.server.service.review;
 
 import com.dearbella.server.domain.Review;
 import com.dearbella.server.dto.request.review.ReviewAddRequestDto;
+import com.dearbella.server.dto.response.review.MyReviewResponseDto;
 import com.dearbella.server.dto.response.review.ReviewAddResponseDto;
 import com.dearbella.server.dto.response.review.ReviewDetailResponseDto;
 import com.dearbella.server.dto.response.review.ReviewResponseDto;
@@ -17,4 +18,6 @@ public interface ReviewService {
     public Set<ReviewResponseDto> findByQuery(String query);
 
     public ReviewDetailResponseDto findById(Long id);
+
+    public List<MyReviewResponseDto> findMyReviews();
 }

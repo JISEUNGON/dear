@@ -20,8 +20,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     public List<Review> findByContentContainingAndDeletedFalse(String byValue, Sort sort);
     public List<Review> findByHospitalNameContainingAndDeletedFalse(String byValue, Sort sort);
     public List<Review> findByDoctorNameContainingAndDeletedFalse(String byValue, Sort sort);
-
     public List<Review> findByHospitalId(Long hospitalId);
-
     public List<Review> findByDoctorId(Long doctorId);
+    public List<Review> findAllByMemberId(Long memberId, Sort sort);
 }

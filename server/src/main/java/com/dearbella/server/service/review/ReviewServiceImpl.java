@@ -2,6 +2,7 @@ package com.dearbella.server.service.review;
 
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.review.ReviewAddRequestDto;
+import com.dearbella.server.dto.response.review.MyReviewResponseDto;
 import com.dearbella.server.dto.response.review.ReviewAddResponseDto;
 import com.dearbella.server.dto.response.review.ReviewDetailResponseDto;
 import com.dearbella.server.dto.response.review.ReviewResponseDto;
@@ -235,5 +236,25 @@ public class ReviewServiceImpl implements ReviewService {
         );
 
         return response;
+    }
+
+    @Override
+    @Transactional
+    public List<MyReviewResponseDto> findMyReviews() {
+        List<MyReviewResponseDto> responseDtoList = new ArrayList<>();
+
+        final List<Review> allByMemberId = reviewRepository.findAllByMemberId(JwtUtil.getMemberId(), Sort.by(Sort.Direction.DESC, "updatedAt"));
+
+        for(Review review: allByMemberId) {
+            responseDtoList.add(
+                    MyReviewResponseDto.builder()
+                            .reviewId(review.getReviewId())
+                            .rate(review.getRate())
+                            .title(review.getTitle())
+                            .build()
+            );
+        }
+
+        return responseDtoList;
     }
 }
