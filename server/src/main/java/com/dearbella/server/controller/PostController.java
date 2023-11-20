@@ -3,6 +3,7 @@ package com.dearbella.server.controller;
 import com.dearbella.server.domain.Member;
 import com.dearbella.server.domain.Post;
 import com.dearbella.server.dto.request.post.PostAddRequestDto;
+import com.dearbella.server.dto.response.post.PostResponseDto;
 import com.dearbella.server.service.member.MemberService;
 import com.dearbella.server.service.post.PostService;
 import com.dearbella.server.service.s3.S3UploadService;
@@ -42,5 +43,11 @@ public class PostController {
         }
 
         return ResponseEntity.ok(postService.savePost(dto, images));
+    }
+
+    @ApiOperation("내 게시물")
+    @GetMapping("/my")
+    public ResponseEntity<List<PostResponseDto>> getMyPosts() {
+        return ResponseEntity.ok(postService.findByMemberId());
     }
 }

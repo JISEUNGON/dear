@@ -63,8 +63,8 @@ public class SpringConfig {
 
     @Bean
     public PostService postService(PostRepository postRepository, ImageRepository imageRepository,
-                                   TagRepository tagRepository) {
-        return new PostServiceImpl(postRepository, tagRepository, imageRepository);
+                                   TagRepository tagRepository, MemberRepository memberRepository) {
+        return new PostServiceImpl(postRepository, tagRepository, imageRepository, memberRepository);
     }
 
     @Bean
