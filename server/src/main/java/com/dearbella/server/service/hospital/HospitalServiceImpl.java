@@ -5,6 +5,7 @@ import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
 import com.dearbella.server.dto.response.doctor.DoctorResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalDetailResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalResponseDto;
+import com.dearbella.server.dto.response.hospital.MyHospitalResponseDto;
 import com.dearbella.server.dto.response.review.ReviewResponseDto;
 import com.dearbella.server.exception.banner.BannerInfraNotFoundException;
 import com.dearbella.server.exception.doctor.DoctorByHospitalNameNotFoundException;
@@ -289,5 +290,28 @@ public class HospitalServiceImpl implements HospitalService {
             throw new HospitalResponseNullException();
 
         return responseDtoList;
+    }
+
+    @Override
+    @Transactional
+    public List<MyHospitalResponseDto> findByMemberId() {
+        List<MyHospitalResponseDto> responseDtos = new ArrayList<>();
+        final List<HospitalMember> my = hospitalMemberRepository.findByMemberId(JwtUtil.getMemberId(), Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        for(HospitalMember hospitalMember: my) {
+            final Optional<Hospital> hospital = hospitalRepository.findById(hospitalMember.getHospitalId());
+            final List<Review> reviews = reviewRepository.findByHospitalId(hospitalMember.getHospitalId());
+
+            responseDtos.add(
+                    MyHospitalResponseDto.builder()
+                            .hospitalId(hospitalMember.getHospitalId())
+                            .hospitalName(hospitalMember.getHospitalName())
+                            .rate(hospital.isEmpty() ? 0L : hospital.get().getTotalRate())
+                            .reviewNum(hospital.isEmpty() ? 0L : reviews.size())
+                            .build()
+            );
+        }
+
+        return responseDtos;
     }
 }

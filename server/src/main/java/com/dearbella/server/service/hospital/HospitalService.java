@@ -4,6 +4,7 @@ import com.dearbella.server.domain.Hospital;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
 import com.dearbella.server.dto.response.hospital.HospitalDetailResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalResponseDto;
+import com.dearbella.server.dto.response.hospital.MyHospitalResponseDto;
 
 import java.util.List;
 import java.util.Set;
@@ -13,4 +14,6 @@ public interface HospitalService {
     public List<HospitalResponseDto> getAll(Long category, Long sort);
     public HospitalDetailResponseDto findById(Long id);
     public Set<HospitalResponseDto> findByQuery(String query);
+
+    public List<MyHospitalResponseDto> findByMemberId();
 }
