@@ -1,10 +1,9 @@
 package com.dearbella.server.controller;
 
 import com.dearbella.server.domain.Review;
+import com.dearbella.server.domain.ReviewLike;
 import com.dearbella.server.dto.request.review.ReviewAddRequestDto;
 import com.dearbella.server.dto.response.review.MyReviewResponseDto;
-import com.dearbella.server.dto.response.review.ReviewAddResponseDto;
-import com.dearbella.server.dto.response.review.ReviewResponseDto;
 import com.dearbella.server.service.review.ReviewService;
 import com.dearbella.server.service.s3.S3UploadService;
 import io.swagger.annotations.Api;
@@ -53,8 +52,14 @@ public class ReviewController {
     }
 
     @ApiOperation("내가 작성한 후기")
-    @GetMapping("/review/my")
+    @GetMapping("/my")
     public ResponseEntity<List<MyReviewResponseDto>> getMyReviews() {
         return ResponseEntity.ok(reviewService.findMyReviews());
+    }
+
+    @ApiOperation("리뷰 좋아요/취소")
+    @GetMapping("/like")
+    public ResponseEntity<String> likeReview(@RequestParam Long reviewId) {
+        return ResponseEntity.ok(reviewService.likeReview(reviewId));
     }
 }

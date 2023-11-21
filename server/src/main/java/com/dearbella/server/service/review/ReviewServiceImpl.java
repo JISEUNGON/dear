@@ -19,10 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.dearbella.server.config.MapperConfig.modelMapper;
 
@@ -256,5 +253,27 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         return responseDtoList;
+    }
+
+    @Override
+    @Transactional
+    public String likeReview(final Long reviewId) {
+        final Optional<ReviewLike> byReviewIdAndMemberId = reviewLikeRepository.findByReviewIdAndMemberId(reviewId, JwtUtil.getMemberId());
+
+        if(byReviewIdAndMemberId.isEmpty()) {
+            reviewLikeRepository.save(
+                    ReviewLike.builder()
+                            .reviewId(reviewId)
+                            .memberId(JwtUtil.getMemberId())
+                            .build()
+            );
+
+            return "save";
+        }
+        else {
+            reviewLikeRepository.deleteById(byReviewIdAndMemberId.get().getLikeId());
+
+            return "delete";
+        }
     }
 }
