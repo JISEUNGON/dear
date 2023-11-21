@@ -19,4 +19,6 @@ public interface PostService {
     public void addViewNum(Long postId);
 
     public void deletePost(Long postId);
+
+    public String likePost(Long id);
 }

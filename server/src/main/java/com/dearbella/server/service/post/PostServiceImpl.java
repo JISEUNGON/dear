@@ -183,4 +183,27 @@ public class PostServiceImpl implements PostService {
 
         post.setDeleted(true);
     }
+
+    @Override
+    @Transactional
+    public String likePost(final Long id) {
+        final Optional<PostLike> byPostIdAndMemberId = postLikeRepository.findByPostIdAndMemberId(id, JwtUtil.getMemberId());
+
+        if(byPostIdAndMemberId.isEmpty()) {
+            postLikeRepository.save(
+                    PostLike.builder()
+                            .postId(id)
+                            .memberId(JwtUtil.getMemberId())
+                            .build()
+            );
+
+            return "save";
+        }
+        else
+        {
+            postLikeRepository.deleteById(byPostIdAndMemberId.get().getPostLikeId());
+
+            return "delete";
+        }
+    }
 }

@@ -57,4 +57,10 @@ public class PostController {
         postService.deletePost(postId);
         return ResponseEntity.ok().build();
     }
+
+    @ApiOperation("커뮤니티 글 좋아요/취소")
+    @GetMapping("/like")
+    public ResponseEntity<String> likePost(@RequestParam Long id) {
+        return ResponseEntity.ok(postService.likePost(id));
+    }
 }
