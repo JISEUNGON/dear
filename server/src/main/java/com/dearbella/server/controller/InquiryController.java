@@ -2,6 +2,7 @@ package com.dearbella.server.controller;
 
 import com.dearbella.server.domain.Inquiry;
 import com.dearbella.server.dto.request.inquiry.InquiryAddRequestDto;
+import com.dearbella.server.dto.response.inquiry.InquiryDetailResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryResponseDto;
 import com.dearbella.server.service.inquiry.InquiryService;
 import io.swagger.annotations.Api;
@@ -31,5 +32,11 @@ public class InquiryController {
     @GetMapping("/my-list")
     public ResponseEntity<List<InquiryResponseDto>> getMyInquiries() {
         return ResponseEntity.ok(inquiryService.findMyInquiries());
+    }
+
+    @ApiOperation("문의하기 결과 보기")
+    @GetMapping("/answer")
+    public ResponseEntity<InquiryDetailResponseDto> getAnswer(@RequestParam Long id) {
+        return ResponseEntity.ok(inquiryService.findById(id));
     }
 }

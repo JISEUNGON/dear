@@ -2,8 +2,10 @@ package com.dearbella.server.service.inquiry;
 
 import com.dearbella.server.domain.Inquiry;
 import com.dearbella.server.dto.request.inquiry.InquiryAddRequestDto;
+import com.dearbella.server.dto.response.inquiry.InquiryDetailResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryResponseDto;
 import com.dearbella.server.enums.doctor.CategoryEnum;
+import com.dearbella.server.exception.inquiry.InquiryIdNotFoundException;
 import com.dearbella.server.repository.InquiryRepository;
 import com.dearbella.server.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -54,5 +57,20 @@ public class InquiryServiceImpl implements InquiryService {
         }
 
         return responseDtoList;
+    }
+
+    @Override
+    @Transactional
+    public InquiryDetailResponseDto findById(final Long id) {
+        final Inquiry byId = inquiryRepository.findById(id).orElseThrow(
+                () -> new InquiryIdNotFoundException(id)
+        );
+
+        return InquiryDetailResponseDto.builder()
+                .inquiryId(byId.getInquiryId())
+                .inquiryContent(byId.getContent())
+                .answer(byId.getAnswer())
+                .category(CategoryEnum.findByValue(byId.getCategory()).name())
+                .build();
     }
 }

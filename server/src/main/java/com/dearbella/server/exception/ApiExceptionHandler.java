@@ -8,6 +8,7 @@ import com.dearbella.server.exception.doctor.DoctorByHospitalNameNotFoundExcepti
 import com.dearbella.server.exception.doctor.DoctorIdNotFoundException;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
 import com.dearbella.server.exception.hospital.HospitalResponseNullException;
+import com.dearbella.server.exception.inquiry.InquiryIdNotFoundException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
 import com.dearbella.server.exception.member.MemberLoginEmailNotFoundException;
 import com.dearbella.server.exception.post.TagIdNotFoundException;
@@ -119,6 +120,16 @@ public class ApiExceptionHandler {
     @ExceptionHandler(ReviewIdNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleException(ReviewIdNotFoundException ex) {
         ApiErrorResponse response = new ApiErrorResponse("DER-0002", "Review id not exist: " + ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * inquiry Exception
+     * */
+    @ExceptionHandler(InquiryIdNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(InquiryIdNotFoundException ex) {
+        ApiErrorResponse response = new ApiErrorResponse("DEI-001", "Inquiry id is not exist: id " + ex.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
