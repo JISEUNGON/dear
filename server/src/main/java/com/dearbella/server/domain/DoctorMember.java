@@ -1,8 +1,10 @@
 package com.dearbella.server.domain;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "doctor_member")
@@ -22,4 +24,7 @@ public class DoctorMember {
 
     @Column(name = "member_id", columnDefinition = "bigint")
     private Long memberId;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }

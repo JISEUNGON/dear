@@ -12,4 +12,5 @@ public class MyHospitalResponseDto {
     private String hospitalName;
     private Float rate;
     private Long reviewNum;
+    private String location;
 }

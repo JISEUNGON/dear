@@ -4,6 +4,7 @@ import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
 import com.dearbella.server.dto.request.doctor.DoctorDetailResponseDto;
 import com.dearbella.server.dto.response.doctor.DoctorResponseDto;
+import com.dearbella.server.dto.response.doctor.MyDoctorResponseDto;
 import com.dearbella.server.dto.response.review.ReviewPreviewResponseDto;
 import com.dearbella.server.enums.doctor.CategoryEnum;
 import com.dearbella.server.exception.doctor.CategoryNotFoundException;
@@ -265,5 +266,34 @@ public class DoctorServiceImpl implements DoctorService {
         }
 
         return doctorResponseDtos;
+    }
+
+    @Override
+    @Transactional
+    public List<MyDoctorResponseDto> findMyDoctors() {
+        List<MyDoctorResponseDto> responseDtoList = new ArrayList<>();
+        final List<DoctorMember> byMemberId = doctorMemberRepository.findByMemberId(JwtUtil.getMemberId(), Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        for(DoctorMember doctorMember: byMemberId) {
+            final Doctor doctor = doctorRepository.findById(doctorMember.getDoctorId()).orElseThrow(
+                    () -> new DoctorIdNotFoundException(doctorMember.getDoctorId())
+            );
+            final List<Review> reviews = reviewRepository.findByDoctorId(doctor.getDoctorId());
+
+            responseDtoList.add(
+                    MyDoctorResponseDto.builder()
+                            .doctorId(doctor.getDoctorId())
+                            .DoctorImage(doctor.getDoctorImage())
+                            .categories(doctor.getCategories())
+                            .reviewNum(Long.valueOf(reviews.size()))
+                            .rate(doctor.getTotalRate())
+                            .hospitalName(doctor.getHospitalName())
+                            .intro(doctor.getDescription())
+                            .doctorName(doctor.getDoctorName())
+                            .build()
+            );
+        }
+
+        return responseDtoList;
     }
 }

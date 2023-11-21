@@ -308,6 +308,7 @@ public class HospitalServiceImpl implements HospitalService {
                             .hospitalName(hospitalMember.getHospitalName())
                             .rate(hospital.isEmpty() ? 0L : hospital.get().getTotalRate())
                             .reviewNum(hospital.isEmpty() ? 0L : reviews.size())
+                            .location(hospital.isEmpty() ? null : hospital.get().getHospitalLocation())
                             .build()
             );
         }
