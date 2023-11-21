@@ -4,6 +4,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.dearbella.server.repository.*;
 import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.banner.BannerServiceImpl;
+import com.dearbella.server.service.comment.CommentService;
+import com.dearbella.server.service.comment.CommentServiceImpl;
 import com.dearbella.server.service.doctor.DoctorService;
 import com.dearbella.server.service.doctor.DoctorServiceImpl;
 import com.dearbella.server.service.hospital.HospitalService;
@@ -91,5 +93,10 @@ public class SpringConfig {
                 reviewRepository,
                 doctorMemberRepository
         );
+    }
+
+    @Bean
+    public CommentService commentService(CommentRepository commentRepository,  MemberRepository memberRepository) {
+        return new CommentServiceImpl(commentRepository, memberRepository);
     }
 }

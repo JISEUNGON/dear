@@ -3,6 +3,7 @@ package com.dearbella.server.exception;
 import com.dearbella.server.exception.banner.BannerIdNotFoundException;
 import com.dearbella.server.exception.banner.BannerInfraNotFoundException;
 import com.dearbella.server.exception.banner.BannerNotExistException;
+import com.dearbella.server.exception.comment.CommentIdNotFoundException;
 import com.dearbella.server.exception.doctor.CategoryNotFoundException;
 import com.dearbella.server.exception.doctor.DoctorByHospitalNameNotFoundException;
 import com.dearbella.server.exception.doctor.DoctorIdNotFoundException;
@@ -138,6 +139,16 @@ public class ApiExceptionHandler {
     @ExceptionHandler(InquiryIdNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleException(InquiryIdNotFoundException ex) {
         ApiErrorResponse response = new ApiErrorResponse("DEI-001", "Inquiry id is not exist: id " + ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * comment error
+     * */
+    @ExceptionHandler(CommentIdNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(CommentIdNotFoundException ex) {
+        ApiErrorResponse response = new ApiErrorResponse("DEC-001", "Comment id not found: " + ex.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
