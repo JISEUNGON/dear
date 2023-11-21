@@ -50,4 +50,11 @@ public class PostController {
     public ResponseEntity<List<PostResponseDto>> getMyPosts() {
         return ResponseEntity.ok(postService.findByMemberId());
     }
+
+    @ApiOperation("게시물 삭제")
+    @DeleteMapping("/my")
+    public ResponseEntity deletePost(@RequestParam Long postId) {
+        postService.deletePost(postId);
+        return ResponseEntity.ok().build();
+    }
 }

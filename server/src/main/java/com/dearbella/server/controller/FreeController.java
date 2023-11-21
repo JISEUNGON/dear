@@ -7,6 +7,9 @@ import com.dearbella.server.dto.response.banner.BannerResponseDto;
 import com.dearbella.server.dto.response.doctor.DoctorResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalDetailResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalResponseDto;
+import com.dearbella.server.dto.response.post.PostDetailResponseDto;
+import com.dearbella.server.dto.response.post.PostFindResponseDto;
+import com.dearbella.server.dto.response.post.PostResponseDto;
 import com.dearbella.server.dto.response.review.ReviewDetailResponseDto;
 import com.dearbella.server.dto.response.review.ReviewResponseDto;
 import com.dearbella.server.repository.DoctorRepository;
@@ -14,6 +17,7 @@ import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.doctor.DoctorService;
 import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.ip.IpService;
+import com.dearbella.server.service.post.PostService;
 import com.dearbella.server.service.review.ReviewService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,17 +41,7 @@ public class FreeController {
     private final HospitalService hospitalService;
     private final DoctorService doctorService;
     private final IpService ipService;
-
-
-    /**
-     * TODO
-     * 추천 의사 10명
-     * 추천 병원 15개
-     * 추천 리뷰 20개
-     * 광고 무제한
-     * 더보기에서 카테고리별 항목 10개씩
-     *
-     * */
+    private final PostService postService;
 
     /**
      * Banner API
@@ -130,5 +124,22 @@ public class FreeController {
     @GetMapping("/ip")
     public ResponseEntity<MemberIp> getIp() {
         return ResponseEntity.ok(ipService.getIp());
+    }
+
+    /**
+     * post API
+     * */
+    @ApiOperation("커뮤니티 게시글 전체 조회")
+    @GetMapping("/post/all")
+    public ResponseEntity<List<PostFindResponseDto>> getPosts(@RequestParam Long tagId) {
+        return ResponseEntity.ok(postService.findAll(tagId));
+    }
+
+    @ApiOperation("커뮤니티 게시글 상세 조회")
+    @GetMapping("/post/detail")
+    public ResponseEntity<PostDetailResponseDto> getPostDetail(@RequestParam Long postId) {
+        postService.addViewNum(postId);
+
+        return ResponseEntity.ok(postService.findById(postId));
     }
 }

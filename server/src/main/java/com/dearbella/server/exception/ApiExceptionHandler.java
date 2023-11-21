@@ -11,6 +11,7 @@ import com.dearbella.server.exception.hospital.HospitalResponseNullException;
 import com.dearbella.server.exception.inquiry.InquiryIdNotFoundException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
 import com.dearbella.server.exception.member.MemberLoginEmailNotFoundException;
+import com.dearbella.server.exception.post.PostIdNotFoundException;
 import com.dearbella.server.exception.post.TagIdNotFoundException;
 import com.dearbella.server.exception.review.ReviewIdNotFoundException;
 import com.dearbella.server.exception.review.ReviewNotFoundException;
@@ -104,6 +105,13 @@ public class ApiExceptionHandler {
     @ExceptionHandler(TagIdNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleException(TagIdNotFoundException ex) {
         ApiErrorResponse response = new ApiErrorResponse("DEP-001", "Tag id is not exist: " + ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PostIdNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(PostIdNotFoundException ex)  {
+        ApiErrorResponse response = new ApiErrorResponse("DEP-002", "Post id not found: " + ex.getMessage());
+
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 

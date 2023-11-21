@@ -46,8 +46,11 @@ public class Post {
     @Column(name = "member_id", columnDefinition = "bigint")
     private Long memberId;
 
-    @Column(name = "like", columnDefinition = "int")
-    private Long like;
+    @Column(name = "view_num", columnDefinition = "int")
+    private Long viewNum;
+
+    @Column(name = "deleted", columnDefinition = "tinyint")
+    private Boolean deleted;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
