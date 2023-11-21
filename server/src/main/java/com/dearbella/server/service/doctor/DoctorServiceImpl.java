@@ -296,4 +296,26 @@ public class DoctorServiceImpl implements DoctorService {
 
         return responseDtoList;
     }
+
+    @Override
+    @Transactional
+    public DoctorMember addWish(final Long doctorId) {
+        final Optional<DoctorMember> byDoctorIdAndMemberId = doctorMemberRepository.findByDoctorIdAndMemberId(doctorId, JwtUtil.getMemberId());
+
+        if(byDoctorIdAndMemberId.isEmpty())
+            return doctorMemberRepository.save(
+                    DoctorMember.builder()
+                            .doctorId(doctorId)
+                            .memberId(JwtUtil.getMemberId())
+                            .build()
+            );
+        else
+            return byDoctorIdAndMemberId.get();
+    }
+
+    @Override
+    @Transactional
+    public void removeWish(final Long doctorId) {
+        doctorMemberRepository.deleteByDoctorId(doctorId);
+    }
 }

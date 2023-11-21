@@ -22,9 +22,6 @@ public class HospitalMember {
     @Column(name = "hospital_id", columnDefinition = "int")
     private Long hospitalId;
 
-    @Column(name = "hospital_name", length = 100, columnDefinition = "varchar")
-    private String hospitalName;
-
     @Column(name = "memberId", columnDefinition = "bigint")
     private Long memberId;
 

@@ -22,6 +22,7 @@ import javax.annotation.PostConstruct;
 import java.util.*;
 
 import static com.dearbella.server.config.MapperConfig.modelMapper;
+import static org.apache.logging.log4j.ThreadContext.isEmpty;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -305,7 +306,7 @@ public class HospitalServiceImpl implements HospitalService {
             responseDtos.add(
                     MyHospitalResponseDto.builder()
                             .hospitalId(hospitalMember.getHospitalId())
-                            .hospitalName(hospitalMember.getHospitalName())
+                            .hospitalName(hospital.isEmpty() ? null : hospital.get().getHospitalName())
                             .rate(hospital.isEmpty() ? 0L : hospital.get().getTotalRate())
                             .reviewNum(hospital.isEmpty() ? 0L : reviews.size())
                             .location(hospital.isEmpty() ? null : hospital.get().getHospitalLocation())
@@ -314,5 +315,27 @@ public class HospitalServiceImpl implements HospitalService {
         }
 
         return responseDtos;
+    }
+
+    @Override
+    @Transactional
+    public HospitalMember addWishList(final Long hospitalId) {
+        final Optional<HospitalMember> byHospitalIdAndMemberId = hospitalMemberRepository.findByHospitalIdAndMemberId(hospitalId, JwtUtil.getMemberId());
+
+        if(byHospitalIdAndMemberId.isEmpty())
+            return hospitalMemberRepository.save(
+                    HospitalMember.builder()
+                            .hospitalId(hospitalId)
+                            .memberId(JwtUtil.getMemberId())
+                            .build()
+            );
+        else
+            return byHospitalIdAndMemberId.get();
+    }
+
+    @Override
+    @Transactional
+    public void deleteWish(final Long hospitalId) {
+        hospitalMemberRepository.deleteByHospitalId(hospitalId);
     }
 }

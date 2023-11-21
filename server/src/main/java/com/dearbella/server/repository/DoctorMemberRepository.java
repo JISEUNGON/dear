@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface DoctorMemberRepository extends JpaRepository<DoctorMember, Long> {
     public Optional<DoctorMember> findByDoctorIdAndMemberId(Long doctorId, Long memberId);
-
     public List<DoctorMember> findByMemberId(Long memberId, Sort sort);
+    public void deleteByDoctorId(Long doctorId);
 }

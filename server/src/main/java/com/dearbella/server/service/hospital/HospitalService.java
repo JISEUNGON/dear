@@ -1,6 +1,7 @@
 package com.dearbella.server.service.hospital;
 
 import com.dearbella.server.domain.Hospital;
+import com.dearbella.server.domain.HospitalMember;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
 import com.dearbella.server.dto.response.hospital.HospitalDetailResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalResponseDto;
@@ -16,4 +17,8 @@ public interface HospitalService {
     public Set<HospitalResponseDto> findByQuery(String query);
 
     public List<MyHospitalResponseDto> findByMemberId();
+
+    public HospitalMember addWishList(Long hospitalId);
+
+    public void deleteWish(Long hospitalId);
 }
