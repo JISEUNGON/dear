@@ -1,10 +1,13 @@
 package com.dearbella.server.controller;
 
+import com.dearbella.server.domain.Token;
+import com.dearbella.server.dto.request.login.AdminLoginRequestDto;
 import com.dearbella.server.dto.response.login.LoginResponseDto;
 import com.dearbella.server.service.member.MemberService;
 import com.dearbella.server.service.oauth.OauthService;
 import com.dearbella.server.vo.GoogleIdTokenVo;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -38,5 +41,11 @@ public class LoginController {
         {
             return ResponseEntity.ok(memberService.signUp(googleIdTokenVo));
         }
+    }
+
+    @ApiOperation("관리자 로그인")
+    @PostMapping("/admin")
+    public ResponseEntity<Token> loginAdmin(@RequestBody AdminLoginRequestDto dto) {
+        return ResponseEntity.ok(memberService.login(dto));
     }
 }

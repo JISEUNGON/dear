@@ -10,6 +10,7 @@ import com.dearbella.server.exception.doctor.DoctorIdNotFoundException;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
 import com.dearbella.server.exception.hospital.HospitalResponseNullException;
 import com.dearbella.server.exception.inquiry.InquiryIdNotFoundException;
+import com.dearbella.server.exception.login.AdminLoginException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
 import com.dearbella.server.exception.member.MemberLoginEmailNotFoundException;
 import com.dearbella.server.exception.post.PostIdNotFoundException;
@@ -151,5 +152,14 @@ public class ApiExceptionHandler {
         ApiErrorResponse response = new ApiErrorResponse("DEC-001", "Comment id not found: " + ex.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Login Error
+     * */
+    @ExceptionHandler(AdminLoginException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(AdminLoginException ex) {
+        ApiErrorResponse response = new ApiErrorResponse("DEL-001", "Info Not miss match: " + ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
     }
 }

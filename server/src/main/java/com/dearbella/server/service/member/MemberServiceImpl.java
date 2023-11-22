@@ -3,9 +3,11 @@ package com.dearbella.server.service.member;
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.admin.AdminCreateRequestDto;
 import com.dearbella.server.dto.request.admin.AdminEditRequestDto;
+import com.dearbella.server.dto.request.login.AdminLoginRequestDto;
 import com.dearbella.server.dto.response.admin.AdminResponseDto;
 import com.dearbella.server.dto.response.login.LoginResponseDto;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
+import com.dearbella.server.exception.login.AdminLoginException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
 import com.dearbella.server.exception.member.MemberLoginEmailNotFoundException;
 import com.dearbella.server.repository.*;
@@ -213,5 +215,19 @@ public class MemberServiceImpl implements MemberService {
             admin.setAdminPassword(passwordEncoder.encode(dto.getPassword()));
 
         return modelMapper.map(adminRepository.save(admin), AdminResponseDto.class);
+    }
+
+    @Override
+    public Token login(final AdminLoginRequestDto dto) {
+        final Admin admin = adminRepository.findByAdminId(dto.getUserId()).orElseThrow(
+                () -> new AdminLoginException("id")
+        );
+
+        if(passwordEncoder.matches(dto.getPassword(), admin.getAdminPassword()))
+            return tokenRepository.findById(admin.getMemberId()).orElseThrow(
+                    () -> new MemberIdNotFoundException(admin.getMemberId().toString())
+            );
+        else
+            throw new AdminLoginException("password");
     }
 }
