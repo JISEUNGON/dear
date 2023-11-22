@@ -2,6 +2,7 @@ package com.dearbella.server.controller;
 
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.admin.AdminCreateRequestDto;
+import com.dearbella.server.dto.request.admin.AdminEditRequestDto;
 import com.dearbella.server.dto.request.banner.BannerAddRequestDto;
 import com.dearbella.server.dto.request.comment.CommentDoctorRequestDto;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
@@ -135,5 +136,11 @@ public class AdminController {
     @GetMapping("/user/all")
     public ResponseEntity<List<AdminResponseDto>> getAllAdmin(@RequestParam Long page) {
         return ResponseEntity.ok(memberService.getAllAdmin(page));
+    }
+
+    @ApiOperation("관리자 정보 수정")
+    @PostMapping("/user/edit")
+    public ResponseEntity<AdminResponseDto> editAdmin(@RequestBody AdminEditRequestDto dto) {
+        return ResponseEntity.ok(memberService.editAdmin(dto));
     }
 }

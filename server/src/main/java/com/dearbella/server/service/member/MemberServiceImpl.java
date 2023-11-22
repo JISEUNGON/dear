@@ -2,6 +2,7 @@ package com.dearbella.server.service.member;
 
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.admin.AdminCreateRequestDto;
+import com.dearbella.server.dto.request.admin.AdminEditRequestDto;
 import com.dearbella.server.dto.response.admin.AdminResponseDto;
 import com.dearbella.server.dto.response.login.LoginResponseDto;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -31,6 +33,7 @@ public class MemberServiceImpl implements MemberService {
     private final TokenRepository tokenRepository;
     private final AdminRepository adminRepository;
     private final MemberDeleteRepository memberDeleteRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -132,7 +135,7 @@ public class MemberServiceImpl implements MemberService {
                 Admin.builder()
                         .memberId(memberId)
                         .adminId(dto.getUserId())
-                        .adminPassword(dto.getPassword())
+                        .adminPassword(passwordEncoder.encode(dto.getPassword()))
                         .hospitalId(dto.getHospitalId())
                         .hospitalName(dto.getHospitalName())
                         .build()
@@ -187,5 +190,28 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return responseDtoList;
+    }
+
+    @Override
+    @Transactional
+    public AdminResponseDto editAdmin(final AdminEditRequestDto dto) {
+        Member member = memberRepository.findById(dto.getMemberId()).orElseThrow(
+                () -> new MemberIdNotFoundException(dto.getMemberId().toString())
+        );
+        Admin admin = adminRepository.findById(dto.getMemberId()).orElseThrow(
+                () -> new MemberIdNotFoundException(dto.getMemberId().toString())
+        );
+
+        if(dto.getUserId() != null) {
+            admin.setAdminId(dto.getUserId());
+            member.setLoginEmail(dto.getUserId());
+
+            memberRepository.save(member);
+        }
+
+        if(dto.getPassword() != null)
+            admin.setAdminPassword(passwordEncoder.encode(dto.getPassword()));
+
+        return modelMapper.map(adminRepository.save(admin), AdminResponseDto.class);
     }
 }

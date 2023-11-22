@@ -23,7 +23,7 @@ public class Admin {
     @Column(name = "admin_id", length = 10, columnDefinition = "varchar")
     private String adminId;
 
-    @Column(name = "admin_password", length = 12, columnDefinition = "varchar")
+    @Column(name = "admin_password", columnDefinition = "text")
     private String adminPassword;
 
     @Column(name = "hospital_name", length = 100, columnDefinition = "varchar")

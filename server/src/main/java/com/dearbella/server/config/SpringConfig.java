@@ -24,16 +24,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
 public class SpringConfig {
-
+    private final PasswordEncoder passwordEncoder;
     @Bean
     public MemberService memberService(TokenRepository tokenRepository, MemberRepository memberRepository,
                                        AdminRepository adminRepository, MemberDeleteRepository memberDeleteRepository) {
-        return new MemberServiceImpl(memberRepository, tokenRepository, adminRepository, memberDeleteRepository);
+        return new MemberServiceImpl(memberRepository, tokenRepository, adminRepository, memberDeleteRepository, passwordEncoder);
     }
 
     @Bean
