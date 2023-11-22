@@ -4,6 +4,7 @@ import com.dearbella.server.domain.MemberIp;
 import com.dearbella.server.dto.request.doctor.DoctorDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
+import com.dearbella.server.dto.response.comment.CommentResponseDto;
 import com.dearbella.server.dto.response.doctor.DoctorResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalDetailResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalResponseDto;
@@ -14,6 +15,7 @@ import com.dearbella.server.dto.response.review.ReviewDetailResponseDto;
 import com.dearbella.server.dto.response.review.ReviewResponseDto;
 import com.dearbella.server.repository.DoctorRepository;
 import com.dearbella.server.service.banner.BannerService;
+import com.dearbella.server.service.comment.CommentService;
 import com.dearbella.server.service.doctor.DoctorService;
 import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.ip.IpService;
@@ -35,7 +37,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Api(tags = {"권한 필요 없는 API"})
 public class FreeController {
-    private final DoctorRepository doctorRepository;
+    private final CommentService commentService;
     private final BannerService bannerService;
     private final ReviewService reviewService;
     private final HospitalService hospitalService;
@@ -141,5 +143,16 @@ public class FreeController {
         postService.addViewNum(postId);
 
         return ResponseEntity.ok(postService.findById(postId));
+    }
+
+    /**
+     * comment API
+     * */
+
+
+    @ApiOperation("후기/커뮤니티 댓글 불러오기")
+    @GetMapping("/commetn/all")
+    public ResponseEntity<List<CommentResponseDto>> getComments(@RequestParam Long id) {
+        return ResponseEntity.ok(commentService.getAll(id));
     }
 }

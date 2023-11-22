@@ -14,4 +14,5 @@ public class CommentResponseDto {
     private Long memberId;
     private String memberName;
     private String memberImage;
+    private Long likeNum;
 }

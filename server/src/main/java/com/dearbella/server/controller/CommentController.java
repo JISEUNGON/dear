@@ -1,6 +1,7 @@
 package com.dearbella.server.controller;
 
 import com.dearbella.server.domain.Comment;
+import com.dearbella.server.domain.CommentLike;
 import com.dearbella.server.dto.request.comment.CommentAddRequestDto;
 import com.dearbella.server.dto.request.comment.CommentEditRequestDto;
 import com.dearbella.server.dto.response.comment.CommentResponseDto;
@@ -28,12 +29,6 @@ public class CommentController {
         return ResponseEntity.ok(commentService.addComment(dto));
     }
 
-    @ApiOperation("후기/커뮤니티 댓글 불러오기")
-    @GetMapping("/all")
-    public ResponseEntity<List<CommentResponseDto>> getComments(@RequestParam Long id) {
-        return ResponseEntity.ok(commentService.getAll(id));
-    }
-
     @ApiOperation("댓글 삭제")
     @DeleteMapping("/delete")
     public ResponseEntity deleteComment(@RequestParam Long commentId) {
@@ -46,5 +41,11 @@ public class CommentController {
     @PostMapping("/edit")
     public ResponseEntity<Comment> editComment(@RequestBody CommentEditRequestDto dto) {
         return ResponseEntity.ok(commentService.editComment(dto));
+    }
+
+    @ApiOperation("댓글 좋아요/취소")
+    @GetMapping("/like")
+    public ResponseEntity<String> likeComment(@RequestParam Long commentId) {
+        return ResponseEntity.ok(commentService.likeComment(commentId));
     }
 }
