@@ -53,7 +53,6 @@ public class SecurityConfig {
             public void customize(WebSecurity web) {
                 web.ignoring().antMatchers(
                         "/",
-                        "/auth/**",
                         "/login/**",
                         "/swagger-ui.html",
                         "/swagger-ui/**",
@@ -86,6 +85,7 @@ public class SecurityConfig {
                 .antMatchers("/hospital/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .antMatchers("/comment/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .antMatchers("/authority/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                .antMatchers("/member/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .anyRequest().denyAll()
                 .and().build();
     }

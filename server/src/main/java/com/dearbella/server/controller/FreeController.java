@@ -36,7 +36,6 @@ import java.util.Set;
 @Slf4j
 @RequiredArgsConstructor
 @Api(tags = {"권한 필요 없는 API"})
-@CrossOrigin("http://localhost:3000")
 public class FreeController {
     private final CommentService commentService;
     private final BannerService bannerService;

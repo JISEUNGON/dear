@@ -138,4 +138,21 @@ public class MemberServiceImpl implements MemberService {
                         .build()
         );
     }
+
+    @Override
+    @Transactional
+    public String signOut() {
+        Member member = memberRepository.findById(JwtUtil.getMemberId()).orElseThrow(
+                () -> new MemberIdNotFoundException(JwtUtil.getMemberId().toString())
+        );
+
+        member.setSignOut(true);
+        member.setLoginEmail(member.getLoginEmail() + "deleted");
+
+        memberRepository.save(member);
+
+        tokenRepository.deleteById(member.getMemberId());
+
+        return "success";
+    }
 }

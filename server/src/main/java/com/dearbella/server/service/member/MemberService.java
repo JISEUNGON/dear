@@ -12,4 +12,6 @@ public interface MemberService {
     public Boolean isMember(String email);
     public Member findById();
     public Admin createAdmin(AdminCreateRequestDto dto);
+
+    public String signOut();
 }
