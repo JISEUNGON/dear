@@ -32,8 +32,8 @@ public class SpringConfig {
 
     @Bean
     public MemberService memberService(TokenRepository tokenRepository, MemberRepository memberRepository,
-                                       AdminRepository adminRepository) {
-        return new MemberServiceImpl(memberRepository, tokenRepository, adminRepository);
+                                       AdminRepository adminRepository, MemberDeleteRepository memberDeleteRepository) {
+        return new MemberServiceImpl(memberRepository, tokenRepository, adminRepository, memberDeleteRepository);
     }
 
     @Bean

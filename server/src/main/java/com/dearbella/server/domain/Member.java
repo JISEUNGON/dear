@@ -29,9 +29,6 @@ public class Member {
     @Column(name = "profile_img", columnDefinition = "text")
     private String profileImg;
 
-    @Column(name = "sign_out", columnDefinition = "tinyint")
-    private Boolean signOut;
-
     @Column(name = "phone", length = 30, columnDefinition = "varchar")
     private String phone;
 

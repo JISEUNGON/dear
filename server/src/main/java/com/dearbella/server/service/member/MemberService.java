@@ -14,4 +14,6 @@ public interface MemberService {
     public Admin createAdmin(AdminCreateRequestDto dto);
 
     public String signOut();
+
+    public String deleteAdmin(Long memberId);
 }

@@ -6,10 +6,7 @@ import com.dearbella.server.dto.response.login.LoginResponseDto;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
 import com.dearbella.server.exception.member.MemberLoginEmailNotFoundException;
-import com.dearbella.server.repository.AdminRepository;
-import com.dearbella.server.repository.HospitalRepository;
-import com.dearbella.server.repository.MemberRepository;
-import com.dearbella.server.repository.TokenRepository;
+import com.dearbella.server.repository.*;
 import com.dearbella.server.util.JwtUtil;
 import com.dearbella.server.vo.GoogleIdTokenVo;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +26,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final TokenRepository tokenRepository;
     private final AdminRepository adminRepository;
+    private final MemberDeleteRepository memberDeleteRepository;
 
     @Override
     @Transactional
@@ -41,7 +39,6 @@ public class MemberServiceImpl implements MemberService {
                 Member.builder()
                         .memberId(System.currentTimeMillis())
                         .loginEmail(idTokenVo.getEmail())
-                        .signOut(false)
                         .profileImg(idTokenVo.getPicture())
                         .phone(null)
                         .nickname(idTokenVo.getName())
@@ -110,7 +107,6 @@ public class MemberServiceImpl implements MemberService {
                                         .build()
                         ))
                         .ban(false)
-                        .signOut(false)
                         .phone(null)
                         .profileImg("https://dearbella-bucket.s3.ap-northeast-2.amazonaws.com/profile.png")
                         .loginEmail(dto.getUserId())
@@ -146,12 +142,30 @@ public class MemberServiceImpl implements MemberService {
                 () -> new MemberIdNotFoundException(JwtUtil.getMemberId().toString())
         );
 
-        member.setSignOut(true);
-        member.setLoginEmail(member.getLoginEmail() + "deleted");
 
-        memberRepository.save(member);
+        memberRepository.delete(member);
 
         tokenRepository.deleteById(member.getMemberId());
+
+        memberDeleteRepository.save(modelMapper.map(member, MemberDelete.class));
+
+        return "success";
+    }
+
+    @Override
+    @Transactional
+    public String deleteAdmin(final Long memberId) {
+        adminRepository.deleteById(memberId);
+
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new MemberIdNotFoundException(memberId.toString())
+        );
+
+        memberRepository.delete(member);
+
+        tokenRepository.deleteById(memberId);
+
+        memberDeleteRepository.save(modelMapper.map(member, MemberDelete.class));
 
         return "success";
     }

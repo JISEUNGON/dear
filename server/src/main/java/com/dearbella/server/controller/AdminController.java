@@ -122,4 +122,10 @@ public class AdminController {
     public ResponseEntity<Admin> createAdmin(@RequestBody AdminCreateRequestDto dto) {
         return ResponseEntity.ok(memberService.createAdmin(dto));
     }
+
+    @ApiOperation("관리자 계정 삭제")
+    @GetMapping("/user/delete")
+    public ResponseEntity<String> deleteAdmin(@RequestParam Long memberId) {
+        return ResponseEntity.ok(memberService.deleteAdmin(memberId));
+    }
 }
