@@ -6,6 +6,7 @@ import com.dearbella.server.dto.request.banner.BannerAddRequestDto;
 import com.dearbella.server.dto.request.comment.CommentDoctorRequestDto;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
+import com.dearbella.server.dto.response.admin.AdminResponseDto;
 import com.dearbella.server.repository.BannerRepository;
 import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.comment.CommentService;
@@ -17,6 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -124,8 +126,14 @@ public class AdminController {
     }
 
     @ApiOperation("관리자 계정 삭제")
-    @GetMapping("/user/delete")
+    @DeleteMapping("/user/delete")
     public ResponseEntity<String> deleteAdmin(@RequestParam Long memberId) {
         return ResponseEntity.ok(memberService.deleteAdmin(memberId));
+    }
+
+    @ApiOperation("관리자 계정 조회")
+    @GetMapping("/user/all")
+    public ResponseEntity<List<AdminResponseDto>> getAllAdmin(@RequestParam Long page) {
+        return ResponseEntity.ok(memberService.getAllAdmin(page));
     }
 }

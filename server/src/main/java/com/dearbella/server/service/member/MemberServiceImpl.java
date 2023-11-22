@@ -2,6 +2,7 @@ package com.dearbella.server.service.member;
 
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.admin.AdminCreateRequestDto;
+import com.dearbella.server.dto.response.admin.AdminResponseDto;
 import com.dearbella.server.dto.response.login.LoginResponseDto;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
@@ -11,6 +12,9 @@ import com.dearbella.server.util.JwtUtil;
 import com.dearbella.server.vo.GoogleIdTokenVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -168,5 +172,20 @@ public class MemberServiceImpl implements MemberService {
         memberDeleteRepository.save(modelMapper.map(member, MemberDelete.class));
 
         return "success";
+    }
+
+    @Override
+    @Transactional
+    public List<AdminResponseDto> getAllAdmin(final Long page) {
+        final Page<Admin> all = adminRepository.findAll(PageRequest.of(page.intValue(), 11, Sort.by(Sort.Direction.DESC, "createdAt")));
+        List<AdminResponseDto> responseDtoList = new ArrayList<>();
+
+        for(Admin admin: all) {
+            responseDtoList.add(
+                    modelMapper.map(admin, AdminResponseDto.class)
+            );
+        }
+
+        return responseDtoList;
     }
 }

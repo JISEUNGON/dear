@@ -2,8 +2,10 @@ package com.dearbella.server.domain;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -29,4 +31,7 @@ public class Admin {
 
     @Column(name = "hospital_id", columnDefinition = "int")
     private Long hospitalId;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }
