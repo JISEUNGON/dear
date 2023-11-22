@@ -1,9 +1,7 @@
 package com.dearbella.server.controller;
 
-import com.dearbella.server.domain.Banner;
-import com.dearbella.server.domain.Doctor;
-import com.dearbella.server.domain.DoctorResponse;
-import com.dearbella.server.domain.Hospital;
+import com.dearbella.server.domain.*;
+import com.dearbella.server.dto.request.admin.AdminCreateRequestDto;
 import com.dearbella.server.dto.request.banner.BannerAddRequestDto;
 import com.dearbella.server.dto.request.comment.CommentDoctorRequestDto;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
@@ -13,6 +11,7 @@ import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.comment.CommentService;
 import com.dearbella.server.service.doctor.DoctorService;
 import com.dearbella.server.service.hospital.HospitalService;
+import com.dearbella.server.service.member.MemberService;
 import com.dearbella.server.service.s3.S3UploadService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,7 +38,11 @@ public class AdminController {
     private final DoctorService doctorService;
     private final BannerService bannerService;
     private final CommentService commentService;
+    private final MemberService memberService;
 
+    /**
+     * hospital API
+     * */
     @ApiOperation("병원 정보 넣기")
     @PostMapping(value = "/hospital/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Transactional
@@ -69,6 +72,9 @@ public class AdminController {
         return ResponseEntity.ok(hospitalService.addHospital(dto, befores, afters, banners));
     }
 
+    /**
+     * Doctor API
+     * */
     @ApiOperation("의사 정보 넣기")
     @PostMapping(value = "/doctor/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Transactional
@@ -78,6 +84,9 @@ public class AdminController {
         return ResponseEntity.ok(doctorService.addDoctor(dto, upload));
     }
 
+    /**
+     * Banner API
+     * */
     @ApiOperation("배너 만들기")
     @PostMapping(value = "/banner/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Transactional
@@ -96,9 +105,21 @@ public class AdminController {
         return ResponseEntity.ok(bannerService.addBanner(dto, mainImages, detailImages));
     }
 
+    /**
+     * Comment API
+     * */
     @ApiOperation("원장이 댓글 남기기")
     @PostMapping("/comment/add")
     public ResponseEntity<DoctorResponse> addComment(@RequestBody CommentDoctorRequestDto dto) {
         return ResponseEntity.ok(commentService.addDoctorResponse(dto));
+    }
+
+    /**
+     * Admin Id API
+     * */
+    @ApiOperation("관리자 계정 생성")
+    @PostMapping("/user/add")
+    public ResponseEntity<Admin> createAdmin(@RequestBody AdminCreateRequestDto dto) {
+        return ResponseEntity.ok(memberService.createAdmin(dto));
     }
 }

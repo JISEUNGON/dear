@@ -1,11 +1,13 @@
 package com.dearbella.server.service.member;
 
-import com.dearbella.server.domain.Authority;
-import com.dearbella.server.domain.Member;
-import com.dearbella.server.domain.Token;
+import com.dearbella.server.domain.*;
+import com.dearbella.server.dto.request.admin.AdminCreateRequestDto;
 import com.dearbella.server.dto.response.login.LoginResponseDto;
+import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
 import com.dearbella.server.exception.member.MemberLoginEmailNotFoundException;
+import com.dearbella.server.repository.AdminRepository;
+import com.dearbella.server.repository.HospitalRepository;
 import com.dearbella.server.repository.MemberRepository;
 import com.dearbella.server.repository.TokenRepository;
 import com.dearbella.server.util.JwtUtil;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +28,7 @@ import static com.dearbella.server.config.MapperConfig.modelMapper;
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final TokenRepository tokenRepository;
+    private final AdminRepository adminRepository;
 
     @Override
     @Transactional
@@ -89,6 +93,49 @@ public class MemberServiceImpl implements MemberService {
     public Member findById() {
         return memberRepository.findById(JwtUtil.getMemberId()).orElseThrow(
                 () -> new MemberIdNotFoundException(JwtUtil.getMemberId().toString())
+        );
+    }
+
+    @Override
+    @Transactional
+    public Admin createAdmin(AdminCreateRequestDto dto) {
+        Long memberId = System.currentTimeMillis();
+
+        Member roleAdmin = memberRepository.save(
+                Member.builder()
+                        .memberId(memberId)
+                        .authorities(List.of(
+                                Authority.builder()
+                                        .authorityName("ROLE_ADMIN")
+                                        .build()
+                        ))
+                        .ban(false)
+                        .signOut(false)
+                        .phone(null)
+                        .profileImg("https://dearbella-bucket.s3.ap-northeast-2.amazonaws.com/profile.png")
+                        .loginEmail(dto.getUserId())
+                        .nickname(dto.getHospitalName())
+                        .build()
+        );
+
+        tokenRepository.save(
+                Token.builder()
+                        .memberId(memberId)
+                        .accessToken(JwtUtil.createJwt(memberId))
+                        .refreshToken(JwtUtil.createRefreshToken(memberId))
+                        .accessTokenExpiredAt(LocalDate.now().plusYears(1L))
+                        .refreshTokenExpiredAt(LocalDate.now().plusYears(1L))
+                        .build()
+        );
+
+        return adminRepository.save(
+                Admin.builder()
+                        .memberId(memberId)
+                        .adminId(dto.getUserId())
+                        .adminPassword(dto.getPassword())
+                        .hospitalId(dto.getHospitalId())
+                        .hospitalName(dto.getHospitalName())
+                        .build()
         );
     }
 }

@@ -1,11 +1,10 @@
 package com.dearbella.server.domain;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -13,7 +12,7 @@ import javax.persistence.Table;
 @Builder
 @Entity
 @Setter
-@Table(name = "authority")
+@Table(name = "admin")
 public class Admin {
     @Id
     @Column(name = "member_id", columnDefinition = "bigint")

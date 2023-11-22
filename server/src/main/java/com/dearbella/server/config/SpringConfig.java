@@ -31,8 +31,9 @@ import org.springframework.context.annotation.Configuration;
 public class SpringConfig {
 
     @Bean
-    public MemberService memberService(TokenRepository tokenRepository, MemberRepository memberRepository) {
-        return new MemberServiceImpl(memberRepository, tokenRepository);
+    public MemberService memberService(TokenRepository tokenRepository, MemberRepository memberRepository,
+                                       AdminRepository adminRepository) {
+        return new MemberServiceImpl(memberRepository, tokenRepository, adminRepository);
     }
 
     @Bean
