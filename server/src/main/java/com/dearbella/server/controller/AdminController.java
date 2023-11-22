@@ -2,12 +2,15 @@ package com.dearbella.server.controller;
 
 import com.dearbella.server.domain.Banner;
 import com.dearbella.server.domain.Doctor;
+import com.dearbella.server.domain.DoctorResponse;
 import com.dearbella.server.domain.Hospital;
 import com.dearbella.server.dto.request.banner.BannerAddRequestDto;
+import com.dearbella.server.dto.request.comment.CommentDoctorRequestDto;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
 import com.dearbella.server.repository.BannerRepository;
 import com.dearbella.server.service.banner.BannerService;
+import com.dearbella.server.service.comment.CommentService;
 import com.dearbella.server.service.doctor.DoctorService;
 import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.s3.S3UploadService;
@@ -35,7 +38,7 @@ public class AdminController {
     private final S3UploadService s3UploadService;
     private final DoctorService doctorService;
     private final BannerService bannerService;
-    private final BannerRepository bannerRepository;
+    private final CommentService commentService;
 
     @ApiOperation("병원 정보 넣기")
     @PostMapping(value = "/hospital/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -91,5 +94,11 @@ public class AdminController {
         }
 
         return ResponseEntity.ok(bannerService.addBanner(dto, mainImages, detailImages));
+    }
+
+    @ApiOperation("원장이 댓글 남기기")
+    @PostMapping("/comment/add")
+    public ResponseEntity<DoctorResponse> addComment(@RequestBody CommentDoctorRequestDto dto) {
+        return ResponseEntity.ok(commentService.addDoctorResponse(dto));
     }
 }

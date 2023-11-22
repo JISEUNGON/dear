@@ -29,5 +29,5 @@ public class DoctorResponse {
     private LocalDateTime updatedAt;
 
     @Column(name = "post_id", columnDefinition = "int")
-    private Long id;
+    private Long postId;
 }

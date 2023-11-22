@@ -2,14 +2,17 @@ package com.dearbella.server.service.comment;
 
 import com.dearbella.server.domain.Comment;
 import com.dearbella.server.domain.CommentLike;
+import com.dearbella.server.domain.DoctorResponse;
 import com.dearbella.server.domain.Member;
 import com.dearbella.server.dto.request.comment.CommentAddRequestDto;
+import com.dearbella.server.dto.request.comment.CommentDoctorRequestDto;
 import com.dearbella.server.dto.request.comment.CommentEditRequestDto;
 import com.dearbella.server.dto.response.comment.CommentResponseDto;
 import com.dearbella.server.exception.comment.CommentIdNotFoundException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
 import com.dearbella.server.repository.CommentLikeRepository;
 import com.dearbella.server.repository.CommentRepository;
+import com.dearbella.server.repository.DoctorResponseRepository;
 import com.dearbella.server.repository.MemberRepository;
 import com.dearbella.server.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final CommentLikeRepository commentLikeRepository;
+    private final DoctorResponseRepository doctorResponseRepository;
 
     @Override
     @Transactional
@@ -113,5 +117,17 @@ public class CommentServiceImpl implements CommentService {
 
             return "delete";
         }
+    }
+
+    @Override
+    @Transactional
+    public DoctorResponse addDoctorResponse(CommentDoctorRequestDto dto) {
+        return doctorResponseRepository.save(
+                DoctorResponse.builder()
+                        .postId(dto.getPostId())
+                        .adminId(JwtUtil.getMemberId())
+                        .content(dto.getContent())
+                        .build()
+        );
     }
 }

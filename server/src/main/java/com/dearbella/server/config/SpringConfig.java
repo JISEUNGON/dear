@@ -97,7 +97,8 @@ public class SpringConfig {
 
     @Bean
     public CommentService commentService(CommentRepository commentRepository,  MemberRepository memberRepository,
-                                         CommentLikeRepository commentLikeRepository) {
-        return new CommentServiceImpl(commentRepository, memberRepository, commentLikeRepository);
+                                         CommentLikeRepository commentLikeRepository,
+                                         DoctorResponseRepository doctorResponseRepository) {
+        return new CommentServiceImpl(commentRepository, memberRepository, commentLikeRepository, doctorResponseRepository);
     }
 }

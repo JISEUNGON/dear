@@ -148,8 +148,6 @@ public class FreeController {
     /**
      * comment API
      * */
-
-
     @ApiOperation("후기/커뮤니티 댓글 불러오기")
     @GetMapping("/commetn/all")
     public ResponseEntity<List<CommentResponseDto>> getComments(@RequestParam Long id) {
