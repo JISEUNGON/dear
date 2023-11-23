@@ -3,6 +3,7 @@ package com.dearbella.server.service.doctor;
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
 import com.dearbella.server.dto.request.doctor.DoctorDetailResponseDto;
+import com.dearbella.server.dto.response.doctor.DoctorAdminResponseDto;
 import com.dearbella.server.dto.response.doctor.DoctorResponseDto;
 import com.dearbella.server.dto.response.doctor.MyDoctorResponseDto;
 import com.dearbella.server.dto.response.review.ReviewPreviewResponseDto;
@@ -14,11 +15,11 @@ import com.dearbella.server.repository.*;
 import com.dearbella.server.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -318,5 +319,24 @@ public class DoctorServiceImpl implements DoctorService {
     @Transactional
     public void removeWish(final Long doctorId) {
         doctorMemberRepository.deleteByDoctorId(doctorId);
+    }
+
+    @Override
+    @Transactional
+    public List<DoctorAdminResponseDto> getDoctors(final Long page) {
+        final Page<Doctor> all = doctorRepository.findAll(PageRequest.of(page.intValue(), 12, Sort.by(Sort.Direction.ASC, "doctorName")));
+        List<DoctorAdminResponseDto> responseDtos = new ArrayList<>();
+
+        for(Doctor doctor: all) {
+            responseDtos.add(
+                    DoctorAdminResponseDto.builder()
+                            .doctorId(doctor.getDoctorId())
+                            .doctorName(doctor.getDoctorName())
+                            .totalPage(Long.valueOf(all.getTotalPages()))
+                            .build()
+            );
+        }
+
+        return responseDtos;
     }
 }

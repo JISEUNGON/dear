@@ -12,6 +12,7 @@ import com.dearbella.server.dto.request.inquiry.InquiryEditRequestDto;
 import com.dearbella.server.dto.response.admin.AdminResponseDto;
 import com.dearbella.server.dto.response.banner.BannerAdminResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
+import com.dearbella.server.dto.response.doctor.DoctorAdminResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryAdminResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryDetailDto;
 import com.dearbella.server.dto.response.inquiry.InquiryDetailResponseDto;
@@ -95,6 +96,12 @@ public class AdminController {
         final String upload = s3UploadService.upload(dto.getImage(), "dearbella/doctor", false);
 
         return ResponseEntity.ok(doctorService.addDoctor(dto, upload));
+    }
+
+    @ApiOperation("의사 정보 전체 조회")
+    @GetMapping("/doctor/all")
+    public ResponseEntity<List<DoctorAdminResponseDto>> getDoctors(@RequestParam Long page) {
+        return ResponseEntity.ok(doctorService.getDoctors(page));
     }
 
     /**
