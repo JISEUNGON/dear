@@ -9,6 +9,8 @@ import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
 import com.dearbella.server.dto.request.inquiry.InquiryEditRequestDto;
 import com.dearbella.server.dto.response.admin.AdminResponseDto;
+import com.dearbella.server.dto.response.banner.BannerAdminResponseDto;
+import com.dearbella.server.dto.response.banner.BannerResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryAdminResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryDetailDto;
 import com.dearbella.server.dto.response.inquiry.InquiryDetailResponseDto;
@@ -114,6 +116,13 @@ public class AdminController {
 
         return ResponseEntity.ok(bannerService.addBanner(dto, mainImages, detailImages));
     }
+
+    @ApiOperation("배너 조회")
+    @GetMapping("/banner/all")
+    public ResponseEntity<List<BannerAdminResponseDto>> getBanners(@RequestParam Long location, @RequestParam Long page) {
+        return ResponseEntity.ok(bannerService.getBanners(location, page));
+    }
+
 
     /**
      * Comment API

@@ -27,6 +27,9 @@ public class Banner {
     @Column(name = "banner_link", columnDefinition = "text")
     private String bannerLink;
 
+    @Column(name = "sequence", columnDefinition = "int")
+    private Long sequence;
+
     @Column(name = "hospital_name", length = 100, columnDefinition = "varchar")
     private String hospitalName;
 

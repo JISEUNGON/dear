@@ -14,6 +14,7 @@ public class BannerAddRequestDto {
     private Boolean isTop;
     private String bannerLink;
     private List<MultipartFile> bannerImages;
+    private Long sequence;
     private String hospitalName;
     private String hospitalLocation;
     private String description;

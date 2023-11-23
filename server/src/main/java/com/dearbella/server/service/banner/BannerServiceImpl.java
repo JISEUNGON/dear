@@ -4,6 +4,7 @@ import com.dearbella.server.domain.Banner;
 import com.dearbella.server.domain.Image;
 import com.dearbella.server.domain.Infra;
 import com.dearbella.server.dto.request.banner.BannerAddRequestDto;
+import com.dearbella.server.dto.response.banner.BannerAdminResponseDto;
 import com.dearbella.server.dto.response.banner.BannerDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
 import com.dearbella.server.enums.hospital.InfraEnum;
@@ -16,6 +17,9 @@ import com.dearbella.server.repository.InfraRepository;
 import com.dearbella.server.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -81,6 +85,7 @@ public class BannerServiceImpl implements BannerService {
                         .bannerImages(mains)
                         .bannerDetailImages(details)
                         .bannerInfra(infras)
+                        .sequence(dto.getSequence())
                         .build()
         );
     }
@@ -89,7 +94,7 @@ public class BannerServiceImpl implements BannerService {
     public List<BannerResponseDto> getBanners(Boolean location) {
         List<BannerResponseDto> response = new ArrayList<>();
 
-        List<Banner> banners = bannerRepository.findBannerByBannerLocation(location);
+        List<Banner> banners = bannerRepository.findBannerByBannerLocation(location, Sort.by(Sort.Direction.ASC, "sequence"));
 
         if(banners.isEmpty()) {
             throw new BannerNotExistException();
@@ -113,5 +118,24 @@ public class BannerServiceImpl implements BannerService {
         log.info("banner: {}", banner);
 
         return modelMapper.map(banner, BannerDetailResponseDto.class);
+    }
+
+    @Override
+    @Transactional
+    public List<BannerAdminResponseDto> getBanners(final Long location, final Long page) {
+        Page<Banner> banners = bannerRepository.findAll(PageRequest.of(page.intValue(), 3, Sort.by(Sort.Direction.ASC, "sequence")));
+
+        List<BannerAdminResponseDto> responseDtos = new ArrayList<>();
+
+        for(Banner banner: banners) {
+            responseDtos.add(
+                    BannerAdminResponseDto.builder()
+                            .bannerId(banner.getBannerId())
+                            .sequence(banner.getSequence())
+                            .imageUrl(banner.getMainImage())
+                            .build()
+            );
+        }
+        return responseDtos;
     }
 }
