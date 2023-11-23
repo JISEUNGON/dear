@@ -11,4 +11,5 @@ public class AdminResponseDto {
     private Long memberId;
     private String hospitalName;
     private String adminId;
+    private Long totalPages;
 }

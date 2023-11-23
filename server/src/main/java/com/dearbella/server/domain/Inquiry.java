@@ -26,7 +26,7 @@ public class Inquiry {
     private Long hospitalId;
 
     @Column(name = "member_name", length = 100, columnDefinition = "varchar")
-    private String member_name;
+    private String memberName;
 
     @Column(name = "location", columnDefinition = "int")
     private Long location;

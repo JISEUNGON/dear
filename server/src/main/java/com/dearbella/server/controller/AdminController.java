@@ -8,11 +8,13 @@ import com.dearbella.server.dto.request.comment.CommentDoctorRequestDto;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
 import com.dearbella.server.dto.response.admin.AdminResponseDto;
+import com.dearbella.server.dto.response.inquiry.InquiryAdminResponseDto;
 import com.dearbella.server.repository.BannerRepository;
 import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.comment.CommentService;
 import com.dearbella.server.service.doctor.DoctorService;
 import com.dearbella.server.service.hospital.HospitalService;
+import com.dearbella.server.service.inquiry.InquiryService;
 import com.dearbella.server.service.member.MemberService;
 import com.dearbella.server.service.s3.S3UploadService;
 import io.swagger.annotations.Api;
@@ -42,6 +44,7 @@ public class AdminController {
     private final BannerService bannerService;
     private final CommentService commentService;
     private final MemberService memberService;
+    private final InquiryService inquiryService;
 
     /**
      * hospital API
@@ -142,5 +145,14 @@ public class AdminController {
     @PostMapping("/user/edit")
     public ResponseEntity<AdminResponseDto> editAdmin(@RequestBody AdminEditRequestDto dto) {
         return ResponseEntity.ok(memberService.editAdmin(dto));
+    }
+
+    /**
+     * Inquiry API
+     * */
+    @ApiOperation("문의 글 불러오기")
+    @GetMapping("/inquiry/all")
+    public ResponseEntity<List<InquiryAdminResponseDto>> getAllInquiries(@RequestParam Long page) {
+        return ResponseEntity.ok(inquiryService.getAll(page));
     }
 }

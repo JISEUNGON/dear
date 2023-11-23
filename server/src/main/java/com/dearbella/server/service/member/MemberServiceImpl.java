@@ -186,8 +186,11 @@ public class MemberServiceImpl implements MemberService {
         List<AdminResponseDto> responseDtoList = new ArrayList<>();
 
         for(Admin admin: all) {
+            AdminResponseDto map = modelMapper.map(admin, AdminResponseDto.class);
+            map.setTotalPages(Long.valueOf(all.getTotalPages()));
+
             responseDtoList.add(
-                    modelMapper.map(admin, AdminResponseDto.class)
+                    map
             );
         }
 

@@ -72,8 +72,9 @@ public class SpringConfig {
     }
 
     @Bean
-    public InquiryService inquiryService(InquiryRepository inquiryRepository) {
-        return new InquiryServiceImpl(inquiryRepository);
+    public InquiryService inquiryService(InquiryRepository inquiryRepository, HospitalRepository hospitalRepository,
+                                         MemberRepository memberRepository) {
+        return new InquiryServiceImpl(inquiryRepository, hospitalRepository, memberRepository);
     }
 
     @Bean
