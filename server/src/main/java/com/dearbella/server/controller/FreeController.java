@@ -10,10 +10,8 @@ import com.dearbella.server.dto.response.hospital.HospitalDetailResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalResponseDto;
 import com.dearbella.server.dto.response.post.PostDetailResponseDto;
 import com.dearbella.server.dto.response.post.PostFindResponseDto;
-import com.dearbella.server.dto.response.post.PostResponseDto;
 import com.dearbella.server.dto.response.review.ReviewDetailResponseDto;
 import com.dearbella.server.dto.response.review.ReviewResponseDto;
-import com.dearbella.server.repository.DoctorRepository;
 import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.comment.CommentService;
 import com.dearbella.server.service.doctor.DoctorService;
@@ -21,13 +19,13 @@ import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.ip.IpService;
 import com.dearbella.server.service.post.PostService;
 import com.dearbella.server.service.review.ReviewService;
+import com.dearbella.server.service.s3.S3UploadService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Set;
 

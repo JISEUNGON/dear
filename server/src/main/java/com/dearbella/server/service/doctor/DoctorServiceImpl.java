@@ -85,6 +85,7 @@ public class DoctorServiceImpl implements DoctorService {
                         .links(videos)
                         .sequence(dto.getSequence())
                         .totalRate(0.0F)
+                        .viewNum(0L)
                         .deleted(false)
                         .build()
         );

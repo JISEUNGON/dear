@@ -97,9 +97,10 @@ public class HospitalServiceImpl implements HospitalService {
                         .sequence(dto.getSequence())
                         .totalRate(0F)
                         .infras(infraList)
-                        .anesthesiologist(0L)
-                        .plasticSurgeon(0L)
-                        .dermatologist(0L)
+                        .anesthesiologist(dto.getAnesthesiologist())
+                        .plasticSurgeon(dto.getPlasticSurgeon())
+                        .dermatologist(dto.getDermatologist())
+                        .viewNum(0L)
                         .deleted(false)
                         .build()
         );
