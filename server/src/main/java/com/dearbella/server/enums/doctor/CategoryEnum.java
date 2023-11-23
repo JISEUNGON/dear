@@ -10,7 +10,8 @@ public enum CategoryEnum {
     Botox(6L),
     Lifting(7L),
     FatProcedure(8L),
-    Skin(9L);
+    Skin(9L),
+    Etc(10L);
 
     private Long value;
 

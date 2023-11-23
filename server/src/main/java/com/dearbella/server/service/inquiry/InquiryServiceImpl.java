@@ -4,7 +4,9 @@ import com.dearbella.server.domain.Hospital;
 import com.dearbella.server.domain.Inquiry;
 import com.dearbella.server.domain.Member;
 import com.dearbella.server.dto.request.inquiry.InquiryAddRequestDto;
+import com.dearbella.server.dto.request.inquiry.InquiryEditRequestDto;
 import com.dearbella.server.dto.response.inquiry.InquiryAdminResponseDto;
+import com.dearbella.server.dto.response.inquiry.InquiryDetailDto;
 import com.dearbella.server.dto.response.inquiry.InquiryDetailResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryResponseDto;
 import com.dearbella.server.enums.doctor.CategoryEnum;
@@ -113,5 +115,34 @@ public class InquiryServiceImpl implements InquiryService {
         }
 
         return responseDtoList;
+    }
+
+    @Override
+    @Transactional
+    public Inquiry answerInquiry(final InquiryEditRequestDto dto) {
+        Inquiry inquiry = inquiryRepository.findById(dto.getInquiryId()).orElseThrow(
+                () -> new InquiryIdNotFoundException(dto.getInquiryId())
+        );
+
+        inquiry.setAnswer(dto.getContent());
+
+        return inquiryRepository.save(inquiry);
+    }
+
+    @Override
+    @Transactional
+    public InquiryDetailDto getDetail(final Long inquiryId) {
+        final Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow(
+                () -> new InquiryIdNotFoundException(inquiryId)
+        );
+
+        return InquiryDetailDto.builder()
+                .inquiryId(inquiryId)
+                .hospitalName(hospitalRepository.findById(inquiry.getHospitalId()).orElseThrow(() -> new HospitalIdNotFoundException(inquiry.getHospitalId())).getHospitalName())
+                .category(CategoryEnum.findByValue(inquiry.getCategory()).name())
+                .name(inquiry.getMemberName())
+                .phone(inquiry.getPhoneNumber())
+                .content(inquiry.getContent())
+                .build();
     }
 }

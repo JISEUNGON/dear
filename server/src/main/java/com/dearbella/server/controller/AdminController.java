@@ -7,8 +7,12 @@ import com.dearbella.server.dto.request.banner.BannerAddRequestDto;
 import com.dearbella.server.dto.request.comment.CommentDoctorRequestDto;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
+import com.dearbella.server.dto.request.inquiry.InquiryEditRequestDto;
 import com.dearbella.server.dto.response.admin.AdminResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryAdminResponseDto;
+import com.dearbella.server.dto.response.inquiry.InquiryDetailDto;
+import com.dearbella.server.dto.response.inquiry.InquiryDetailResponseDto;
+import com.dearbella.server.dto.response.inquiry.InquiryResponseDto;
 import com.dearbella.server.repository.BannerRepository;
 import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.comment.CommentService;
@@ -154,5 +158,17 @@ public class AdminController {
     @GetMapping("/inquiry/all")
     public ResponseEntity<List<InquiryAdminResponseDto>> getAllInquiries(@RequestParam Long page) {
         return ResponseEntity.ok(inquiryService.getAll(page));
+    }
+
+    @ApiOperation("문의 상세 보기")
+    @GetMapping("/inquiry/detail")
+    public ResponseEntity<InquiryDetailDto> getInquiry(@RequestParam Long inquiryId) {
+        return ResponseEntity.ok(inquiryService.getDetail(inquiryId));
+    }
+
+    @ApiOperation("문의 답변하기")
+    @PostMapping("/inquiry/answer")
+    public ResponseEntity<Inquiry> answerInquiry(@RequestBody InquiryEditRequestDto dto) {
+        return ResponseEntity.ok(inquiryService.answerInquiry(dto));
     }
 }
