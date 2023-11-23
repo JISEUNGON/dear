@@ -4,6 +4,7 @@ import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.admin.AdminCreateRequestDto;
 import com.dearbella.server.dto.request.admin.AdminEditRequestDto;
 import com.dearbella.server.dto.request.banner.BannerAddRequestDto;
+import com.dearbella.server.dto.request.banner.BannerEditRequestDto;
 import com.dearbella.server.dto.request.comment.CommentDoctorRequestDto;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
@@ -117,12 +118,35 @@ public class AdminController {
         return ResponseEntity.ok(bannerService.addBanner(dto, mainImages, detailImages));
     }
 
+    @ApiOperation("배너 수정")
+    @PostMapping(value = "/banner/edit", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @Transactional
+    public ResponseEntity<Banner> editBanner(@ModelAttribute BannerEditRequestDto dto) throws IOException {
+        List<String> mainImages = new ArrayList<>();
+        List<String> detailImages = new ArrayList<>();
+
+        for(MultipartFile file: dto.getBannerImages()) {
+            mainImages.add(s3UploadService.upload(file, "dearbella/banner/main", false));
+        }
+
+        for(MultipartFile file: dto.getDetailImages()) {
+            detailImages.add(s3UploadService.upload(file, "dearbella/banner/detail", false));
+        }
+
+        return ResponseEntity.ok(bannerService.editBanner(dto, mainImages, detailImages));
+    }
+
     @ApiOperation("배너 조회")
     @GetMapping("/banner/all")
     public ResponseEntity<List<BannerAdminResponseDto>> getBanners(@RequestParam Long location, @RequestParam Long page) {
         return ResponseEntity.ok(bannerService.getBanners(location, page));
     }
 
+    @ApiOperation("배너 상세 조회")
+    @GetMapping("/banner/detail")
+    public ResponseEntity<Banner> getBannerDetail(@RequestParam Long bannerId) {
+        return ResponseEntity.ok(bannerService.getBanner(bannerId));
+    }
 
     /**
      * Comment API

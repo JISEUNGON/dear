@@ -4,6 +4,7 @@ import com.dearbella.server.domain.Banner;
 import com.dearbella.server.domain.Image;
 import com.dearbella.server.domain.Infra;
 import com.dearbella.server.dto.request.banner.BannerAddRequestDto;
+import com.dearbella.server.dto.request.banner.BannerEditRequestDto;
 import com.dearbella.server.dto.response.banner.BannerAdminResponseDto;
 import com.dearbella.server.dto.response.banner.BannerDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
@@ -137,5 +138,70 @@ public class BannerServiceImpl implements BannerService {
             );
         }
         return responseDtos;
+    }
+
+    @Override
+    @Transactional
+    public Banner editBanner(final BannerEditRequestDto dto, final List<String> mainImages, final List<String> detailImages) {
+        List<Image> mains = new ArrayList<>();
+        List<Image> details = new ArrayList<>();
+        Long memberId = JwtUtil.getMemberId();
+        List<Infra> infras = new ArrayList<>();
+
+        for(int i = 1; i < mainImages.size(); i++) {
+            mains.add(
+                    imageRepository.save(
+                            Image.builder()
+                                    .imageUrl(mainImages.get(i))
+                                    .memberId(memberId)
+                                    .build()
+                    )
+            );
+        }
+
+        for(String image: detailImages) {
+            details.add(
+                    imageRepository.save(
+                            Image.builder()
+                                    .imageUrl(image)
+                                    .memberId(memberId)
+                                    .build()
+                    )
+            );
+        }
+
+        for(Long tag: dto.getTags()) {
+            infras.add(
+                    infraRepository.findById(tag).orElseThrow(
+                            () -> new BannerInfraNotFoundException(tag)
+                    )
+            );
+        }
+
+        Banner banner = bannerRepository.findById(dto.getBannerId()).orElseThrow(
+                () -> new BannerIdNotFoundException(dto.getBannerId())
+        );
+
+        banner.setBannerImages(mains);
+        banner.setBannerLocation(dto.getIsTop());
+        banner.setHospitalName(dto.getHospitalName());
+        banner.setMainImage(mainImages.get(0));
+        banner.setHospitalLocation(dto.getHospitalLocation());
+        banner.setDescription(dto.getDescription());
+        banner.setAdminId(memberId);
+        banner.setBannerImages(mains);
+        banner.setBannerDetailImages(details);
+        banner.setBannerInfra(infras);
+        banner.setSequence(dto.getSequence());
+
+        return bannerRepository.save(banner);
+    }
+
+    @Override
+    @Transactional
+    public Banner getBanner(final Long bannerId) {
+        return bannerRepository.findById(bannerId).orElseThrow(
+                () ->new BannerIdNotFoundException(bannerId)
+        );
     }
 }
