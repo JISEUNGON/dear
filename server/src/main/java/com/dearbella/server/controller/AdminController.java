@@ -104,6 +104,12 @@ public class AdminController {
         return ResponseEntity.ok(doctorService.getDoctors(page));
     }
 
+    @ApiOperation("의사 정보 조회")
+    @GetMapping("/doctor/detail")
+    public ResponseEntity<Doctor> getDoctorInfo(@RequestParam Long doctorId) {
+        return ResponseEntity.ok(doctorService.getDoctor(doctorId));
+    }
+
     /**
      * Banner API
      * */

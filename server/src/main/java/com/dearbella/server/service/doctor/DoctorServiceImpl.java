@@ -339,4 +339,12 @@ public class DoctorServiceImpl implements DoctorService {
 
         return responseDtos;
     }
+
+    @Override
+    @Transactional
+    public Doctor getDoctor(Long doctorId) {
+        return doctorRepository.findById(doctorId).orElseThrow(
+                () -> new DoctorIdNotFoundException(doctorId)
+        );
+    }
 }

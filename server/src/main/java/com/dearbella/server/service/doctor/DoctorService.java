@@ -19,6 +19,6 @@ public interface DoctorService {
     public List<MyDoctorResponseDto> findMyDoctors();
     public DoctorMember addWish(Long doctorId);
     public void removeWish(Long doctorId);
-
     public List<DoctorAdminResponseDto> getDoctors(Long page);
+    public Doctor getDoctor(Long doctorId);
 }
