@@ -38,7 +38,7 @@ public class PostController {
 
         for(MultipartFile file: dto.getImages()) {
             images.add(
-                    s3UploadService.upload(file, "/dearbella/post", false)
+                    s3UploadService.upload(file, "dearbella/post", false)
             );
         }
 
@@ -53,9 +53,8 @@ public class PostController {
 
     @ApiOperation("게시물 삭제")
     @DeleteMapping("/my")
-    public ResponseEntity deletePost(@RequestParam Long postId) {
-        postService.deletePost(postId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> deletePost(@RequestParam Long postId) {
+        return ResponseEntity.ok(postService.deletePost(postId));
     }
 
     @ApiOperation("커뮤니티 글 좋아요/취소")

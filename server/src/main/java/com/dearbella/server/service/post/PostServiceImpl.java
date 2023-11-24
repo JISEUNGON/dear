@@ -2,6 +2,7 @@ package com.dearbella.server.service.post;
 
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.post.PostAddRequestDto;
+import com.dearbella.server.dto.response.post.PostAdminResponseDto;
 import com.dearbella.server.dto.response.post.PostDetailResponseDto;
 import com.dearbella.server.dto.response.post.PostFindResponseDto;
 import com.dearbella.server.dto.response.post.PostResponseDto;
@@ -13,6 +14,8 @@ import com.dearbella.server.repository.*;
 import com.dearbella.server.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,6 +63,7 @@ public class PostServiceImpl implements PostService {
                         .title(dto.getTitle())
                         .content(dto.getContent())
                         .memberId(JwtUtil.getMemberId())
+                        .deleted(false)
                         .viewNum(0L)
                     .build()
         );
@@ -119,7 +123,7 @@ public class PostServiceImpl implements PostService {
                             .memberName(member.getNickname())
                             .title(post.getTitle())
                             .viewNum(post.getViewNum())
-                            .likeNum(Long.valueOf(postLikeRepository.findByPostId(post.getPostId()).size()))
+                            .likeNum((long) postLikeRepository.findByPostId(post.getPostId()).size())
                             .commentNum(0L)
                             .build()
             );
@@ -176,12 +180,18 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void deletePost(final Long postId) {
+    public String deletePost(final Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new PostIdNotFoundException(postId)
         );
 
-        post.setDeleted(true);
+        if(post.getDeleted())
+            return "already deleted";
+        else
+            post.setDeleted(true);
+        postRepository.save(post);
+
+        return "deleted";
     }
 
     @Override
@@ -205,5 +215,29 @@ public class PostServiceImpl implements PostService {
 
             return "delete";
         }
+    }
+
+    @Override
+    @Transactional
+    public List<PostAdminResponseDto> findAllByCategory(Long category, Long page) {
+        Page<Post> posts = postRepository.findByTagAndDeletedFalse(
+                Tag.builder()
+                        .tagId(category)
+                        .tagName(TagEnum.findByValue(category).name())
+                        .build(), PageRequest.of(page.intValue(), 11, Sort.by(Sort.Direction.DESC, "createdAt"))
+        );
+        List<PostAdminResponseDto> responseDtoList = new ArrayList<>();
+
+        for(Post post: posts) {
+            responseDtoList.add(
+                    PostAdminResponseDto.builder()
+                            .postId(post.getPostId())
+                            .postName(post.getTitle())
+                            .totalPage((long) posts.getTotalPages())
+                            .build()
+            );
+        }
+
+        return responseDtoList;
     }
 }

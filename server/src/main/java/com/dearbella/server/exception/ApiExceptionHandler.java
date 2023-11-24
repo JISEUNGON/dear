@@ -9,6 +9,7 @@ import com.dearbella.server.exception.doctor.DoctorByHospitalNameNotFoundExcepti
 import com.dearbella.server.exception.doctor.DoctorIdNotFoundException;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
 import com.dearbella.server.exception.hospital.HospitalResponseNullException;
+import com.dearbella.server.exception.image.FileNameNotValidException;
 import com.dearbella.server.exception.inquiry.InquiryIdNotFoundException;
 import com.dearbella.server.exception.login.AdminLoginException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
@@ -161,5 +162,15 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleException(AdminLoginException ex) {
         ApiErrorResponse response = new ApiErrorResponse("DEL-001", "Info Not miss match: " + ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    /**
+     * image Exceptuon
+     * */
+    @ExceptionHandler(FileNameNotValidException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(FileNameNotValidException ex) {
+        ApiErrorResponse response = new ApiErrorResponse("DEI-001", ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

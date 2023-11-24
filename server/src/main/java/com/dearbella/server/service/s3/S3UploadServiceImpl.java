@@ -4,6 +4,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
+import com.dearbella.server.exception.image.FileNameNotValidException;
 import com.dearbella.server.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +25,13 @@ public class S3UploadServiceImpl implements S3UploadService {
     public String upload(MultipartFile multipartFile, String dirName, boolean profile) throws IOException {
         String fileName;
 
-        fileName = multipartFile.getOriginalFilename();
+        fileName = multipartFile.getOriginalFilename().replaceAll("[^a-zA-Z0-9.\\(\\)]", "");
 
         String[] parts = fileName.split("\\.");
+
+        if(parts[0].isEmpty()) {
+            throw new FileNameNotValidException();
+        }
 
         if (parts.length < 2) {
             throw new IllegalArgumentException("Invalid file type => file name: " + fileName);

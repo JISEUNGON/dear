@@ -2,6 +2,7 @@ package com.dearbella.server.service.post;
 
 import com.dearbella.server.domain.Post;
 import com.dearbella.server.dto.request.post.PostAddRequestDto;
+import com.dearbella.server.dto.response.post.PostAdminResponseDto;
 import com.dearbella.server.dto.response.post.PostDetailResponseDto;
 import com.dearbella.server.dto.response.post.PostFindResponseDto;
 import com.dearbella.server.dto.response.post.PostResponseDto;
@@ -18,7 +19,8 @@ public interface PostService {
 
     public void addViewNum(Long postId);
 
-    public void deletePost(Long postId);
+    public String deletePost(Long postId);
 
     public String likePost(Long id);
+    public List<PostAdminResponseDto> findAllByCategory(Long category, Long page);
 }

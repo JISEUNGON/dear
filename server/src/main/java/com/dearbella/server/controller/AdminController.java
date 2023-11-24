@@ -17,6 +17,7 @@ import com.dearbella.server.dto.response.inquiry.InquiryAdminResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryDetailDto;
 import com.dearbella.server.dto.response.inquiry.InquiryDetailResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryResponseDto;
+import com.dearbella.server.dto.response.post.PostAdminResponseDto;
 import com.dearbella.server.repository.BannerRepository;
 import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.comment.CommentService;
@@ -24,6 +25,7 @@ import com.dearbella.server.service.doctor.DoctorService;
 import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.inquiry.InquiryService;
 import com.dearbella.server.service.member.MemberService;
+import com.dearbella.server.service.post.PostService;
 import com.dearbella.server.service.s3.S3UploadService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -53,6 +55,7 @@ public class AdminController {
     private final CommentService commentService;
     private final MemberService memberService;
     private final InquiryService inquiryService;
+    private final PostService postService;
 
     /**
      * hospital API
@@ -222,5 +225,20 @@ public class AdminController {
     @PostMapping("/inquiry/answer")
     public ResponseEntity<Inquiry> answerInquiry(@RequestBody InquiryEditRequestDto dto) {
         return ResponseEntity.ok(inquiryService.answerInquiry(dto));
+    }
+
+    /**
+     * community API
+     * */
+    @ApiOperation("커뮤니티 글 전체 조회")
+    @GetMapping("/community/all")
+    public ResponseEntity<List<PostAdminResponseDto>> getPosts(@RequestParam Long category, @RequestParam Long page) {
+        return ResponseEntity.ok(postService.findAllByCategory(category, page));
+    }
+
+    @ApiOperation("커뮤니티 글 삭제")
+    @DeleteMapping("/community/delete")
+    public ResponseEntity<String> deletePost(@RequestParam Long postId) {
+        return ResponseEntity.ok(postService.deletePost(postId));
     }
 }
