@@ -14,6 +14,7 @@ import com.dearbella.server.dto.response.admin.AdminResponseDto;
 import com.dearbella.server.dto.response.banner.BannerAdminResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
 import com.dearbella.server.dto.response.doctor.DoctorAdminResponseDto;
+import com.dearbella.server.dto.response.hospital.HospitalAdminResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryAdminResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryDetailDto;
 import com.dearbella.server.dto.response.inquiry.InquiryDetailResponseDto;
@@ -96,6 +97,12 @@ public class AdminController {
         }
 
         return ResponseEntity.ok(hospitalService.addHospital(dto, befores, afters, banners));
+    }
+
+    @ApiOperation("병원 리스트 조회")
+    @GetMapping("/hospital/all")
+    public ResponseEntity<List<HospitalAdminResponseDto>> getHospitals(@RequestParam Long page) {
+        return ResponseEntity.ok(hospitalService.findALl(page));
     }
 
     /**

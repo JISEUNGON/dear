@@ -3,6 +3,7 @@ package com.dearbella.server.service.hospital;
 import com.dearbella.server.domain.Hospital;
 import com.dearbella.server.domain.HospitalMember;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
+import com.dearbella.server.dto.response.hospital.HospitalAdminResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalDetailResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalResponseDto;
 import com.dearbella.server.dto.response.hospital.MyHospitalResponseDto;
@@ -15,10 +16,8 @@ public interface HospitalService {
     public List<HospitalResponseDto> getAll(Long category, Long sort);
     public HospitalDetailResponseDto findById(Long id);
     public Set<HospitalResponseDto> findByQuery(String query);
-
     public List<MyHospitalResponseDto> findByMemberId();
-
     public HospitalMember addWishList(Long hospitalId);
-
     public void deleteWish(Long hospitalId);
+    public List<HospitalAdminResponseDto> findALl(Long page);
 }

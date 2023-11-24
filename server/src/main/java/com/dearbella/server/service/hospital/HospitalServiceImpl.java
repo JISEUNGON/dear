@@ -3,6 +3,7 @@ package com.dearbella.server.service.hospital;
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
 import com.dearbella.server.dto.response.doctor.DoctorResponseDto;
+import com.dearbella.server.dto.response.hospital.HospitalAdminResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalDetailResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalResponseDto;
 import com.dearbella.server.dto.response.hospital.MyHospitalResponseDto;
@@ -15,6 +16,8 @@ import com.dearbella.server.repository.*;
 import com.dearbella.server.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -338,5 +341,24 @@ public class HospitalServiceImpl implements HospitalService {
     @Transactional
     public void deleteWish(final Long hospitalId) {
         hospitalMemberRepository.deleteByHospitalId(hospitalId);
+    }
+
+    @Override
+    @Transactional
+    public List<HospitalAdminResponseDto> findALl(final Long page) {
+        Page<Hospital> hospitals = hospitalRepository.findAll(PageRequest.of(page.intValue(), 11, Sort.by(Sort.Direction.ASC, "hospitalName")));
+        List<HospitalAdminResponseDto> responseDtoList = new ArrayList<>();
+
+        for(Hospital hospital: hospitals) {
+            responseDtoList.add(
+                    HospitalAdminResponseDto.builder()
+                            .hospitalId(hospital.getHospitalId())
+                            .hospitalName(hospital.getHospitalName())
+                            .totalPage(Long.valueOf(hospitals.getTotalPages()))
+                            .build()
+            );
+        }
+
+        return responseDtoList;
     }
 }
