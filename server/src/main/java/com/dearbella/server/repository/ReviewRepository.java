@@ -2,6 +2,9 @@ package com.dearbella.server.repository;
 
 import com.dearbella.server.domain.Review;
 import com.dearbella.server.enums.doctor.CategoryEnum;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +27,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     public List<Review> findByDoctorId(Long doctorId);
     public List<Review> findAllByMemberId(Long memberId, Sort sort);
     public List<Review> findByDoctorIdAndDeletedFalse(Long doctorId);
+
+    public Page<Review> findByDeletedFalse(Pageable createdAt);
 }

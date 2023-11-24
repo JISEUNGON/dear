@@ -2,10 +2,7 @@ package com.dearbella.server.service.review;
 
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.review.ReviewAddRequestDto;
-import com.dearbella.server.dto.response.review.MyReviewResponseDto;
-import com.dearbella.server.dto.response.review.ReviewAddResponseDto;
-import com.dearbella.server.dto.response.review.ReviewDetailResponseDto;
-import com.dearbella.server.dto.response.review.ReviewResponseDto;
+import com.dearbella.server.dto.response.review.*;
 import com.dearbella.server.enums.doctor.CategoryEnum;
 import com.dearbella.server.exception.doctor.DoctorIdNotFoundException;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
@@ -16,6 +13,8 @@ import com.dearbella.server.repository.*;
 import com.dearbella.server.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -275,5 +274,24 @@ public class ReviewServiceImpl implements ReviewService {
 
             return "delete";
         }
+    }
+
+    @Override
+    @Transactional
+    public List<ReviewAdminResponseDto> getReviews(Long page) {
+        Page<Review> reviews = reviewRepository.findByDeletedFalse(PageRequest.of(page.intValue(), 12, Sort.by(Sort.Direction.DESC, "updatedAt")));
+        List<ReviewAdminResponseDto> responseDtoList = new ArrayList<>();
+
+        for(Review review: reviews) {
+            responseDtoList.add(
+                    ReviewAdminResponseDto.builder()
+                            .reviewId(review.getReviewId())
+                            .reviewTittle(review.getTitle())
+                            .totalPage((long) reviews.getTotalPages())
+                            .build()
+            );
+        }
+
+        return responseDtoList;
     }
 }

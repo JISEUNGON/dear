@@ -20,6 +20,7 @@ import com.dearbella.server.dto.response.inquiry.InquiryResponseDto;
 import com.dearbella.server.dto.response.post.PostAdminDetailResponseDto;
 import com.dearbella.server.dto.response.post.PostAdminResponseDto;
 import com.dearbella.server.dto.response.post.PostDetailResponseDto;
+import com.dearbella.server.dto.response.review.ReviewAdminResponseDto;
 import com.dearbella.server.repository.BannerRepository;
 import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.comment.CommentService;
@@ -28,6 +29,7 @@ import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.inquiry.InquiryService;
 import com.dearbella.server.service.member.MemberService;
 import com.dearbella.server.service.post.PostService;
+import com.dearbella.server.service.review.ReviewService;
 import com.dearbella.server.service.s3.S3UploadService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -58,6 +60,7 @@ public class AdminController {
     private final MemberService memberService;
     private final InquiryService inquiryService;
     private final PostService postService;
+    private final ReviewService reviewService;
 
     /**
      * hospital API
@@ -248,5 +251,14 @@ public class AdminController {
     @GetMapping("/community/detail")
     public ResponseEntity<PostAdminDetailResponseDto> getPostDetail(@RequestParam Long postId) {
         return ResponseEntity.ok(postService.getDetail(postId));
+    }
+
+    /**
+     * review API
+     * */
+    @ApiOperation("리뷰전체 조회")
+    @GetMapping("/review/all")
+    public ResponseEntity<List<ReviewAdminResponseDto>> getReviews(Long page) {
+        return ResponseEntity.ok(reviewService.getReviews(page));
     }
 }
