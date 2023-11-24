@@ -9,6 +9,7 @@ import com.dearbella.server.dto.request.comment.CommentDoctorRequestDto;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
 import com.dearbella.server.dto.request.doctor.DoctorEditRequestDto;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
+import com.dearbella.server.dto.request.hospital.HospitalEditRequestDto;
 import com.dearbella.server.dto.request.inquiry.InquiryEditRequestDto;
 import com.dearbella.server.dto.response.admin.AdminResponseDto;
 import com.dearbella.server.dto.response.banner.BannerAdminResponseDto;
@@ -97,6 +98,34 @@ public class AdminController {
         }
 
         return ResponseEntity.ok(hospitalService.addHospital(dto, befores, afters, banners));
+    }
+
+    @ApiOperation("병원 편집")
+    @PostMapping(value = "/hospital/edit", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Hospital> editHospital(@ModelAttribute HospitalEditRequestDto dto) throws IOException {
+        List<String> befores = new ArrayList<>();
+        List<String> afters = new ArrayList<>();
+        List<String> banners = new ArrayList<>();
+
+        for(MultipartFile before: dto.getBefores()) {
+            befores.add(
+                    s3UploadService.upload(before, "dearbella/hospital/before", false)
+            );
+        }
+
+        for(MultipartFile after: dto.getAfters()) {
+            afters.add(
+                    s3UploadService.upload(after, "dearbella/hospital/after", false)
+            );
+        }
+
+        for(MultipartFile banner: dto.getBanners()) {
+            banners.add(
+                    s3UploadService.upload(banner, "dearbella/hospital/banner", false)
+            );
+        }
+
+        return ResponseEntity.ok(hospitalService.editHospital(dto, befores, afters, banners));
     }
 
     @ApiOperation("병원 리스트 조회")

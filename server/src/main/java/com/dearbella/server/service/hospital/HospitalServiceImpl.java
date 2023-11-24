@@ -2,6 +2,7 @@ package com.dearbella.server.service.hospital;
 
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
+import com.dearbella.server.dto.request.hospital.HospitalEditRequestDto;
 import com.dearbella.server.dto.response.doctor.DoctorResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalAdminResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalDetailResponseDto;
@@ -360,5 +361,75 @@ public class HospitalServiceImpl implements HospitalService {
         }
 
         return responseDtoList;
+    }
+
+    @Override
+    @Transactional
+    public Hospital editHospital(final HospitalEditRequestDto dto, final List<String> befores, final List<String> afters, final List<String> banners) {
+        List<Image> beforeImages = new ArrayList<>();
+        List<Image> afterImages = new ArrayList<>();
+        List<Image> bannerImages = new ArrayList<>();
+        Set<Infra> infraList = new HashSet<>();
+        Hospital hospital = hospitalRepository.findById(dto.getHospitalId()).orElseThrow(
+                () -> new HospitalIdNotFoundException(dto.getHospitalId())
+        );
+
+        for(String image: befores) {
+            beforeImages.add(
+                    imageRepository.save(
+                            Image.builder()
+                                    .imageUrl(image)
+                                    .memberId(JwtUtil.getMemberId())
+                                    .build()
+                    )
+            );
+        }
+
+        for(String image: afters) {
+            afterImages.add(
+                    imageRepository.save(
+                            Image.builder()
+                                    .imageUrl(image)
+                                    .memberId(JwtUtil.getMemberId())
+                                    .build()
+                    )
+            );
+        }
+
+        for(String image: banners) {
+            bannerImages.add(
+                    imageRepository.save(
+                            Image.builder()
+                                    .imageUrl(image)
+                                    .memberId(JwtUtil.getMemberId())
+                                    .build()
+                    )
+            );
+        }
+
+        for(Long tag: dto.getInfras()) {
+            infraList.add(
+                    infraRepository.findById(tag).orElseThrow(
+                            () -> new BannerInfraNotFoundException(tag)
+                    )
+            );
+        }
+
+        hospital.setHospitalLocation(dto.getLocation());
+        hospital.setAfter(afterImages);
+        hospital.setBefore(beforeImages);
+        hospital.setBanners(bannerImages);
+        hospital.setHospitalName(dto.getName());
+        hospital.setDescription(dto.getDescription());
+        hospital.setHospitalLocation(dto.getLocation());
+        hospital.setDescription(dto.getDescription());
+        hospital.setHospitalVideoLink(dto.getLink());
+        hospital.setSequence(dto.getSequence());
+        hospital.setInfras(infraList);
+        hospital.setAnesthesiologist(dto.getAnesthesiologist());
+        hospital.setPlasticSurgeon(dto.getPlasticSurgeon());
+        hospital.setDermatologist(dto.getDermatologist());
+
+        return hospitalRepository.save(hospital);
     }
 }
