@@ -31,6 +31,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/free")
+@CrossOrigin("http://localhost:3000")
 @Slf4j
 @RequiredArgsConstructor
 @Api(tags = {"권한 필요 없는 API"})
