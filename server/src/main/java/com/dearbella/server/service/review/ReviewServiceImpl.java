@@ -104,13 +104,13 @@ public class ReviewServiceImpl implements ReviewService {
         if(doctor != null) {
             final int num = reviewRepository.findByDoctorId(doctor.getDoctorId()).size();
 
-            doctor.setTotalRate(((doctor.getTotalRate() * num + dto.getRate())) / (num + 1));
+            doctor.setTotalRate(((doctor.getTotalRate() * num + dto.getRate())) / (float) (num + 1));
         }
 
         if(hospital != null) {
             final int num = reviewRepository.findByHospitalId(hospital.getHospitalId()).size();
 
-            hospital.setTotalRate(((hospital.getTotalRate() * num + dto.getRate())) / (num + 1));
+            hospital.setTotalRate(((hospital.getTotalRate() * num + dto.getRate())) / (float) (num + 1));
         }
 
         return save;
