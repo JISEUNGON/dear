@@ -8,6 +8,7 @@ import com.dearbella.server.dto.request.admin.AdminEditRequestDto;
 import com.dearbella.server.dto.request.login.AdminLoginRequestDto;
 import com.dearbella.server.dto.response.admin.AdminResponseDto;
 import com.dearbella.server.dto.response.login.LoginResponseDto;
+import com.dearbella.server.dto.response.member.MemberAdminResponseDto;
 import com.dearbella.server.vo.GoogleIdTokenVo;
 import org.springframework.data.domain.Page;
 
@@ -24,4 +25,6 @@ public interface MemberService {
     public List<AdminResponseDto> getAllAdmin(Long page);
     public AdminResponseDto editAdmin(AdminEditRequestDto dto);
     public Token login(AdminLoginRequestDto dto);
+
+    public List<MemberAdminResponseDto> findAll(Long page);
 }

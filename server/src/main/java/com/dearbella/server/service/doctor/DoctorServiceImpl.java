@@ -3,6 +3,7 @@ package com.dearbella.server.service.doctor;
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
 import com.dearbella.server.dto.request.doctor.DoctorDetailResponseDto;
+import com.dearbella.server.dto.request.doctor.DoctorEditRequestDto;
 import com.dearbella.server.dto.response.doctor.DoctorAdminResponseDto;
 import com.dearbella.server.dto.response.doctor.DoctorResponseDto;
 import com.dearbella.server.dto.response.doctor.MyDoctorResponseDto;
@@ -361,5 +362,56 @@ public class DoctorServiceImpl implements DoctorService {
         doctorRepository.save(doctor);
 
         return "Success";
+    }
+
+    @Override
+    @Transactional
+    public Doctor editDoctor(final DoctorEditRequestDto dto, String image) {
+        Doctor doctor = doctorRepository.findById(dto.getDoctorId()).orElseThrow(
+                () -> new DoctorIdNotFoundException(dto.getDoctorId())
+        );
+
+        List<Career> careers = new ArrayList<>();
+        List<IntroLink> videos = new ArrayList<>();
+        List<Category> categories = new ArrayList<>();
+
+        for(int i = 0; i < dto.getCareer().size(); i++) {
+            careers.add(
+                    careerRepository.save(
+                            Career.builder()
+                                    .careerName(dto.getCareer().get(i))
+                                    .careerDate(dto.getDate().get(i))
+                                    .build()
+                    )
+            );
+        }
+
+        for(String video: dto.getVideoLinks()) {
+            videos.add(
+                    introLinkRepository.save(
+                            IntroLink.builder()
+                                    .linkUrl(video)
+                                    .build()
+                    )
+            );
+        }
+
+        for(Long tag: dto.getTags()) {
+            categories.add(
+                    categoryRepository.findById(tag).orElseThrow(
+                            () -> new CategoryNotFoundException(tag)
+                    )
+            );
+        }
+
+        doctor.setDoctorImage(image);
+        doctor.setDoctorName(dto.getDoctorName());
+        doctor.setHospitalName(dto.getHospitalName());
+        doctor.setLinks(videos);
+        doctor.setCareer(careers);
+        doctor.setCategories(categories);
+        doctor.setDescription(dto.getDescription());
+
+        return doctorRepository.save(doctor);
     }
 }

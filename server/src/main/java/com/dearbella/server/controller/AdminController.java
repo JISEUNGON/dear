@@ -7,6 +7,7 @@ import com.dearbella.server.dto.request.banner.BannerAddRequestDto;
 import com.dearbella.server.dto.request.banner.BannerEditRequestDto;
 import com.dearbella.server.dto.request.comment.CommentDoctorRequestDto;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
+import com.dearbella.server.dto.request.doctor.DoctorEditRequestDto;
 import com.dearbella.server.dto.request.hospital.HospitalAddRequestDto;
 import com.dearbella.server.dto.request.inquiry.InquiryEditRequestDto;
 import com.dearbella.server.dto.response.admin.AdminResponseDto;
@@ -17,10 +18,12 @@ import com.dearbella.server.dto.response.inquiry.InquiryAdminResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryDetailDto;
 import com.dearbella.server.dto.response.inquiry.InquiryDetailResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryResponseDto;
+import com.dearbella.server.dto.response.member.MemberAdminResponseDto;
 import com.dearbella.server.dto.response.post.PostAdminDetailResponseDto;
 import com.dearbella.server.dto.response.post.PostAdminResponseDto;
 import com.dearbella.server.dto.response.post.PostDetailResponseDto;
 import com.dearbella.server.dto.response.review.ReviewAdminResponseDto;
+import com.dearbella.server.dto.response.review.ReviewDetailResponseDto;
 import com.dearbella.server.repository.BannerRepository;
 import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.comment.CommentService;
@@ -122,6 +125,14 @@ public class AdminController {
     @DeleteMapping("/doctor/delete")
     public ResponseEntity<String> deleteDoctor(@RequestParam Long doctorId) {
         return ResponseEntity.ok(doctorService.deleteDoctor(doctorId));
+    }
+
+    @ApiOperation("의사 편집")
+    @PostMapping(value = "/doctor/edit", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Doctor> editDoctor(@ModelAttribute DoctorEditRequestDto dto) throws IOException {
+        final String upload = s3UploadService.upload(dto.getImage(), "dearbella/doctor", false);
+
+        return ResponseEntity.ok(doctorService.editDoctor(dto, upload));
     }
 
     /**
@@ -266,5 +277,14 @@ public class AdminController {
     @DeleteMapping("/review/all")
     public ResponseEntity<String> deleteReview(Long reviewId) {
         return ResponseEntity.ok(reviewService.deleteReview(reviewId));
+    }
+
+    /**
+     * member API
+     * */
+    @ApiOperation("회원 정보 전체 조회")
+    @GetMapping("/member/all")
+    public ResponseEntity<List<MemberAdminResponseDto>> getUsers(@RequestParam Long page) {
+        return ResponseEntity.ok(memberService.findAll(page));
     }
 }

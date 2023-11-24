@@ -1,8 +1,10 @@
 package com.dearbella.server.domain;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "member_ip")
@@ -22,4 +24,7 @@ public class MemberIp {
 
     @Column(name = "ip", length = 20, columnDefinition = "varchar")
     private String ip;
+
+    @CreationTimestamp
+    private LocalDateTime accessAt;
 }

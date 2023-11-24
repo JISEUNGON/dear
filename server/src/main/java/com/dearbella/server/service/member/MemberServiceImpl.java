@@ -6,6 +6,7 @@ import com.dearbella.server.dto.request.admin.AdminEditRequestDto;
 import com.dearbella.server.dto.request.login.AdminLoginRequestDto;
 import com.dearbella.server.dto.response.admin.AdminResponseDto;
 import com.dearbella.server.dto.response.login.LoginResponseDto;
+import com.dearbella.server.dto.response.member.MemberAdminResponseDto;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
 import com.dearbella.server.exception.login.AdminLoginException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
@@ -36,6 +37,7 @@ public class MemberServiceImpl implements MemberService {
     private final AdminRepository adminRepository;
     private final MemberDeleteRepository memberDeleteRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MemberIpRepository memberIpRepository;
 
     @Override
     @Transactional
@@ -232,5 +234,29 @@ public class MemberServiceImpl implements MemberService {
             );
         else
             throw new AdminLoginException("password");
+    }
+
+    @Override
+    @Transactional
+    public List<MemberAdminResponseDto> findAll(final Long page) {
+        final Page<MemberIp> all = memberIpRepository.findAll(PageRequest.of(page.intValue(), 12, Sort.by(Sort.Direction.DESC, "accessAt")));
+        List<MemberAdminResponseDto> responseDtoList = new ArrayList<>();
+
+        for(MemberIp ip: all) {
+            final Member member = memberRepository.findById(ip.getMemberId()).orElseThrow(
+                    () -> new MemberIdNotFoundException(ip.getMemberId().toString())
+            );
+
+            responseDtoList.add(
+                    MemberAdminResponseDto.builder()
+                            .memberId(ip.getMemberId())
+                            .userIp(ip.getIp())
+                            .totalPage(Long.valueOf(all.getTotalPages()))
+                            .userId(member.getLoginEmail())
+                            .build()
+            );
+        }
+
+        return responseDtoList;
     }
 }

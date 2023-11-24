@@ -33,8 +33,9 @@ public class SpringConfig {
     private final PasswordEncoder passwordEncoder;
     @Bean
     public MemberService memberService(TokenRepository tokenRepository, MemberRepository memberRepository,
-                                       AdminRepository adminRepository, MemberDeleteRepository memberDeleteRepository) {
-        return new MemberServiceImpl(memberRepository, tokenRepository, adminRepository, memberDeleteRepository, passwordEncoder);
+                                       AdminRepository adminRepository, MemberDeleteRepository memberDeleteRepository
+                                        ,MemberIpRepository memberIpRepository) {
+        return new MemberServiceImpl(memberRepository, tokenRepository, adminRepository, memberDeleteRepository, passwordEncoder, memberIpRepository);
     }
 
     @Bean

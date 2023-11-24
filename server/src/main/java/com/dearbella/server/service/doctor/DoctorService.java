@@ -4,6 +4,7 @@ import com.dearbella.server.domain.Doctor;
 import com.dearbella.server.domain.DoctorMember;
 import com.dearbella.server.dto.request.doctor.DoctorAddRequestDto;
 import com.dearbella.server.dto.request.doctor.DoctorDetailResponseDto;
+import com.dearbella.server.dto.request.doctor.DoctorEditRequestDto;
 import com.dearbella.server.dto.response.doctor.DoctorAdminResponseDto;
 import com.dearbella.server.dto.response.doctor.DoctorResponseDto;
 import com.dearbella.server.dto.response.doctor.MyDoctorResponseDto;
@@ -21,6 +22,6 @@ public interface DoctorService {
     public void removeWish(Long doctorId);
     public List<DoctorAdminResponseDto> getDoctors(Long page);
     public Doctor getDoctor(Long doctorId);
-
     public String deleteDoctor(Long doctorId);
+    public Doctor editDoctor(DoctorEditRequestDto dto, String image);
 }
