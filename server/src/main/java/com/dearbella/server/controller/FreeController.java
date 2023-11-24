@@ -148,7 +148,7 @@ public class FreeController {
      * comment API
      * */
     @ApiOperation("후기/커뮤니티 댓글 불러오기")
-    @GetMapping("/commetn/all")
+    @GetMapping("/comment/all")
     public ResponseEntity<List<CommentResponseDto>> getComments(@RequestParam Long id) {
         return ResponseEntity.ok(commentService.getAll(id));
     }
