@@ -294,4 +294,22 @@ public class ReviewServiceImpl implements ReviewService {
 
         return responseDtoList;
     }
+
+    @Override
+    @Transactional
+    public String deleteReview(final Long reviewId) {
+        Review review = reviewRepository.findById(reviewId).orElseThrow(
+                () -> new ReviewIdNotFoundException(reviewId)
+        );
+
+        if(review.getDeleted())
+            return "already deleted";
+        else {
+            review.setDeleted(true);
+
+            reviewRepository.save(review);
+
+            return "success";
+        }
+    }
 }

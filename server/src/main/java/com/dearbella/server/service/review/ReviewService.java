@@ -16,4 +16,6 @@ public interface ReviewService {
     public List<MyReviewResponseDto> findMyReviews();
     public String likeReview(Long reviewId);
     public List<ReviewAdminResponseDto> getReviews(Long page);
+
+    public String deleteReview(Long reviewId);
 }

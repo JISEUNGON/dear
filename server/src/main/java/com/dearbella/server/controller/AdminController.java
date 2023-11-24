@@ -261,4 +261,10 @@ public class AdminController {
     public ResponseEntity<List<ReviewAdminResponseDto>> getReviews(Long page) {
         return ResponseEntity.ok(reviewService.getReviews(page));
     }
+
+    @ApiOperation("리뷰 삭제")
+    @DeleteMapping("/review/all")
+    public ResponseEntity<String> deleteReview(Long reviewId) {
+        return ResponseEntity.ok(reviewService.deleteReview(reviewId));
+    }
 }
