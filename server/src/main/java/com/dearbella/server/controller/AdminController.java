@@ -17,7 +17,9 @@ import com.dearbella.server.dto.response.inquiry.InquiryAdminResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryDetailDto;
 import com.dearbella.server.dto.response.inquiry.InquiryDetailResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryResponseDto;
+import com.dearbella.server.dto.response.post.PostAdminDetailResponseDto;
 import com.dearbella.server.dto.response.post.PostAdminResponseDto;
+import com.dearbella.server.dto.response.post.PostDetailResponseDto;
 import com.dearbella.server.repository.BannerRepository;
 import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.comment.CommentService;
@@ -240,5 +242,11 @@ public class AdminController {
     @DeleteMapping("/community/delete")
     public ResponseEntity<String> deletePost(@RequestParam Long postId) {
         return ResponseEntity.ok(postService.deletePost(postId));
+    }
+
+    @ApiOperation("커뮤니티 글 상세보기")
+    @GetMapping("/community/detail")
+    public ResponseEntity<PostAdminDetailResponseDto> getPostDetail(@RequestParam Long postId) {
+        return ResponseEntity.ok(postService.getDetail(postId));
     }
 }

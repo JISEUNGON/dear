@@ -2,10 +2,7 @@ package com.dearbella.server.service.post;
 
 import com.dearbella.server.domain.*;
 import com.dearbella.server.dto.request.post.PostAddRequestDto;
-import com.dearbella.server.dto.response.post.PostAdminResponseDto;
-import com.dearbella.server.dto.response.post.PostDetailResponseDto;
-import com.dearbella.server.dto.response.post.PostFindResponseDto;
-import com.dearbella.server.dto.response.post.PostResponseDto;
+import com.dearbella.server.dto.response.post.*;
 import com.dearbella.server.enums.post.TagEnum;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
 import com.dearbella.server.exception.post.PostIdNotFoundException;
@@ -239,5 +236,27 @@ public class PostServiceImpl implements PostService {
         }
 
         return responseDtoList;
+    }
+
+    @Override
+    @Transactional
+    public PostAdminDetailResponseDto getDetail(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new PostIdNotFoundException(postId)
+        );
+        Member member = memberRepository.findById(post.getMemberId()).orElseThrow(
+                () -> new MemberIdNotFoundException(post.getMemberId().toString())
+        );
+
+        return PostAdminDetailResponseDto.builder()
+                .postId(postId)
+                .content(post.getContent())
+                .createdAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyy-MM-dd HH-mm:ss")))
+                .images(post.getPostImages())
+                .memberId(post.getMemberId())
+                .tag(post.getTag())
+                .memberName(member.getNickname())
+                .memberImage(member.getProfileImg())
+                .build();
     }
 }
