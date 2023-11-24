@@ -7,6 +7,7 @@ import com.dearbella.server.dto.request.login.AdminLoginRequestDto;
 import com.dearbella.server.dto.response.admin.AdminResponseDto;
 import com.dearbella.server.dto.response.login.LoginResponseDto;
 import com.dearbella.server.dto.response.member.MemberAdminResponseDto;
+import com.dearbella.server.dto.response.member.MemberBanResponseDto;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
 import com.dearbella.server.exception.login.AdminLoginException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
@@ -258,5 +259,43 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return responseDtoList;
+    }
+
+    @Override
+    @Transactional
+    public List<MemberBanResponseDto> findAllByBan(final Long page) {
+        Page<Member> members = memberRepository.findAll(PageRequest.of(page.intValue(), 10, Sort.by(Sort.Direction.ASC, "loginEmail")));
+        List<MemberBanResponseDto> responseDtoList = new ArrayList<>();
+
+        for(Member member: members) {
+            responseDtoList.add(
+                    MemberBanResponseDto.builder()
+                            .memberId(member.getMemberId())
+                            .userId(member.getLoginEmail())
+                            .isBan(member.getBan())
+                            .totalPage(Long.valueOf(members.getTotalPages()))
+                            .build()
+            );
+        }
+
+        return responseDtoList;
+    }
+
+    @Override
+    @Transactional
+    public String banMember(final Long memberId) {
+        final Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new MemberIdNotFoundException(memberId.toString())
+        );
+
+        if(member.getBan()) {
+            member.setBan(false);
+            return "ban";
+        }
+        else {
+            member.setBan(true);
+
+            return "release";
+        }
     }
 }

@@ -19,6 +19,7 @@ import com.dearbella.server.dto.response.inquiry.InquiryDetailDto;
 import com.dearbella.server.dto.response.inquiry.InquiryDetailResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryResponseDto;
 import com.dearbella.server.dto.response.member.MemberAdminResponseDto;
+import com.dearbella.server.dto.response.member.MemberBanResponseDto;
 import com.dearbella.server.dto.response.post.PostAdminDetailResponseDto;
 import com.dearbella.server.dto.response.post.PostAdminResponseDto;
 import com.dearbella.server.dto.response.post.PostDetailResponseDto;
@@ -282,9 +283,21 @@ public class AdminController {
     /**
      * member API
      * */
-    @ApiOperation("회원 정보 전체 조회")
+    @ApiOperation("회원 정보 전체 조회(유저 IP)")
     @GetMapping("/member/all")
     public ResponseEntity<List<MemberAdminResponseDto>> getUsers(@RequestParam Long page) {
         return ResponseEntity.ok(memberService.findAll(page));
+    }
+
+    @ApiOperation("유저 정보 전체 조회(아이디 차단)")
+    @GetMapping("/member/ban")
+    public ResponseEntity<List<MemberBanResponseDto>> getBanMembers(@RequestParam Long page) {
+        return ResponseEntity.ok(memberService.findAllByBan(page));
+    }
+
+    @ApiOperation("회원 차단")
+    @DeleteMapping("/member/ban")
+    public ResponseEntity<String> banUser(@RequestParam Long memberId) {
+        return ResponseEntity.ok(memberService.banMember(memberId));
     }
 }
