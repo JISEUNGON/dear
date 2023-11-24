@@ -21,4 +21,6 @@ public interface DoctorService {
     public void removeWish(Long doctorId);
     public List<DoctorAdminResponseDto> getDoctors(Long page);
     public Doctor getDoctor(Long doctorId);
+
+    public String deleteDoctor(Long doctorId);
 }

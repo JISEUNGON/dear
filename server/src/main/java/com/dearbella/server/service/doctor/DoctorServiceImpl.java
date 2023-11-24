@@ -74,7 +74,7 @@ public class DoctorServiceImpl implements DoctorService {
             );
         }
 
-        final Doctor save = doctorRepository.save(
+        return doctorRepository.save(
                 Doctor.builder()
                         .doctorName(dto.getDoctorName())
                         .doctorImage(image)
@@ -90,8 +90,6 @@ public class DoctorServiceImpl implements DoctorService {
                         .deleted(false)
                         .build()
         );
-
-        return save;
     }
 
     @Override
@@ -109,7 +107,7 @@ public class DoctorServiceImpl implements DoctorService {
         final List<Doctor> byCategories;
 
         if(category > 0) {
-            byCategories = doctorRepository.findByCategories(
+            byCategories = doctorRepository.findByCategoriesAndDeletedFalse(
                     Category.builder()
                             .categoryNum(category)
                             .categoryName(CategoryEnum.findByValue(category).name())
@@ -118,20 +116,20 @@ public class DoctorServiceImpl implements DoctorService {
         }
         else
         {
-            byCategories = doctorRepository.findAll(sort1);
+            byCategories = doctorRepository.findByAndDeletedFalse(sort1);
         }
 
         Long memberId = JwtUtil.isExistAccessToken() == null ? 0L : JwtUtil.getMemberId(JwtUtil.isExistAccessToken());
 
         for(Doctor doctor: byCategories) {
             final boolean empty = doctorMemberRepository.findByDoctorIdAndMemberId(doctor.getDoctorId(), memberId).isEmpty();
-            final int size = reviewRepository.findByDoctorId(doctor.getDoctorId()).size();
+            final int size = reviewRepository.findByDoctorIdAndDeletedFalse(doctor.getDoctorId()).size();
 
             responseDtoList.add(
                     DoctorResponseDto.builder()
                             .isMine(empty ? false : true)
                             .doctorId(doctor.getDoctorId())
-                            .reviewNum(Long.valueOf(size))
+                            .reviewNum((long) size)
                             .parts(doctor.getCategories())
                             .rate(doctor.getTotalRate())
                             .intro(doctor.getDescription())
@@ -148,7 +146,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     @Transactional
     public DoctorDetailResponseDto findById(final Long doctorId) {
-        final Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(
+        final Doctor doctor = doctorRepository.findByDoctorIdAndDeletedFalse(doctorId).orElseThrow(
                 () -> new DoctorIdNotFoundException(doctorId)
         );
 
@@ -156,7 +154,7 @@ public class DoctorServiceImpl implements DoctorService {
 
         final boolean empty = doctorMemberRepository.findByDoctorIdAndMemberId(doctorId, memberId).isEmpty();
 
-        final List<Review> byDoctorId = reviewRepository.findByDoctorId(doctorId);
+        final List<Review> byDoctorId = reviewRepository.findByDoctorIdAndDeletedFalse(doctorId);
 
         List<ReviewPreviewResponseDto> reviews = new ArrayList<>();
 
@@ -196,7 +194,7 @@ public class DoctorServiceImpl implements DoctorService {
                 .videos(doctor.getLinks())
                 .doctorImage(doctor.getDoctorImage())
                 .isMine(empty ? false : true)
-                .reviewNum(Long.valueOf(byDoctorId.size()))
+                .reviewNum((long) byDoctorId.size())
                 .reviews(reviews)
                 .build();
 
@@ -210,7 +208,7 @@ public class DoctorServiceImpl implements DoctorService {
         Set<DoctorResponseDto> doctorResponseDtos = new HashSet<>();
 
         for(Doctor doctor: doctorRepository.findByHospitalNameContainingAndDeletedFalse(query)) {
-            final List<Review> byDoctorId = reviewRepository.findByDoctorId(doctor.getDoctorId());
+            final List<Review> byDoctorId = reviewRepository.findByDoctorIdAndDeletedFalse(doctor.getDoctorId());
 
             doctorResponseDtos.add(
                     DoctorResponseDto.builder()
@@ -228,7 +226,7 @@ public class DoctorServiceImpl implements DoctorService {
         }
 
         for(Doctor doctor: doctorRepository.findByDescriptionAndDeletedFalse(query)) {
-            final List<Review> byDoctorId = reviewRepository.findByDoctorId(doctor.getDoctorId());
+            final List<Review> byDoctorId = reviewRepository.findByDoctorIdAndDeletedFalse(doctor.getDoctorId());
 
             doctorResponseDtos.add(
                     DoctorResponseDto.builder()
@@ -249,7 +247,7 @@ public class DoctorServiceImpl implements DoctorService {
 
         if(!byCategoryName.isEmpty()) {
             for(Doctor doctor: doctorRepository.findByCategoriesAndDeletedFalse(byCategoryName.get())) {
-                final List<Review> byDoctorId = reviewRepository.findByDoctorId(doctor.getDoctorId());
+                final List<Review> byDoctorId = reviewRepository.findByDoctorIdAndDeletedFalse(doctor.getDoctorId());
 
                 doctorResponseDtos.add(
                         DoctorResponseDto.builder()
@@ -258,7 +256,7 @@ public class DoctorServiceImpl implements DoctorService {
                                 .doctorImage(doctor.getDoctorImage())
                                 .isMine(false)
                                 .rate(doctor.getTotalRate())
-                                .reviewNum(Long.valueOf(byDoctorId.size()))
+                                .reviewNum((long) byDoctorId.size())
                                 .intro(doctor.getDescription())
                                 .parts(doctor.getCategories())
                                 .doctorName(doctor.getDoctorName())
@@ -277,17 +275,17 @@ public class DoctorServiceImpl implements DoctorService {
         final List<DoctorMember> byMemberId = doctorMemberRepository.findByMemberId(JwtUtil.getMemberId(), Sort.by(Sort.Direction.DESC, "createdAt"));
 
         for(DoctorMember doctorMember: byMemberId) {
-            final Doctor doctor = doctorRepository.findById(doctorMember.getDoctorId()).orElseThrow(
+            final Doctor doctor = doctorRepository.findByDoctorIdAndDeletedFalse(doctorMember.getDoctorId()).orElseThrow(
                     () -> new DoctorIdNotFoundException(doctorMember.getDoctorId())
             );
-            final List<Review> reviews = reviewRepository.findByDoctorId(doctor.getDoctorId());
+            final List<Review> reviews = reviewRepository.findByDoctorIdAndDeletedFalse(doctor.getDoctorId());
 
             responseDtoList.add(
                     MyDoctorResponseDto.builder()
                             .doctorId(doctor.getDoctorId())
                             .DoctorImage(doctor.getDoctorImage())
                             .categories(doctor.getCategories())
-                            .reviewNum(Long.valueOf(reviews.size()))
+                            .reviewNum((long) reviews.size())
                             .rate(doctor.getTotalRate())
                             .hospitalName(doctor.getHospitalName())
                             .intro(doctor.getDescription())
@@ -324,7 +322,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     @Transactional
     public List<DoctorAdminResponseDto> getDoctors(final Long page) {
-        final Page<Doctor> all = doctorRepository.findAll(PageRequest.of(page.intValue(), 12, Sort.by(Sort.Direction.ASC, "doctorName")));
+        final Page<Doctor> all = doctorRepository.findByDeletedFalse(PageRequest.of(page.intValue(), 12, Sort.by(Sort.Direction.ASC, "doctorName")));
         List<DoctorAdminResponseDto> responseDtos = new ArrayList<>();
 
         for(Doctor doctor: all) {
@@ -343,8 +341,25 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     @Transactional
     public Doctor getDoctor(Long doctorId) {
-        return doctorRepository.findById(doctorId).orElseThrow(
+        return doctorRepository.findByDoctorIdAndDeletedFalse(doctorId).orElseThrow(
                 () -> new DoctorIdNotFoundException(doctorId)
         );
+    }
+
+    @Override
+    @Transactional
+    public String deleteDoctor(Long doctorId) {
+        Doctor doctor = doctorRepository.findByDoctorIdAndDeletedFalse(doctorId).orElseThrow(
+                () -> new DoctorIdNotFoundException(doctorId)
+        );
+
+        if(doctor.getDeleted())
+            return "already deleted";
+        else
+            doctor.setDeleted(true);
+
+        doctorRepository.save(doctor);
+
+        return "Success";
     }
 }

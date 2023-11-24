@@ -23,4 +23,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     public List<Review> findByHospitalId(Long hospitalId);
     public List<Review> findByDoctorId(Long doctorId);
     public List<Review> findAllByMemberId(Long memberId, Sort sort);
+    public List<Review> findByDoctorIdAndDeletedFalse(Long doctorId);
 }

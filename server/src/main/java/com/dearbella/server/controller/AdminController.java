@@ -110,6 +110,12 @@ public class AdminController {
         return ResponseEntity.ok(doctorService.getDoctor(doctorId));
     }
 
+    @ApiOperation("의사 삭제")
+    @DeleteMapping("/doctor/delete")
+    public ResponseEntity<String> deleteDoctor(@RequestParam Long doctorId) {
+        return ResponseEntity.ok(doctorService.deleteDoctor(doctorId));
+    }
+
     /**
      * Banner API
      * */
