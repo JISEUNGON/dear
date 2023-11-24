@@ -114,25 +114,6 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         return save;
-
-        /*
-        ReviewAddResponseDto response = modelMapper.map(save, ReviewAddResponseDto.class);
-
-        response.setMemberName(member.getNickname());
-        response.setLikeNum(0L);
-        response.setTotalRate(hospital.getTotalRate());
-        response.setDoctorName(doctor.getDoctorName());
-        response.setDoctorImage(doctor.getDoctorImage());
-        response.setDoctorIntro(doctor.getDescription());
-        response.setParts(doctor.getCategories());
-        response.setHospitalLocation(hospital.getHospitalLocation());
-        response.setDoctorReviewRate(doctor.getTotalRate());
-        response.setHospitalReviewRate(hospital.getTotalRate());
-        response.setBefores(befores);
-        response.setAfters(afters);
-
-        return response;
-         */
     }
 
     @Override
