@@ -4,8 +4,11 @@ import com.dearbella.server.domain.Review;
 import com.dearbella.server.domain.ReviewLike;
 import com.dearbella.server.dto.request.review.ReviewAddRequestDto;
 import com.dearbella.server.dto.response.review.MyReviewResponseDto;
+import com.dearbella.server.service.fcm.FCMService;
+import com.dearbella.server.service.member.MemberService;
 import com.dearbella.server.service.review.ReviewService;
 import com.dearbella.server.service.s3.S3UploadService;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,8 @@ import java.util.List;
 public class ReviewController {
     private final ReviewService reviewService;
     private final S3UploadService s3UploadService;
+    private final FCMService fcmService;
+    private final MemberService memberService;
 
     @ApiOperation("후기 작성")
     @PostMapping(value = "/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -59,7 +64,12 @@ public class ReviewController {
 
     @ApiOperation("리뷰 좋아요/취소")
     @GetMapping("/like")
-    public ResponseEntity<String> likeReview(@RequestParam Long reviewId) {
-        return ResponseEntity.ok(reviewService.likeReview(reviewId));
+    public ResponseEntity<String> likeReview(@RequestParam Long reviewId) throws IOException, FirebaseMessagingException {
+        final ResponseEntity<String> ok = ResponseEntity.ok(reviewService.likeReview(reviewId));
+
+        if(ok.getBody().equals("save"))
+            fcmService.sendMessageByTopic("review", memberService.getMemberName(), "review-" + reviewId);
+
+        return ok;
     }
 }

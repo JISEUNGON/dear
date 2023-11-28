@@ -8,6 +8,8 @@ import com.dearbella.server.service.comment.CommentService;
 import com.dearbella.server.service.comment.CommentServiceImpl;
 import com.dearbella.server.service.doctor.DoctorService;
 import com.dearbella.server.service.doctor.DoctorServiceImpl;
+import com.dearbella.server.service.fcm.FCMService;
+import com.dearbella.server.service.fcm.FCMServiceImpl;
 import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.hospital.HospitalServiceImpl;
 import com.dearbella.server.service.inquiry.InquiryService;
@@ -104,5 +106,10 @@ public class SpringConfig {
                                          CommentLikeRepository commentLikeRepository,
                                          DoctorResponseRepository doctorResponseRepository) {
         return new CommentServiceImpl(commentRepository, memberRepository, commentLikeRepository, doctorResponseRepository);
+    }
+
+    @Bean
+    public FCMService fcmService() {
+        return new FCMServiceImpl();
     }
 }

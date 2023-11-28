@@ -29,4 +29,5 @@ public interface MemberService {
     public List<MemberAdminResponseDto> findAll(Long page);
     public List<MemberBanResponseDto> findAllByBan(Long page);
     public String banMember(Long memberId);
+    public String getMemberName();
 }

@@ -8,8 +8,7 @@ import lombok.*;
 @Setter
 @Getter
 public class CommentAddRequestDto {
-    private Long id;
+    private Long postId;
     private Long parentId;
     private String content;
-    private Boolean isReview;
 }

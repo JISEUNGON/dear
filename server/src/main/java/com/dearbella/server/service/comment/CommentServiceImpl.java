@@ -7,6 +7,7 @@ import com.dearbella.server.domain.Member;
 import com.dearbella.server.dto.request.comment.CommentAddRequestDto;
 import com.dearbella.server.dto.request.comment.CommentDoctorRequestDto;
 import com.dearbella.server.dto.request.comment.CommentEditRequestDto;
+import com.dearbella.server.dto.response.comment.CommentMemberResponseDto;
 import com.dearbella.server.dto.response.comment.CommentResponseDto;
 import com.dearbella.server.exception.comment.CommentIdNotFoundException;
 import com.dearbella.server.exception.member.MemberIdNotFoundException;
@@ -34,11 +35,15 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public Comment addComment(final CommentAddRequestDto dto) {
-        return commentRepository.save(
+    public CommentMemberResponseDto addComment(final CommentAddRequestDto dto) {
+        String name = memberRepository.findById(JwtUtil.getMemberId()).orElseThrow(
+                () -> new MemberIdNotFoundException(JwtUtil.getMemberId().toString())
+        ).getNickname();
+
+        final Comment save = commentRepository.save(
                 Comment.builder()
                         .parentComment(dto.getParentId())
-                        .id(dto.getId())
+                        .id(dto.getPostId())
                         .content(dto.getContent())
                         .content(dto.getContent())
                         .memberId(JwtUtil.getMemberId())
@@ -46,6 +51,14 @@ public class CommentServiceImpl implements CommentService {
                         .description(dto.getIsReview() ? "후기 댓글" : "커뮤니티 댓글")
                         .build()
         );
+
+        return CommentMemberResponseDto.builder()
+                .commentId(save.getCommentId())
+                .parentId(save.getParentComment())
+                .content(save.getContent())
+                .memberName(name)
+                .id(save.getId())
+                .build();
     }
 
     @Override

@@ -56,3 +56,6 @@ cloud:
       auto: false
     stack:
       auto: false
+fcm:
+  service-account-file: firebase/firebase.json
+  project-id: dearbella-26441

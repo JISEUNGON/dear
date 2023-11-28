@@ -4,8 +4,11 @@ import com.dearbella.server.domain.Comment;
 import com.dearbella.server.domain.CommentLike;
 import com.dearbella.server.dto.request.comment.CommentAddRequestDto;
 import com.dearbella.server.dto.request.comment.CommentEditRequestDto;
+import com.dearbella.server.dto.response.comment.CommentMemberResponseDto;
 import com.dearbella.server.dto.response.comment.CommentResponseDto;
 import com.dearbella.server.service.comment.CommentService;
+import com.dearbella.server.service.fcm.FCMService;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -22,11 +26,16 @@ import java.util.List;
 @Api(tags = {"댓글 API"})
 public class CommentController {
     private final CommentService commentService;
+    private final FCMService fcmService;
 
-    @ApiOperation("후기/커뮤니티 댓글 생성")
+    @ApiOperation("커뮤니티 댓글 생성")
     @PostMapping("/add")
-    public ResponseEntity<Comment> addComment(@RequestBody CommentAddRequestDto dto) {
-        return ResponseEntity.ok(commentService.addComment(dto));
+    public ResponseEntity<CommentMemberResponseDto> addComment(@RequestBody CommentAddRequestDto dto) throws IOException, FirebaseMessagingException {
+        final ResponseEntity<CommentMemberResponseDto> ok = ResponseEntity.ok(commentService.addComment(dto));
+
+        fcmService.sendMessageByTopic("post comment", ok.getBody().getMemberName(), "post-" + ok.getBody().getId());
+
+        return ok;
     }
 
     @ApiOperation("댓글 삭제")

@@ -6,16 +6,16 @@ import com.dearbella.server.domain.DoctorResponse;
 import com.dearbella.server.dto.request.comment.CommentAddRequestDto;
 import com.dearbella.server.dto.request.comment.CommentDoctorRequestDto;
 import com.dearbella.server.dto.request.comment.CommentEditRequestDto;
+import com.dearbella.server.dto.response.comment.CommentMemberResponseDto;
 import com.dearbella.server.dto.response.comment.CommentResponseDto;
 
 import java.util.List;
 
 public interface CommentService {
-    public Comment addComment(CommentAddRequestDto reviewId);
+    public CommentMemberResponseDto addComment(CommentAddRequestDto reviewId);
     public List<CommentResponseDto> getAll(Long id);
     public void deleteComment(Long commentId);
     public Comment editComment(CommentEditRequestDto dto);
     public String likeComment(Long commentId);
-
     public DoctorResponse addDoctorResponse(CommentDoctorRequestDto dto);
 }

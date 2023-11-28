@@ -298,4 +298,11 @@ public class MemberServiceImpl implements MemberService {
             return "release";
         }
     }
+
+    @Override
+    public String getMemberName() {
+        return memberRepository.findById(JwtUtil.getMemberId()).orElseThrow(
+                () -> new MemberIdNotFoundException(JwtUtil.getMemberId().toString())
+        ).getNickname();
+    }
 }

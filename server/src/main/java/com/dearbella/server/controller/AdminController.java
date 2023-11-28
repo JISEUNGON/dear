@@ -13,35 +13,30 @@ import com.dearbella.server.dto.request.hospital.HospitalEditRequestDto;
 import com.dearbella.server.dto.request.inquiry.InquiryEditRequestDto;
 import com.dearbella.server.dto.response.admin.AdminResponseDto;
 import com.dearbella.server.dto.response.banner.BannerAdminResponseDto;
-import com.dearbella.server.dto.response.banner.BannerResponseDto;
 import com.dearbella.server.dto.response.doctor.DoctorAdminResponseDto;
 import com.dearbella.server.dto.response.hospital.HospitalAdminResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryAdminResponseDto;
 import com.dearbella.server.dto.response.inquiry.InquiryDetailDto;
-import com.dearbella.server.dto.response.inquiry.InquiryDetailResponseDto;
-import com.dearbella.server.dto.response.inquiry.InquiryResponseDto;
 import com.dearbella.server.dto.response.member.MemberAdminResponseDto;
 import com.dearbella.server.dto.response.member.MemberBanResponseDto;
 import com.dearbella.server.dto.response.post.PostAdminDetailResponseDto;
 import com.dearbella.server.dto.response.post.PostAdminResponseDto;
-import com.dearbella.server.dto.response.post.PostDetailResponseDto;
 import com.dearbella.server.dto.response.review.ReviewAdminResponseDto;
-import com.dearbella.server.dto.response.review.ReviewDetailResponseDto;
-import com.dearbella.server.repository.BannerRepository;
 import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.comment.CommentService;
 import com.dearbella.server.service.doctor.DoctorService;
+import com.dearbella.server.service.fcm.FCMService;
 import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.inquiry.InquiryService;
 import com.dearbella.server.service.member.MemberService;
 import com.dearbella.server.service.post.PostService;
 import com.dearbella.server.service.review.ReviewService;
 import com.dearbella.server.service.s3.S3UploadService;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,6 +62,7 @@ public class AdminController {
     private final InquiryService inquiryService;
     private final PostService postService;
     private final ReviewService reviewService;
+    private final FCMService fcmService;
 
     /**
      * hospital API
@@ -228,8 +224,12 @@ public class AdminController {
      * */
     @ApiOperation("원장이 댓글 남기기")
     @PostMapping("/comment/add")
-    public ResponseEntity<DoctorResponse> addComment(@RequestBody CommentDoctorRequestDto dto) {
-        return ResponseEntity.ok(commentService.addDoctorResponse(dto));
+    public ResponseEntity<DoctorResponse> addComment(@RequestBody CommentDoctorRequestDto dto) throws IOException, FirebaseMessagingException {
+        final ResponseEntity<DoctorResponse> ok = ResponseEntity.ok(commentService.addDoctorResponse(dto));
+
+        fcmService.sendMessageByTopic("comment", "answer", "post-" + ok.getBody().getPostId());
+
+        return ok;
     }
 
     /**
@@ -276,8 +276,12 @@ public class AdminController {
 
     @ApiOperation("문의 답변하기")
     @PostMapping("/inquiry/answer")
-    public ResponseEntity<Inquiry> answerInquiry(@RequestBody InquiryEditRequestDto dto) {
-        return ResponseEntity.ok(inquiryService.answerInquiry(dto));
+    public ResponseEntity<Inquiry> answerInquiry(@RequestBody InquiryEditRequestDto dto) throws IOException, FirebaseMessagingException {
+        final ResponseEntity<Inquiry> ok = ResponseEntity.ok(inquiryService.answerInquiry(dto));
+
+        fcmService.sendMessageByTopic("inquiry", "answer", "inquiry-" + ok.getBody().getInquiryId());
+
+        return ok;
     }
 
     /**
