@@ -39,6 +39,9 @@ public class MemberServiceImpl implements MemberService {
     private final MemberDeleteRepository memberDeleteRepository;
     private final PasswordEncoder passwordEncoder;
     private final MemberIpRepository memberIpRepository;
+    private final CommentRepository commentRepository;
+    private final ReviewRepository reviewRepository;
+    private final PostRepository postRepository;
 
     @Override
     @Transactional
@@ -160,6 +163,28 @@ public class MemberServiceImpl implements MemberService {
         tokenRepository.deleteById(member.getMemberId());
 
         memberDeleteRepository.save(modelMapper.map(member, MemberDelete.class));
+
+        final List<Comment> comments = commentRepository.findByMemberIdAAndDeletedFalse(member.getMemberId());
+
+        for (Comment comment: comments) {
+            comment.setDeleted(true);
+            commentRepository.save(comment);
+        }
+
+        final List<Review> reviews = reviewRepository.findByMemberIdAndDeletedFalse(member.getMemberId());
+
+        for(Review review: reviews) {
+            review.setDeleted(true);
+            reviewRepository.save(review);
+        }
+
+        final List<Post> posts = postRepository.findByMemberId(JwtUtil.getMemberId(), Sort.by(Sort.Direction.DESC, "findByMemberIdAndDeletedFalse"));
+
+        for(Post post: posts) {
+            post.setDeleted(true);
+
+            postRepository.save(post);
+        }
 
         return "success";
     }

@@ -36,8 +36,12 @@ public class SpringConfig {
     @Bean
     public MemberService memberService(TokenRepository tokenRepository, MemberRepository memberRepository,
                                        AdminRepository adminRepository, MemberDeleteRepository memberDeleteRepository
-                                        ,MemberIpRepository memberIpRepository) {
-        return new MemberServiceImpl(memberRepository, tokenRepository, adminRepository, memberDeleteRepository, passwordEncoder, memberIpRepository);
+                                        ,MemberIpRepository memberIpRepository
+                                        ,CommentRepository commentRepository
+                                        ,ReviewRepository reviewRepository
+                                        ,PostRepository postRepository) {
+        return new MemberServiceImpl(memberRepository, tokenRepository, adminRepository, memberDeleteRepository, passwordEncoder, memberIpRepository
+                                    , commentRepository, reviewRepository, postRepository);
     }
 
     @Bean

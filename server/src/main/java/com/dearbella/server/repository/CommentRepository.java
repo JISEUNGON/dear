@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     public List<Comment> findAllByIdAndDeletedFalse(Long id);
+    public List<Comment> findByMemberIdAAndDeletedFalse(Long memberId);
 }
