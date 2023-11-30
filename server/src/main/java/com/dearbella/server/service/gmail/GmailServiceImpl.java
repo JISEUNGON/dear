@@ -23,7 +23,9 @@ public class GmailServiceImpl implements GmailService {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
             mimeMessageHelper.setTo(email); // 메일 수신자
             mimeMessageHelper.setSubject("Dearbella Alarm"); // 메일 제목
-            mimeMessageHelper.setText("Your answer to your inquiry has been registered. Please check it on Dearbella My Page. https://dearbella.kr", false); // 메일 본문 내용, HTML 여부
+            mimeMessageHelper.setText("<DearBella>\n" +
+                    "\n" +
+                    "[Notification]:Your inquiry has been answered. Please check it on Dearbella My Page. (링크)", false); // 메일 본문 내용, HTML 여부
             javaMailSender.send(mimeMessage);
 
             log.info("Success");
