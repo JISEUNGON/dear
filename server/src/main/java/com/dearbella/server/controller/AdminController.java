@@ -26,6 +26,7 @@ import com.dearbella.server.service.banner.BannerService;
 import com.dearbella.server.service.comment.CommentService;
 import com.dearbella.server.service.doctor.DoctorService;
 import com.dearbella.server.service.fcm.FCMService;
+import com.dearbella.server.service.gmail.GmailService;
 import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.inquiry.InquiryService;
 import com.dearbella.server.service.member.MemberService;
@@ -63,6 +64,7 @@ public class AdminController {
     private final PostService postService;
     private final ReviewService reviewService;
     private final FCMService fcmService;
+    private final GmailService gmailService;
 
     /**
      * hospital API
@@ -280,6 +282,8 @@ public class AdminController {
         final ResponseEntity<Inquiry> ok = ResponseEntity.ok(inquiryService.answerInquiry(dto));
 
         fcmService.sendMessageByTopic("inquiry", "answer", "inquiry-" + ok.getBody().getInquiryId());
+
+        gmailService.sendMail(memberService.getMemberName(dto.getMemberId()));
 
         return ok;
     }

@@ -26,6 +26,21 @@ spring:
     show-sql: true
     generate-ddl: false
   mvc.pathmatch.matching-strategy: ANT_PATH_MATCHER # Swagger-ui
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${GOOGLE_USERNAME}
+    password: ${GOOGLE_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+        transport:
+          protocol: smtp
+        debug: true
+    default-encoding: UTF-8
 
 logging:
   slack:

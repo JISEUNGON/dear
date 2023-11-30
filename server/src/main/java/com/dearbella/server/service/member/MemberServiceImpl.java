@@ -164,7 +164,7 @@ public class MemberServiceImpl implements MemberService {
 
         memberDeleteRepository.save(modelMapper.map(member, MemberDelete.class));
 
-        final List<Comment> comments = commentRepository.findByMemberIdAAndDeletedFalse(member.getMemberId());
+        final List<Comment> comments = commentRepository.findByMemberIdAndDeletedFalse(member.getMemberId());
 
         for (Comment comment: comments) {
             comment.setDeleted(true);
@@ -328,6 +328,13 @@ public class MemberServiceImpl implements MemberService {
     public String getMemberName() {
         return memberRepository.findById(JwtUtil.getMemberId()).orElseThrow(
                 () -> new MemberIdNotFoundException(JwtUtil.getMemberId().toString())
+        ).getNickname();
+    }
+
+    @Override
+    public String getMemberName(final Long memberId) {
+        return memberRepository.findById(memberId).orElseThrow(
+                () -> new MemberIdNotFoundException(memberId.toString())
         ).getNickname();
     }
 }

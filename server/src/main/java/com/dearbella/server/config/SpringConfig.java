@@ -10,6 +10,8 @@ import com.dearbella.server.service.doctor.DoctorService;
 import com.dearbella.server.service.doctor.DoctorServiceImpl;
 import com.dearbella.server.service.fcm.FCMService;
 import com.dearbella.server.service.fcm.FCMServiceImpl;
+import com.dearbella.server.service.gmail.GmailService;
+import com.dearbella.server.service.gmail.GmailServiceImpl;
 import com.dearbella.server.service.hospital.HospitalService;
 import com.dearbella.server.service.hospital.HospitalServiceImpl;
 import com.dearbella.server.service.inquiry.InquiryService;
@@ -26,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
@@ -33,6 +36,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Slf4j
 public class SpringConfig {
     private final PasswordEncoder passwordEncoder;
+    private final JavaMailSender javaMailSender;
+
     @Bean
     public MemberService memberService(TokenRepository tokenRepository, MemberRepository memberRepository,
                                        AdminRepository adminRepository, MemberDeleteRepository memberDeleteRepository
@@ -115,5 +120,10 @@ public class SpringConfig {
     @Bean
     public FCMService fcmService() {
         return new FCMServiceImpl();
+    }
+
+    @Bean
+    public GmailService gmailService() {
+        return new GmailServiceImpl(javaMailSender);
     }
 }

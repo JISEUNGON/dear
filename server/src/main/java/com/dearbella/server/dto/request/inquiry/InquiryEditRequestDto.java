@@ -10,4 +10,5 @@ import lombok.*;
 public class InquiryEditRequestDto {
     private Long inquiryId;
     private String content;
+    private Long memberId;
 }

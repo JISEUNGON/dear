@@ -48,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
                         .content(dto.getContent())
                         .memberId(JwtUtil.getMemberId())
                         .deleted(false)
-                        .description(dto.getIsReview() ? "후기 댓글" : "커뮤니티 댓글")
+                        .description("커뮤니티 댓글")
                         .build()
         );
 
