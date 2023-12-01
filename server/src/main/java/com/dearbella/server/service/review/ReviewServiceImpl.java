@@ -53,12 +53,20 @@ public class ReviewServiceImpl implements ReviewService {
             doctor = doctorRepository.findById(dto.getDoctorId()).orElseThrow(
                     () -> new DoctorIdNotFoundException(dto.getDoctorId())
             );
+
+            doctor.setViewNum(doctor.getViewNum() + 1);
+
+            doctorRepository.save(doctor);
         }
 
         if(dto.getHospitalId() != 0L) {
             hospital = hospitalRepository.findById(dto.getHospitalId()).orElseThrow(
                     () -> new HospitalIdNotFoundException(dto.getHospitalId())
             );
+
+            hospital.setViewNum(hospital.getViewNum() + 1);
+
+            hospitalRepository.save(hospital);
         }
 
 

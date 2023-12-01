@@ -16,6 +16,8 @@ public class BannerDetailResponseDto {
     private String mainImage;
     private String hospitalLocation;
     private String description;
+    private Long reviewNum;
+    private Float rate;
     private List<Image> bannerImages;
     private List<Image> bannerDetailImages;
     private List<Infra> bannerInfra;

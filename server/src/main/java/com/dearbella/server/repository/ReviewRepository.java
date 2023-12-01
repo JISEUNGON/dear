@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     /**
@@ -29,4 +30,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     public List<Review> findByDoctorIdAndDeletedFalse(Long doctorId);
     public Page<Review> findByDeletedFalse(Pageable createdAt);
     public List<Review> findByMemberIdAndDeletedFalse(Long memberId);
+    public List<Review> findByHospitalName(String hospitalName);
 }

@@ -3,18 +3,18 @@ package com.dearbella.server.service.banner;
 import com.dearbella.server.domain.Banner;
 import com.dearbella.server.domain.Image;
 import com.dearbella.server.domain.Infra;
+import com.dearbella.server.domain.Review;
 import com.dearbella.server.dto.request.banner.BannerAddRequestDto;
 import com.dearbella.server.dto.request.banner.BannerEditRequestDto;
 import com.dearbella.server.dto.response.banner.BannerAdminResponseDto;
 import com.dearbella.server.dto.response.banner.BannerDetailResponseDto;
 import com.dearbella.server.dto.response.banner.BannerResponseDto;
-import com.dearbella.server.enums.hospital.InfraEnum;
 import com.dearbella.server.exception.banner.BannerIdNotFoundException;
 import com.dearbella.server.exception.banner.BannerInfraNotFoundException;
 import com.dearbella.server.exception.banner.BannerNotExistException;
-import com.dearbella.server.repository.BannerRepository;
-import com.dearbella.server.repository.ImageRepository;
-import com.dearbella.server.repository.InfraRepository;
+import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
+import com.dearbella.server.exception.hospital.HospitalNameNotFoundException;
+import com.dearbella.server.repository.*;
 import com.dearbella.server.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +34,8 @@ public class BannerServiceImpl implements BannerService {
     private final BannerRepository bannerRepository;
     private final InfraRepository infraRepository;
     private final ImageRepository imageRepository;
+    private final ReviewRepository reviewRepository;
+    private final HospitalRepository hospitalRepository;
 
     @Override
     @Transactional
@@ -92,6 +94,7 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
+    @Transactional
     public List<BannerResponseDto> getBanners(Boolean location) {
         List<BannerResponseDto> response = new ArrayList<>();
 
@@ -113,12 +116,21 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
+    @Transactional
     public BannerDetailResponseDto findById(Long bannerId) {
         Banner banner = bannerRepository.findById(bannerId).orElseThrow(() -> new BannerIdNotFoundException(bannerId));
 
-        log.info("banner: {}", banner);
+        final List<Review> byHospitalName = reviewRepository.findByHospitalName(banner.getHospitalName());
 
-        return modelMapper.map(banner, BannerDetailResponseDto.class);
+        BannerDetailResponseDto map = modelMapper.map(banner, BannerDetailResponseDto.class);
+
+        map.setReviewNum(Long.valueOf(byHospitalName.size()));
+
+        map.setRate(hospitalRepository.findByHospitalName(banner.getHospitalName()).orElseThrow(
+                () -> new HospitalNameNotFoundException(banner.getHospitalName())
+        ).getTotalRate());
+
+        return map;
     }
 
     @Override

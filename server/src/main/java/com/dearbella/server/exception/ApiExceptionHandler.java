@@ -8,6 +8,7 @@ import com.dearbella.server.exception.doctor.CategoryNotFoundException;
 import com.dearbella.server.exception.doctor.DoctorByHospitalNameNotFoundException;
 import com.dearbella.server.exception.doctor.DoctorIdNotFoundException;
 import com.dearbella.server.exception.hospital.HospitalIdNotFoundException;
+import com.dearbella.server.exception.hospital.HospitalNameNotFoundException;
 import com.dearbella.server.exception.hospital.HospitalResponseNullException;
 import com.dearbella.server.exception.image.FileNameNotValidException;
 import com.dearbella.server.exception.inquiry.InquiryIdNotFoundException;
@@ -91,7 +92,7 @@ public class ApiExceptionHandler {
      * */
     @ExceptionHandler(HospitalIdNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleException(HospitalIdNotFoundException ex) {
-        ApiErrorResponse response = new ApiErrorResponse("DEH-001", "HospitalController id is not exist: " + ex.getMessage());
+        ApiErrorResponse response = new ApiErrorResponse("DEH-001", "Hospital id is not exist: " + ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
@@ -99,6 +100,12 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleException(HospitalResponseNullException ex) {
         ApiErrorResponse response = new ApiErrorResponse("DEH-002", ex.getMessage());
 
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(HospitalNameNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(HospitalNameNotFoundException ex) {
+        ApiErrorResponse response = new ApiErrorResponse("DEH-003", "Hospital name is not exist: " + ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
