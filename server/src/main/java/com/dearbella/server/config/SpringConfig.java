@@ -65,8 +65,9 @@ public class SpringConfig {
     }
 
     @Bean
-    public BannerService bannerService(BannerRepository bannerRepository, InfraRepository infraRepository, ImageRepository imageRepository) {
-        return new BannerServiceImpl(bannerRepository, infraRepository, imageRepository);
+    public BannerService bannerService(BannerRepository bannerRepository, InfraRepository infraRepository, ImageRepository imageRepository,
+                                       ReviewRepository reviewRepository, HospitalRepository hospitalRepository) {
+        return new BannerServiceImpl(bannerRepository, infraRepository, imageRepository, reviewRepository, hospitalRepository);
     }
 
     @Bean
